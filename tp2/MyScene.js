@@ -1,9 +1,5 @@
 import { CGFscene, CGFcamera, CGFaxis } from "../lib/CGF.js";
-import { MyDiamond } from "./MyDiamond.js";
-import { MyTriangle } from "./MyTriangle.js";
-import { MyParallelogram } from "./MyParallelogram.js";
-import { MyTriangleSmall } from "./MyTriangleSmall.js";
-import { MyTriangleBig } from "./MyTriangleBig.js";
+import { MyTangram } from "./MyTangram.js";
 /**
  * MyScene
  * @constructor
@@ -28,11 +24,8 @@ export class MyScene extends CGFscene {
 
     //Initialize scene objects
     this.axis = new CGFaxis(this);
-    this.diamond = new MyDiamond(this);
-    this.triangle = new MyTriangle(this);
-    this.parallelogram = new MyParallelogram(this);
-    this.triangleSmall = new MyTriangleSmall(this);
-    this.triangleBig = new MyTriangleBig(this);
+    this.tangram = new MyTangram(this);
+
     //Objects connected to MyInterface
     this.displayAxis = true;
 
@@ -98,65 +91,7 @@ export class MyScene extends CGFscene {
 
     // ---- BEGIN Primitive drawing section
 
-    // Blue triangle
-    this.pushMatrix();
-    this.rotate(-Math.PI / 2, 0, 0, 1);
-    this.translate(-2, -2, 0);
-    this.triangleBig.display();
-    this.popMatrix();
-
-    // Orange triangle
-    this.pushMatrix();
-    this.translate(0, 4, 0);
-    this.rotate(Math.PI / 2, 0, 0, 1);
-    this.triangleBig.display(this.setDiffuse(255, 165, 0));
-    this.popMatrix();
-
-    // Pink triangle
-    this.pushMatrix();
-    this.translate(-1, 1, 0);
-    this.rotate(Math.PI / 2, 0, 0, 1);
-    this.triangle.display(this.setDiffuse(255, 0, 255));
-    this.popMatrix();
-
-    // Yellow parallelogram
-    this.pushMatrix();
-    this.rotate(Math.PI, 0, 1, 0);
-    this.translate(-1.4, -1.4, 0);
-    this.rotate(Math.PI / 4, 0, 0, 1);
-    this.parallelogram.display(this.setDiffuse(255, 255, 0));
-    this.popMatrix();
-
-    // Green diamond
-    this.pushMatrix();
-    let translateMatrix = [1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      -1.3, -0.7, 0, 1];
-    this.multMatrix(translateMatrix);
-    // this.translate(-1.3, -0.70, 0);
-
-    let rotateMatrix = [Math.cos(Math.PI / 4), -Math.sin(Math.PI / 4), 0, 0,
-    Math.sin(Math.PI / 4), Math.cos(Math.PI / 4), 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1];
-    this.multMatrix(rotateMatrix);
-    this.diamond.display(this.setDiffuse(0, 225, 0));
-    this.popMatrix();
-
-    // Purple triangle
-    this.pushMatrix();
-    this.translate(2.1, -0.7, 0);
-    this.rotate(3 * Math.PI / 4, 0, 0, 1);
-    this.triangleSmall.display(this.setDiffuse(128, 0, 128));
-    this.popMatrix();
-
-    // Red triangle
-    this.pushMatrix();
-    this.translate(2.8, -0.4, 0);
-    this.rotate(Math.PI, 0, 0, 1);
-    this.triangleSmall.display(this.setDiffuse(255, 0, 0));
-    this.popMatrix();
+    this.tangram.display();
 
     // ---- END Primitive drawing section
   }
