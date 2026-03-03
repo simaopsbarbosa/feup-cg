@@ -6,7 +6,7 @@
 | -------------------------- | --------- | ------------------------ |
 | Ana Belém Meireles Bilhoto | 202305035 | up202305035@edu.fe.up.pt |
 | João Rodrigues Vila Cova   | 202307756 | up202307756@edu.fe.up.pt |
-| Simão Pedro Silva Barbosa  | 202306609 | ...                      |
+| Simão Pedro Silva Barbosa  | 202306609 | up202306609@edu.fe.up.pt |
 
 ---
 
