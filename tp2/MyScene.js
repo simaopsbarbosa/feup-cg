@@ -151,6 +151,13 @@ export class MyScene extends CGFscene {
     this.triangleSmall.display(this.setDiffuse(128, 0, 128));
     this.popMatrix();
 
+    // Red triangle
+    this.pushMatrix();
+    this.translate(2.8, -0.4, 0);
+    this.rotate(Math.PI, 0, 0, 1);
+    this.triangleSmall.display(this.setDiffuse(255, 0, 0));
+    this.popMatrix();
+
     // ---- END Primitive drawing section
   }
 }
