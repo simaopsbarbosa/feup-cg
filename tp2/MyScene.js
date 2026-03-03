@@ -1,6 +1,6 @@
 import { CGFscene, CGFcamera, CGFaxis } from "../lib/CGF.js";
-import { MyUnitCube } from "./MyUnitCube.js";
-import { MyTangram } from "./MyTangram.js";
+import { MyQuad } from "./MyQuad.js";
+
 /**
  * MyScene
  * @constructor
@@ -24,9 +24,8 @@ export class MyScene extends CGFscene {
     this.gl.depthFunc(this.gl.LEQUAL);
 
     //Initialize scene objects
-    this.axis = new CGFaxis(this,100);
-    this.unitCube = new MyUnitCube(this);
-    this.tangram= new MyTangram(this);
+    this.axis = new CGFaxis(this);
+    this.quad = new MyQuad(this);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -95,6 +94,7 @@ export class MyScene extends CGFscene {
 
     
 
+    /* This is the square with the tangram 
     this.pushMatrix();
     this.translate(5,-5,5);
     this.scale(10,10,10);
@@ -106,7 +106,8 @@ export class MyScene extends CGFscene {
     this.translate(5,-6.5,10.5);
     this.setAmbient(0,0.5,0,0);
     this.tangram.display();
-    this.popMatrix();
+    this.popMatrix(); */
+    this.quad.display();
 
     
 
