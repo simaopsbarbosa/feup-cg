@@ -4,7 +4,7 @@ import { CGFobject } from '../lib/CGF.js';
  * @constructor
  * @param scene - Reference to MyScene object
  */
-export class MyDiamond extends CGFobject {
+export class MyUnitCube extends CGFobject {
     constructor(scene) {
         super(scene);
         this.initBuffers();
@@ -26,11 +26,28 @@ export class MyDiamond extends CGFobject {
         this.indices = [
             // front face
             0, 1, 2,
-            1, 2, 3, 
-    
+            0,2,3,
+            
+
             // right face
             1,6,5,
             1,5,2,
+            //left face
+            4,7,0,
+            3,4,0,
+            
+            // back face
+            5,6,7,
+            4,5,7,
+            
+            // top face
+            3,2,5,
+            3,5,4,
+            // Bottom face
+            6,1,0,
+            7,6,0
+        
+
         ];
 
         //The defined indices (and corresponding vertices)
