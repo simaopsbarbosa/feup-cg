@@ -11,8 +11,6 @@ import { MyQuad } from './MyQuad.js';
 export class MyUnitCubeQuad extends CGFobject {
     constructor(scene) {
         super(scene);
-
- 
         this.quad = new MyQuad(scene);
         
 
