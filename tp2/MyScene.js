@@ -35,7 +35,7 @@ export class MyScene extends CGFscene {
     this.triangleBig = new MyTriangleBig(this);
     //Objects connected to MyInterface
     this.displayAxis = true;
-    
+
     this.scaleFactor = 1;
   }
   initLights() {
@@ -97,32 +97,58 @@ export class MyScene extends CGFscene {
     this.multMatrix(sca);
 
     // ---- BEGIN Primitive drawing section
+
+    // Blue triangle
     this.pushMatrix();
-    this.rotate(-Math.PI/2,0,0,1);
-    this.translate(-2,-2,0);   
-    this.triangleBig.display();
-    this.popMatrix();
-    //orange triangle
-    this.pushMatrix();
-    this.setDiffuse(255, 127,0);
-    this.translate(0,4,0);
-    this.rotate(Math.PI/2,0,0,1);
+    this.rotate(-Math.PI / 2, 0, 0, 1);
+    this.translate(-2, -2, 0);
     this.triangleBig.display();
     this.popMatrix();
 
-    //Pink triangle
+    // Orange triangle
     this.pushMatrix();
-    this.translate(-1,1,0);
-    this.rotate(Math.PI/2,0,0,1);
-    this.triangle.display(this.setDiffuse(255,0,255));
+    this.translate(0, 4, 0);
+    this.rotate(Math.PI / 2, 0, 0, 1);
+    this.triangleBig.display(this.setDiffuse(255, 165, 0));
     this.popMatrix();
 
-    //Paralelogramo Amarelo
+    // Pink triangle
     this.pushMatrix();
-    this.rotate(Math.PI,0,1,0);
-    this.translate(-1.4,-1.4,0);
-    this.rotate(Math.PI/4,0,0,1);
-    this.parallelogram.display(this.setDiffuse(255,0,0));
+    this.translate(-1, 1, 0);
+    this.rotate(Math.PI / 2, 0, 0, 1);
+    this.triangle.display(this.setDiffuse(255, 0, 255));
+    this.popMatrix();
+
+    // Yellow parallelogram
+    this.pushMatrix();
+    this.rotate(Math.PI, 0, 1, 0);
+    this.translate(-1.4, -1.4, 0);
+    this.rotate(Math.PI / 4, 0, 0, 1);
+    this.parallelogram.display(this.setDiffuse(255, 255, 0));
+    this.popMatrix();
+
+    // Green diamond
+    this.pushMatrix();
+    let translateMatrix = [1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      -1.3, -0.7, 0, 1];
+    this.multMatrix(translateMatrix);
+    // this.translate(-1.3, -0.70, 0);
+
+    let rotateMatrix = [Math.cos(Math.PI / 4), -Math.sin(Math.PI / 4), 0, 0,
+    Math.sin(Math.PI / 4), Math.cos(Math.PI / 4), 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1];
+    this.multMatrix(rotateMatrix);
+    this.diamond.display(this.setDiffuse(0, 225, 0));
+    this.popMatrix();
+
+    // Purple triangle
+    this.pushMatrix();
+    this.translate(2.1, -0.7, 0);
+    this.rotate(3 * Math.PI / 4, 0, 0, 1);
+    this.triangleSmall.display(this.setDiffuse(128, 0, 128));
     this.popMatrix();
 
     // ---- END Primitive drawing section
