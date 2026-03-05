@@ -15,3 +15,8 @@ In exercise 1 we recreated the tangram applying geometric transformations to alr
 ![Exercise 1](screenshots/tp2-1.jpeg)
 
 ### Exercise 2
+
+In exercise 2 we created a 3D object (unit cube) and applied transformations to it.
+
+- Created the MyUnitCube class, and defined the vertices and indices of the cube;
+- Displayed the cube in the scene, and applied transformations to place the tangram and cube in the right places.
