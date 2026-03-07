@@ -21,6 +21,8 @@ In exercise 2 we created a 3D object (unit cube) and applied transformations to 
 - Created the MyUnitCube class, and defined the vertices and indices of the cube;
 - Displayed the cube in the scene, and applied transformations to place the tangram and cube in the right places.
 
+![Exercise 2](screenshots/tp2-2.jpeg)
+
 ### Exercise 3
 
 In exercise 3 we created a new unit cube using a quad plane drawn multiple times to define the six faces.
@@ -28,3 +30,5 @@ In exercise 3 we created a new unit cube using a quad plane drawn multiple times
 - Created the MyQuad class, representing a unit square centered at the origin, (with both-sided indices for visibility from both directions);
 - Created the MyUnitCubeQuad class, which holds a single MyQuad instance;
 - Replaced the previous MyUnitCube in the scene with this new MyUnitCubeQuad, applying the same geometric transformations as before.
+
+![Exercise 3](screenshots/tp2-3.png)
