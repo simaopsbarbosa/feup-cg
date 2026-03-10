@@ -90,9 +90,6 @@ export class MyTangram extends CGFobject {
     this.scene.popMatrix();
    }
 
-   updateBuffers(complexity) {
-   }
-
    enableNormalViz() {
       this.diamond.enableNormalViz();
       this.triangle.enableNormalViz();
