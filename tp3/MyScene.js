@@ -14,6 +14,9 @@ export class MyScene extends CGFscene {
     init(application) {
         super.init(application);
         this.initCameras();
+
+        this.global_light_intensity = 0.3;
+
         this.initLights();
         this.initMaterials();
 
@@ -45,8 +48,13 @@ export class MyScene extends CGFscene {
         this.scaleFactor = 2.0;
 
     }
+
+    updateGlobalLight() {
+        this.setGlobalAmbientLight(this.global_light_intensity, this.global_light_intensity, this.global_light_intensity, 1.0);
+    }
+
     initLights() {
-        this.setGlobalAmbientLight(0.3, 0.3, 0.3, 1.0);
+        this.setGlobalAmbientLight(this.global_light_intensity, this.global_light_intensity, this.global_light_intensity, 1.0);
 
         this.lights[0].setPosition(2.0, 2.0, -1.0, 1.0);
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
