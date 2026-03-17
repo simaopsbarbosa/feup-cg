@@ -32,20 +32,25 @@ export class MyCylinder extends CGFobject {
                 // populate vertices
                 var h = stack / this.stacks;
                 this.vertices.push(Math.cos(angle1), Math.sin(angle1), h);
-                this.vertices.push(Math.cos(angle2), Math.sin(angle2), h);
                 
                 // populate normals
                 this.normals.push(Math.cos(angle1),Math.sin(angle1),0);
-                this.normals.push(Math.cos(angle2), Math.sin(angle2),0);
+                
             }
             
+          
+        }
+        
+        for (var i = 0; i < this.slices; i++) {
             // populate indices
-            var verticesPerFace = 2 * (this.stacks + 1);
+            var verticesPerFace = this.stacks + 1;
             var base = i * verticesPerFace;
+            var nextBase = ((i + 1) % this.slices) * verticesPerFace;
             for (var k = 0; k < this.stacks; k++) {
-                var j = base + k * 2;
-                this.indices.push(j + 1, j + 2, j);
-                this.indices.push(j + 1, j + 3, j + 2);
+                var j = base + k;
+                var jNext=nextBase+k;
+                this.indices.push(jNext,j+1,j );
+                this.indices.push(jNext,jNext + 1, j+1, );
             }
         }
 
