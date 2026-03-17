@@ -5,7 +5,7 @@ import { MyPlane } from "./MyPlane.js";
 import { MyTangram } from "./MyTangram.js";
 import { MyUnitCube } from "./MyUnitCube.js";
 import { MyPrism } from "./MyPrism.js";
-
+import {MyCylinder} from "./MyCylinder.js";
 /**
 * MyScene
 * @constructor
@@ -38,11 +38,12 @@ export class MyScene extends CGFscene {
         this.tangram = new MyTangram(this);
         this.unitCube = new MyUnitCube(this);
         this.prism = new MyPrism(this, 8, 20);
+        this.cylinder=new MyCylinder(this,8,2);
 
-        this.objects = [this.plane, this.pyramid, this.cone, this.tangram, this.unitCube, this.prism];
+        this.objects = [this.plane, this.pyramid, this.cone, this.tangram, this.unitCube, this.prism,this.cylinder];
 
         // Labels and ID's for object selection on MyInterface
-        this.objectIDs = { 'Plane': 0, 'Pyramid': 1, 'Cone': 2, 'Tangram': 3, 'UnitCube': 4, 'Prism': 5 };
+        this.objectIDs = { 'Plane': 0, 'Pyramid': 1, 'Cone': 2, 'Tangram': 3, 'UnitCube': 4, 'Prism': 5 ,'Cylinder':6};
 
         //Other variables connected to MyInterface
         this.selectedObject = 0;
@@ -192,7 +193,7 @@ export class MyScene extends CGFscene {
             this.objects[this.selectedObject].disableNormalViz();
 
         // prism is vertical column
-        if (this.objects[this.selectedObject] == this.prism) {
+        if (this.objects[this.selectedObject] == this.prism||this.objects[this.selectedObject] == this.cylinder) {
             this.rotate(-Math.PI / 2, 1,0,0);
         }   
         
