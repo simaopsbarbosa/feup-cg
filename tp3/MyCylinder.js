@@ -24,8 +24,6 @@ export class MyCylinder extends CGFobject {
 
         for (var i = 0; i < this.slices; i++) {
             var angle1 = i * angleIncrement;
-            var angle2 = (i + 1) * angleIncrement;
-
         
             
             for (var stack = 0; stack <= this.stacks; stack++) {
