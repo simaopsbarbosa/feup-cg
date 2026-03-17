@@ -27,25 +27,28 @@ export class MyPrism extends CGFobject {
             var angle1 = i * angleIncrement;
             var angle2 = (i + 1) * angleIncrement;
 
-            this.vertices.push(Math.cos(angle1), Math.sin(angle1), 0);
-            this.vertices.push(Math.cos(angle1), Math.sin(angle1), 1);
-            this.vertices.push(Math.cos(angle2), Math.sin(angle2), 0);
-            this.vertices.push(Math.cos(angle2), Math.sin(angle2), 1);
+            for (var stack = 0; stack <= this.stacks; stack++) {
+                var h = stack / this.stacks;
+                this.vertices.push(Math.cos(angle1), Math.sin(angle1), h);
+                this.vertices.push(Math.cos(angle2), Math.sin(angle2), h);
+            }
 
             // populate indices (2 triangles per face)
-            var base = i * 4;
-            this.indices.push(base, base + 2, base + 1);
-            this.indices.push(base + 2, base + 3, base + 1);
-
-            // populate normals (4 per face)
-            var angle1 = i * angleIncrement;
+            var verticesPerFace = 2 * (this.stacks + 1);
+            var base = i * verticesPerFace;
+            for (var k = 0; k < this.stacks; k++) {
+                var j = base + k * 2;
+                this.indices.push(j + 1, j + 2, j);
+                this.indices.push(j + 1, j + 3, j + 2);
+            }
+            
+            // populate normals
             var normalX = Math.cos(angle1 + angleIncrement / 2);
             var normalY = Math.sin(angle1 + angleIncrement / 2);
-
-            this.normals.push(normalX, normalY, 0);
-            this.normals.push(normalX, normalY, 0);
-            this.normals.push(normalX, normalY, 0);
-            this.normals.push(normalX, normalY, 0);
+            for (var stack = 0; stack <= this.stacks; stack++) {
+                this.normals.push(normalX, normalY,0);
+                this.normals.push(normalX, normalY,0);
+            }
         }
 
         //The defined indices (and corresponding vertices)

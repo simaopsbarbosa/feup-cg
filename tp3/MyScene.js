@@ -30,7 +30,6 @@ export class MyScene extends CGFscene {
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.enable(this.gl.CULL_FACE);
         this.gl.depthFunc(this.gl.LEQUAL);
-
         //Initialize scene objects
         this.axis = new CGFaxis(this);
         this.plane = new MyPlane(this, 5);
@@ -38,7 +37,7 @@ export class MyScene extends CGFscene {
         this.pyramid = new MyPyramid(this, 3, 1);
         this.tangram = new MyTangram(this);
         this.unitCube = new MyUnitCube(this);
-        this.prism = new MyPrism(this, 8, 1);
+        this.prism = new MyPrism(this, 8, 20);
 
         this.objects = [this.plane, this.pyramid, this.cone, this.tangram, this.unitCube, this.prism];
 
@@ -192,6 +191,11 @@ export class MyScene extends CGFscene {
         else
             this.objects[this.selectedObject].disableNormalViz();
 
+        // prism is vertical column
+        if (this.objects[this.selectedObject] == this.prism) {
+            this.rotate(-Math.PI / 2, 1,0,0);
+        }   
+        
         this.objects[this.selectedObject].display();
         this.popMatrix();
         // ---- END Primitive drawing section
