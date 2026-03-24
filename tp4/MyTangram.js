@@ -1,5 +1,5 @@
 import { CGFobject } from '../lib/CGF.js';
-import { CGFappearance } from '../lib/CGF.js';
+import { CGFappearance, CGFtexture } from '../lib/CGF.js';
 
 import { MyDiamond } from './MyDiamond.js';
 import { MyTriangle } from './MyTriangle.js';
@@ -21,7 +21,10 @@ export class MyTangram extends CGFobject {
       this.triangleSmall = new MyTriangleSmall(scene);
       this.triangleBig = new MyTriangleBig(scene);
 
+      this.texCoords = [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
+
       this.initMaterials();
+
    }
 
    initMaterials() {
@@ -49,11 +52,13 @@ export class MyTangram extends CGFobject {
       this.yellowMaterial.setSpecular(1.0, 1.0, 1.0, 1.0);
       this.yellowMaterial.setShininess(10.0);
 
-      this.greenMaterial = new CGFappearance(this.scene);
-      this.greenMaterial.setAmbient(0.0, 1.0, 0.0, 1.0);
-      this.greenMaterial.setDiffuse(0.0, 1.0, 0.0, 1.0);
-      this.greenMaterial.setSpecular(1.0, 1.0, 1.0, 1.0);
-      this.greenMaterial.setShininess(10.0);
+      this.diamondMaterial = new CGFappearance(this.scene);
+      this.diamondMaterial.setAmbient(0.1, 0.1, 0.1, 1);
+      this.diamondMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
+      this.diamondMaterial.setSpecular(0.1, 0.1, 0.1, 1);
+      this.diamondMaterial.setShininess(10.0);
+      this.diamondMaterial.loadTexture('images/tangram.png');
+      this.diamondMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
       this.purpleMaterial = new CGFappearance(this.scene);
       this.purpleMaterial.setAmbient(0.5, 0.0, 0.5, 1.0);
@@ -91,7 +96,7 @@ export class MyTangram extends CGFobject {
       this.scene.pushMatrix();
       this.scene.multMatrix(translateMatrixDiamond);
       this.scene.multMatrix(rotateMatrixDiamond);
-      this.scene.materials[4].apply();
+      this.diamondMaterial.apply();
       this.diamond.display();
       this.scene.popMatrix();
 

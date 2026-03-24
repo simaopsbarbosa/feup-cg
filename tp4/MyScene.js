@@ -1,5 +1,6 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
 import { MyQuad } from "./MyQuad.js";
+import { MyTangram } from "./MyTangram.js";
 
 /**
  * MyScene
@@ -28,6 +29,8 @@ export class MyScene extends CGFscene {
         this.axis = new CGFaxis(this);
         this.quad = new MyQuad(this);
 
+        this.tangram = new MyTangram(this);
+
         //------ Applied Material
         this.quadMaterial = new CGFappearance(this);
         this.quadMaterial.setAmbient(0.1, 0.1, 0.1, 1);
@@ -46,6 +49,7 @@ export class MyScene extends CGFscene {
 
         //-------Objects connected to MyInterface
         this.displayAxis = true;
+        this.showTangram = false;
         this.showQuad = true;
         this.scaleFactor = 5;
         this.selectedTexture = -1;        
@@ -127,6 +131,10 @@ export class MyScene extends CGFscene {
             // this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
 
             this.quad.display();
+        }
+
+        if (this.showTangram) {
+            this.tangram.display();
         }
 
         // ---- END Primitive drawing section
