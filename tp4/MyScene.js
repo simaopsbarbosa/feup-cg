@@ -51,7 +51,6 @@ export class MyScene extends CGFscene {
         this.displayAxis = true;
         this.showTangram = false;
         this.showQuad = true;
-        this.displayQuadMaterial = true;
         this.scaleFactor = 5;
         this.selectedTexture = -1;        
         this.wrapS = 0;
@@ -123,9 +122,7 @@ export class MyScene extends CGFscene {
         // ---- BEGIN Primitive drawing section
 
         if (this.showQuad) {
-            if (this.displayQuadMaterial) {
                 this.quadMaterial.apply();
-            }
 
             // Default texture filtering in WebCGF is LINEAR. 
             // Uncomment next line for NEAREST when magnifying, or 
