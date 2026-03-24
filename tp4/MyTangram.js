@@ -29,28 +29,36 @@ export class MyTangram extends CGFobject {
 
    initMaterials() {
       this.orangeMaterial = new CGFappearance(this.scene);
-      this.orangeMaterial.setAmbient(1.0, 0.5, 0.0, 1.0);
-      this.orangeMaterial.setDiffuse(1.0, 0.5, 0.0, 1.0);
-      this.orangeMaterial.setSpecular(1.0, 1.0, 1.0, 1.0);
+      this.orangeMaterial.setAmbient(0.1, 0.1, 0.1, 1);
+      this.orangeMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
+      this.orangeMaterial.setSpecular(0.1, 0.1, 0.1, 1);
       this.orangeMaterial.setShininess(10.0);
+      this.orangeMaterial.loadTexture('images/tangram.png');
+      this.orangeMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
       this.blueMaterial = new CGFappearance(this.scene);
-      this.blueMaterial.setAmbient(0.0, 0.0, 1.0, 1.0);
-      this.blueMaterial.setDiffuse(0.0, 0.0, 1.0, 1.0);
-      this.blueMaterial.setSpecular(1.0, 1.0, 1.0, 1.0);
+      this.blueMaterial.setAmbient(0.1, 0.1, 0.1, 1);
+      this.blueMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
+      this.blueMaterial.setSpecular(0.1, 0.1, 0.1, 1);
       this.blueMaterial.setShininess(10.0);
+      this.blueMaterial.loadTexture('images/tangram.png');
+      this.blueMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
       this.pinkMaterial = new CGFappearance(this.scene);
-      this.pinkMaterial.setAmbient(1.0, 0.0, 1.0, 1.0);
-      this.pinkMaterial.setDiffuse(1.0, 0.0, 1.0, 1.0);
-      this.pinkMaterial.setSpecular(1.0, 1.0, 1.0, 1.0);
+      this.pinkMaterial.setAmbient(0.1, 0.1, 0.1, 1);
+      this.pinkMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
+      this.pinkMaterial.setSpecular(0.1, 0.1, 0.1, 1);
       this.pinkMaterial.setShininess(10.0);
+      this.pinkMaterial.loadTexture('images/tangram.png');
+      this.pinkMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
       this.yellowMaterial = new CGFappearance(this.scene);
-      this.yellowMaterial.setAmbient(1.0, 1.0, 0.0, 1.0);
-      this.yellowMaterial.setDiffuse(1.0, 1.0, 0.0, 1.0);
-      this.yellowMaterial.setSpecular(1.0, 1.0, 1.0, 1.0);
+      this.yellowMaterial.setAmbient(0.1, 0.1, 0.1, 1);
+      this.yellowMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
+      this.yellowMaterial.setSpecular(0.1, 0.1, 0.1, 1);
       this.yellowMaterial.setShininess(10.0);
+      this.yellowMaterial.loadTexture('images/tangram.png');
+      this.yellowMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
       this.diamondMaterial = new CGFappearance(this.scene);
       this.diamondMaterial.setAmbient(0.1, 0.1, 0.1, 1);
@@ -61,16 +69,20 @@ export class MyTangram extends CGFobject {
       this.diamondMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
       this.purpleMaterial = new CGFappearance(this.scene);
-      this.purpleMaterial.setAmbient(0.5, 0.0, 0.5, 1.0);
-      this.purpleMaterial.setDiffuse(0.5, 0.0, 0.5, 1.0);
-      this.purpleMaterial.setSpecular(1.0, 1.0, 1.0, 1.0);
+      this.purpleMaterial.setAmbient(0.1, 0.1, 0.1, 1);
+      this.purpleMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
+      this.purpleMaterial.setSpecular(0.1, 0.1, 0.1, 1);
       this.purpleMaterial.setShininess(10.0);
+      this.purpleMaterial.loadTexture('images/tangram.png');
+      this.purpleMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
       this.redMaterial = new CGFappearance(this.scene);
-      this.redMaterial.setAmbient(1.0, 0.0, 0.0, 1.0);
-      this.redMaterial.setDiffuse(1.0, 0.0, 0.0, 1.0);
-      this.redMaterial.setSpecular(0.99, 0.99, 0.99, 1.0);
+      this.redMaterial.setAmbient(0.1, 0.1, 0.1, 1);
+      this.redMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
+      this.redMaterial.setSpecular(0.1, 0.1, 0.1, 1);
       this.redMaterial.setShininess(10.0);
+      this.redMaterial.loadTexture('images/tangram.png');
+      this.redMaterial.setTextureWrap('REPEAT', 'REPEAT');
    }
 
    display() {
