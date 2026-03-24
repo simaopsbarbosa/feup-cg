@@ -125,6 +125,12 @@ export class MyTangram extends CGFobject {
       this.scene.translate(-1.7, 0.7, 0);
       this.scene.rotate(3 * Math.PI / 2, 0, 0, 1);
       this.blueMaterial.apply();
+      var coordsBlue = [
+         0,0,
+         1,0,
+         0.5, 0.5,
+      ]
+      this.triangleBig.updateTexCoords(coordsBlue);
       this.triangleBig.display();
       this.scene.popMatrix();
 
@@ -133,6 +139,12 @@ export class MyTangram extends CGFobject {
       this.scene.translate(0.3, 2.7, 0);
       this.scene.rotate(Math.PI / 2, 0, 0, 1);
       this.orangeMaterial.apply();
+      var coordsOrange = [
+         1, 0,
+         0.5, 0.5,
+         1, 1,
+      ]
+      this.triangleBig.updateTexCoords(coordsOrange);
       this.triangleBig.display();
       this.scene.popMatrix();
 
@@ -150,6 +162,12 @@ export class MyTangram extends CGFobject {
       this.scene.translate(2.4, -2, 0);
       this.scene.rotate(3 * Math.PI / 4, 0, 0, 1);
       this.purpleMaterial.apply();
+      var coordsPurple = [
+         0,0,
+         0.25, 0.25,
+         0, 0.5,
+      ]
+      this.triangleSmall.updateTexCoords(coordsPurple);
       this.triangleSmall.display();
       this.scene.popMatrix();
 
@@ -158,6 +176,12 @@ export class MyTangram extends CGFobject {
       this.scene.translate(3.1, -1.7, 0);
       this.scene.rotate(Math.PI, 0, 0, 1);
       this.redMaterial.apply();
+      var coordsRed = [
+         0.25, 0.75,
+         0.5,0.5,
+         0.75,0.75
+      ]
+      this.triangleSmall.updateTexCoords(coordsRed);
       this.triangleSmall.display();
       this.scene.popMatrix();
    }
