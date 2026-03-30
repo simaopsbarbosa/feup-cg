@@ -1,4 +1,4 @@
-import {CGFinterface, dat} from '../lib/CGF.js';
+import { CGFinterface, dat } from '../lib/CGF.js';
 
 /**
 * MyInterface
@@ -12,18 +12,27 @@ export class MyInterface extends CGFinterface {
     init(application) {
         // call CGFinterface init
         super.init(application);
-        
+
         // init GUI. For more information on the methods, check:
         // https://github.com/dataarts/dat.gui/blob/master/API.md
         this.gui = new dat.GUI();
-        
+
         var obj = this;
 
         //Checkbox element in GUI
         this.gui.add(this.scene, 'displayAxis').name('Display Axis');
 
-        this.gui.add(this.scene, 'showTangram').name('Show Tangram');
-        this.gui.add(this.scene, 'showQuad').name('Show Quad');
+        // Checkbox for displaying MyQuad
+        this.gui.add(this.scene, 'displayQuad').name('Display Quad');
+
+        // Checkbox for displaying MyTangram
+        this.gui.add(this.scene, 'displayMyTangram').name('Display Tangram');
+
+        // Checkbox for displaying MyUnitCubeQuad
+        this.gui.add(this.scene, 'displayUnitCubeQuad').name('Display Unit Cube Quad');
+
+        // Checkbox for texture filtering
+        this.gui.add(this.scene, 'textureFiltering').name('Texture Filtering');
 
         //Dropdown for textures
         this.gui.add(this.scene, 'selectedTexture', this.scene.textureIds).name('Selected Texture').onChange(this.scene.updateAppliedTexture.bind(this.scene));
