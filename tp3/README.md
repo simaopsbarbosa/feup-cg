@@ -26,3 +26,6 @@ Afterwards we created a wood material and added it to the scene's materials list
 Then, we defined a material with high specular component for each tangram piece, corresponding to their colors in the tangram reference picture. After that, we changed the material of the MyDiamond object to the scene's custom material, so we could change it in the interface, seen below in green:
 
 ![Exercise 6](screenshots/cg-t10g3-tp3-2.png)
+
+### Part 3
+In this exercise, we edited the previous angle to be perpendicular to the surface to make it appear smooth when lit. Furthermore, we eliminated repeated vertices and normals by changing the way we rendered per stack. Instead of creating two vertices at a time, we only created one per stack inside the per slice loop.![Exercise12](screenshots/cg-t10g3-tp3-4.png)
