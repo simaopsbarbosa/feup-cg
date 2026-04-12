@@ -9,9 +9,9 @@ import { MyPlane } from "./MyPlane.js";
 
 function getStringFromUrl(url) {
 	var xmlHttpReq = new XMLHttpRequest();
-    xmlHttpReq.open("GET", url, false);
-    xmlHttpReq.send();
-    return xmlHttpReq.responseText;
+	xmlHttpReq.open("GET", url, false);
+	xmlHttpReq.send();
+	return xmlHttpReq.responseText;
 }
 
 /**
@@ -52,7 +52,7 @@ export class ShaderScene extends CGFscene {
 		this.axis = new CGFaxis(this);
 		this.enableTextures(true);
 
-		this.objects=[
+		this.objects = [
 			new Teapot(this),
 			new MyPlane(this, 50)
 		];
@@ -71,11 +71,11 @@ export class ShaderScene extends CGFscene {
 		this.appearance.setSpecular(0.0, 0.0, 0.0, 1);
 		this.appearance.setShininess(120);
 
-		this.texture = new CGFtexture(this, "textures/texture.jpg");
+		this.texture = new CGFtexture(this, "textures/waterTex.jpg");
 		this.appearance.setTexture(this.texture);
 		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
-		this.texture2 = new CGFtexture(this, "textures/FEUP.jpg");
+		this.texture2 = new CGFtexture(this, "textures/waterMap.jpg");
 
 		// shaders initialization
 
@@ -90,13 +90,16 @@ export class ShaderScene extends CGFscene {
 			new CGFshader(this.gl, "shaders/texture1.vert", "shaders/sepia.frag"),
 			new CGFshader(this.gl, "shaders/texture1.vert", "shaders/convolution.frag"),
 			new CGFshader(this.gl, "shaders/half.vert", "shaders/half.frag"),
-			new CGFshader(this.gl, "shaders/texture1.vert", "shaders/grayScale.frag")
+			new CGFshader(this.gl, "shaders/texture1.vert", "shaders/grayScale.frag"),
+			new CGFshader(this.gl, "shaders/water.vert", "shaders/water.frag")
 		];
 
 		// additional texture will have to be bound to texture unit 1 later, when using the shader, with "this.texture2.bind(1);"
 		this.testShaders[4].setUniformsValues({ uSampler2: 1 });
 		this.testShaders[5].setUniformsValues({ uSampler2: 1 });
 		this.testShaders[6].setUniformsValues({ uSampler2: 1 });
+		this.testShaders[11].setUniformsValues({ uSampler2: 1 });
+		this.testShaders[11].setUniformsValues({ heightScale: 0.05 });
 		this.testShaders[6].setUniformsValues({ timeFactor: 0 });
 
 
@@ -113,7 +116,8 @@ export class ShaderScene extends CGFscene {
 			'Sepia': 7,
 			'Convolution': 8,
 			'Half': 9,
-			'Gray Scale': 10
+			'Gray Scale': 10,
+			'Water': 11
 		};
 
 		// shader code panels references
@@ -137,7 +141,7 @@ export class ShaderScene extends CGFscene {
 	initCameras() {
 		this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(20, 20, 100), vec3.fromValues(0, 0, 0));
 	};
-	
+
 	// initialize lights
 	initLights() {
 
@@ -231,24 +235,24 @@ export class ShaderScene extends CGFscene {
 		// bind additional texture to texture unit 1
 		this.texture2.bind(1);
 
-		if (this.selectedObject==0) {
+		if (this.selectedObject == 0) {
 			// teapot (scaled and rotated to conform to our axis)
 
 			this.pushMatrix();
-	
+
 			this.translate(0, -6, 0);
 			this.scale(0.5, 0.5, 0.5);
 			this.rotate(-Math.PI / 2, 1, 0, 0);
 			this.objects[0].display();
-	
+
 			this.popMatrix();
 		}
 		else {
 			this.pushMatrix();
-			
+
 			this.scale(25, 25, 25);
 			this.objects[1].display();
-			
+
 			this.popMatrix();
 		}
 
