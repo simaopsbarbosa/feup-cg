@@ -7,17 +7,16 @@ uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
 uniform sampler2D uSampler2;
-uniform float heightScale;
+uniform float timeFactor;
 
 varying vec2 vTextureCoord;
 
 void main() {
+   vTextureCoord = aTextureCoord + vec2(timeFactor * 0.01, timeFactor * 0.01);
 
-   float height = texture2D(uSampler2, aTextureCoord).r;
+   float height = texture2D(uSampler2, vTextureCoord).b;
 
-   vec3 newPosition = aVertexPosition + aVertexNormal * height * heightScale;
+   vec3 newPosition = aVertexPosition + aVertexNormal * height * 0.05;
 
    gl_Position = uPMatrix * uMVMatrix * vec4(newPosition, 1.0);
-
-   vTextureCoord = aTextureCoord;
 }
