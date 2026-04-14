@@ -11,9 +11,9 @@ void main() {
    vec4 color = texture2D(uSampler, vTextureCoord);
 
    vec4 colorHeight = color;
-	colorHeight.r = color.r * (1.0-height);
-	colorHeight.g = color.g * (1.0-height);
-	colorHeight.b = color.b * (1.0-height);
+	colorHeight.r = color.r * min(height + 0.7, 1.0);
+	colorHeight.g = color.g * min(height + 0.7, 1.0);
+	colorHeight.b = color.b * min(height + 0.7, 1.0);
 
    gl_FragColor = colorHeight;
 }
