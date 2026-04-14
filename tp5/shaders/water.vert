@@ -11,10 +11,12 @@ uniform float timeFactor;
 
 varying vec2 vTextureCoord;
 
+varying float height;
+
 void main() {
    vTextureCoord = aTextureCoord + vec2(timeFactor * 0.01, timeFactor * 0.01);
 
-   float height = texture2D(uSampler2, vTextureCoord).b;
+   height = texture2D(uSampler2, vTextureCoord).b;
 
    vec3 newPosition = aVertexPosition + aVertexNormal * height * 0.05;
 
