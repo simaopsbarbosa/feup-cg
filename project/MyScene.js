@@ -1,5 +1,6 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
 import { MyHalfSphere } from "./halfsphere.js";
+import { MyPlane } from "./MyPlane.js";
 
 /**
  * MyScene
@@ -26,7 +27,7 @@ export class MyScene extends CGFscene {
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
-        this.sphere = new MyHalfSphere(this, 20, 20);
+        this.plane = new MyPlane(this, 20);
 
         //-------Objects connected to MyInterface
         this.displayAxis = true;
@@ -36,6 +37,7 @@ export class MyScene extends CGFscene {
         this.wrapS = 0;
         this.wrapT = 0;
 
+        this.halfSphere = new CGFtexture(this, 'images/nature.jpg');
         this.textures = [this.texture1, this.texture2, this.texture3];
         this.texCoords = [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
         this.wrappingMethods = ['REPEAT', 'CLAMP_TO_EDGE', 'MIRRORED_REPEAT'];
@@ -43,6 +45,9 @@ export class MyScene extends CGFscene {
         this.textureIds = { 'Board': 0, 'Floor': 1, 'Window': 2 };
         this.wrappingS = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
         this.wrappingT = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
+
+        this.sphere = new MyHalfSphere(this, 80, 100, this.halfSphere);
+
 
     }
 
