@@ -1,5 +1,5 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
-import { MySphere } from "./Mysphere.js";
+import { MyHalfSphere } from "./halfsphere.js";
 
 
 
@@ -28,7 +28,7 @@ export class MyScene extends CGFscene {
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
-        this.sphere = new MySphere(this,20,20);
+        this.sphere = new MyHalfSphere(this,2,20);
 
     
 

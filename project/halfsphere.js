@@ -4,7 +4,7 @@ import { CGFobject } from '../lib/CGF.js';
  * @constructor
  * @param scene - Reference to MyScene object
  */
-export class MySphere extends CGFobject {
+export class MyHalfSphere extends CGFobject {
     constructor(scene,radius,stacks) {
         super(scene);
         this.stacks=stacks;
@@ -16,8 +16,10 @@ export class MySphere extends CGFobject {
         this.vertices = [];
         this.indices = [];
         this.normals = [];
-        const radsPerUnit = Math.PI / this.stacks;
-        let latitude = -Math.PI / 2;
+        //while in the circle theses are equal in the half sphere the long needs to increment in gretear increments than the lattitude
+        const longStep = Math.PI/ this.stacks;
+        const latStep=Math.PI/2/this.stacks;
+        let latitude = Math.PI/2;
         var sliceVertCount = this.stacks*2;
         //this goes by stack and completes the entire band
         for (var i = 0; i <= this.stacks; i++) {
@@ -27,34 +29,28 @@ export class MySphere extends CGFobject {
                     let y=this.radius*Math.sin(latitude);
                     let z = this.radius * Math.cos(latitude)*Math.sin(longitude)
                     this.vertices.push(x,y, z);
-                    
-                    
-                    let nx = Math.cos(latitude)*Math.cos(longitude);
-                    let ny = Math.sin(latitude);
-                    let nz = Math.cos(latitude)*Math.sin(longitude);
-                    this.normals.push(nx, ny, nz);
-                    
-                    longitude += radsPerUnit;
+                    this.normals.push(-x / this.radius,-y / this.radius, -z / this.radius);
+                    longitude += longStep;
 
                 }
-            latitude += radsPerUnit;    
+            latitude += latStep;    
         }
         
-         for (var i = 0; i < this.stacks; i++) {
+        for (let i = 0; i < this.stacks; i++) {
             for (let j = 0; j < sliceVertCount; j++) {
-                let first = i*(sliceVertCount+1)+ j;
-                let second= first + sliceVertCount+1;
+                let first = i * (sliceVertCount + 1) + j;
+                let second = first + sliceVertCount + 1;
                 this.indices.push(first, second, first + 1);
                 this.indices.push(second, second + 1, first + 1);
+                this.indices.push(first+1, second, first );
+                this.indices.push(first + 1, second + 1,second );
+            }
+        }
 
-            }   
-
-        }  
+        
         this.primitiveType = this.scene.gl.TRIANGLES;
         
-        console.log(`HalfSphere: stacks=${this.stacks}, slices=${sliceVertCount}`);
-        console.log(`Vertices count: ${this.vertices.length / 3}, Normals count: ${this.normals.length / 3}, Indices count: ${this.indices.length}`);
-        console.log(`Max index needed: ${Math.max(...this.indices)}`);
+      
 
         this.initGLBuffers();
         
