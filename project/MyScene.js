@@ -1,8 +1,6 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
 import { MyHalfSphere } from "./halfsphere.js";
 
-
-
 /**
  * MyScene
  * @constructor
@@ -28,9 +26,7 @@ export class MyScene extends CGFscene {
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
-        this.sphere = new MyHalfSphere(this,20,20);
-
-    
+        this.sphere = new MyHalfSphere(this, 20, 20);
 
         //-------Objects connected to MyInterface
         this.displayAxis = true;
@@ -51,8 +47,14 @@ export class MyScene extends CGFscene {
     }
 
     initLights() {
-        this.lights[0].setPosition(5, 2, 5, 1);
-        this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+        // The scene appears darker because of the ambient light, but when sky texture applied it will look better
+        // TODO: Change later according to the position of the sun
+        this.lights[0].setPosition(-0.5, 1.0, -0.3, 0.0);
+        // Don't change this because of the default material for the sky
+        this.lights[0].setAmbient(0.1, 0.1, 0.1, 1.0);
+        // Can stay like this but test new values for a better effect
+        this.lights[0].setDiffuse(1.0, 0.9, 0.8, 1.0);
+        this.lights[0].setSpecular(0.8, 0.8, 0.7, 1.0);
         this.lights[0].enable();
         this.lights[0].update();
     }
@@ -67,10 +69,6 @@ export class MyScene extends CGFscene {
         this.setSpecular(0.2, 0.4, 0.8, 1.0);
         this.setShininess(10.0);
     }
-
-  
-
-  
 
     display() {
 
@@ -95,8 +93,6 @@ export class MyScene extends CGFscene {
         // ---- BEGIN Primitive drawing section
 
         this.sphere.display();
-
-        
 
         // ---- END Primitive drawing section
     }
