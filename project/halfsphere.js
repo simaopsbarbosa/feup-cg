@@ -1,21 +1,38 @@
-import { CGFobject } from '../lib/CGF.js';
+import { CGFobject,CGFappearance,CGFtexture } from '../lib/CGF.js';
 /**
  * MyTHalfSphere
  * @constructor
  * @param scene - Reference to MyScene object
  */
 export class MyHalfSphere extends CGFobject {
-    constructor(scene,radius,stacks) {
+    constructor(scene,radius,stacks,texture=null) {
         super(scene);
         this.stacks=stacks;
         this.radius=radius;
+       
+        this.appearance = new CGFappearance(scene);
+        this.appearance.setAmbient(0.1, 0.1, 0.1, 1);
+        this.appearance.setDiffuse(0.9, 0.9, 0.9, 1);
+        this.appearance.setSpecular(0.1, 0.1, 0.1, 1);
+        this.appearance.setShininess(10.0);
+        this.texture=texture;
         this.initBuffers();
+    }
+    applyTexture() {
+        this.appearance.setTexture(this.texture);
+        this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+        this.appearance.apply();
+        if (this.texture) {
+            const filter = this.scene.textureFiltering ? this.scene.gl.NEAREST : this.scene.gl.LINEAR;
+            this.scene.gl.texParameteri(this.scene.gl.TEXTURE_2D, this.scene.gl.TEXTURE_MAG_FILTER, filter);
+        }
     }
 
     initBuffers() {
         this.vertices = [];
         this.indices = [];
         this.normals = [];
+        this.texCoords=[];
         //while in the circle theses are equal in the half sphere the long needs to increment in gretear increments than the lattitude
         const longStep = Math.PI/ this.stacks;
         const latStep=Math.PI/2/this.stacks;
@@ -28,13 +45,17 @@ export class MyHalfSphere extends CGFobject {
                     let x=this.radius*Math.cos(latitude)*Math.cos(longitude);
                     let y=this.radius*Math.sin(latitude);
                     let z = this.radius * Math.cos(latitude)*Math.sin(longitude)
+                    let v = longitude / (2 * Math.PI);
+                    let u = (Math.PI/2 - latitude) / (Math.PI/2);
                     this.vertices.push(x,y, z);
                     this.normals.push(-x,-y ,-z);
+                    this.texCoords.push(u,v);
                     longitude += longStep;
 
                 }
             latitude += latStep;    
         }
+        this.texCoords.reverse();
         
         for (let i = 0; i < this.stacks; i++) {
             for (let j = 0; j < sliceVertCount; j++) {
@@ -47,7 +68,7 @@ export class MyHalfSphere extends CGFobject {
             }
         }
 
-        
+        this.applyTexture();
         this.primitiveType = this.scene.gl.TRIANGLES;
         
       
@@ -55,6 +76,11 @@ export class MyHalfSphere extends CGFobject {
         this.initGLBuffers();
         
        
+    }
+
+    display() {
+        this.applyTexture();
+        super.display();
     }
 }
 
