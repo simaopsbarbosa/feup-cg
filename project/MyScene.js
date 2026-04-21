@@ -28,7 +28,7 @@ export class MyScene extends CGFscene {
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
-        this.sphere = new MyHalfSphere(this,2,20);
+        this.sphere = new MyHalfSphere(this,20,20);
 
     
 

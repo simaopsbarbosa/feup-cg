@@ -27,7 +27,7 @@ export class MySphere extends CGFobject {
                     let y=this.radius*Math.sin(latitude);
                     let z = this.radius * Math.cos(latitude)*Math.sin(longitude)
                     this.vertices.push(x,y, z);
-                    this.normals.push(x / this.radius, y / this.radius, z / this.radius);
+                    this.normals.push(x , y, z);
                     longitude += radsPerUnit;
 
                 }
