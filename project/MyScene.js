@@ -2,8 +2,6 @@ import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/
 import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
 
-
-
 /**
  * MyScene
  * @constructor
@@ -29,9 +27,7 @@ export class MyScene extends CGFscene {
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
-        this.plane= new MyPlane(this,20);
-
-    
+        this.plane = new MyPlane(this, 20);
 
         //-------Objects connected to MyInterface
         this.displayAxis = true;
@@ -41,7 +37,9 @@ export class MyScene extends CGFscene {
         this.wrapS = 0;
         this.wrapT = 0;
 
-        this.halfSphere = new CGFtexture(this, 'images/nature.jpg');
+        this.sunDirection = [-1.0, 0.7, 0.3];
+
+        this.halfSphere = new CGFtexture(this, 'images/sky_09_2k.png');
         this.textures = [this.texture1, this.texture2, this.texture3];
         this.texCoords = [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
         this.wrappingMethods = ['REPEAT', 'CLAMP_TO_EDGE', 'MIRRORED_REPEAT'];
@@ -50,15 +48,24 @@ export class MyScene extends CGFscene {
         this.wrappingS = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
         this.wrappingT = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
 
-        this.sphere = new MyHalfSphere(this,80,100,this.halfSphere);
+        this.sphere = new MyHalfSphere(this, 80, 100, this.halfSphere);
+        this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
 
 
     }
 
     initLights() {
-        this.lights[0].setPosition(5, 2, 5, 1);
+        // Don't change this because of the default material for the sky
+        this.lights[0].setAmbient(0.1, 0.1, 0.1, 1.0);
+        // Can stay like this but test new values for a better effect
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+        this.lights[0].setSpecular(0.8, 0.8, 0.7, 1.0);
         this.lights[0].enable();
+    }
+
+    updateLights() {
+        // Directional light
+        this.lights[0].setPosition(this.sunDirection[0], this.sunDirection[1], this.sunDirection[2], 0.0);
         this.lights[0].update();
     }
 
@@ -73,10 +80,6 @@ export class MyScene extends CGFscene {
         this.setShininess(10.0);
     }
 
-  
-
-  
-
     display() {
 
         // ---- BEGIN Background, camera and axis setup
@@ -89,18 +92,20 @@ export class MyScene extends CGFscene {
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
 
+        this.updateLights();
+
         // Draw axis
         if (this.displayAxis)
             this.axis.display();
 
         this.setDefaultAppearance();
 
-        this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-
         // ---- BEGIN Primitive drawing section
 
+        this.pushMatrix();
+        this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
         this.sphere.display();
-       
+        this.popMatrix();
 
         // ---- END Primitive drawing section
     }
