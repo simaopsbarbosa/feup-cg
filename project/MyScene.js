@@ -37,6 +37,8 @@ export class MyScene extends CGFscene {
         this.wrapS = 0;
         this.wrapT = 0;
 
+        this.sunDirection = [-1.0, 0.7, 0.3];
+
         this.halfSphere = new CGFtexture(this, 'images/sky_09_2k.png');
         this.textures = [this.texture1, this.texture2, this.texture3];
         this.texCoords = [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
@@ -53,18 +55,17 @@ export class MyScene extends CGFscene {
     }
 
     initLights() {
-        // TODO: Change later according to the position of the sun
-        this.lights[0].setPosition(-0.5, 1.0, -0.3, 0.0);
         // Don't change this because of the default material for the sky
         this.lights[0].setAmbient(0.1, 0.1, 0.1, 1.0);
         // Can stay like this but test new values for a better effect
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[0].setSpecular(0.8, 0.8, 0.7, 1.0);
         this.lights[0].enable();
-        this.lights[0].update();
     }
 
     updateLights() {
+        // Directional light
+        this.lights[0].setPosition(this.sunDirection[0], this.sunDirection[1], this.sunDirection[2], 0.0);
         this.lights[0].update();
     }
 
@@ -91,8 +92,7 @@ export class MyScene extends CGFscene {
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
 
-        // Only if needed after
-        //this.updateLights();
+        this.updateLights();
 
         // Draw axis
         if (this.displayAxis)
@@ -100,11 +100,12 @@ export class MyScene extends CGFscene {
 
         this.setDefaultAppearance();
 
-        this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-
         // ---- BEGIN Primitive drawing section
 
+        this.pushMatrix();
+        this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
         this.sphere.display();
+        this.popMatrix();
 
         // ---- END Primitive drawing section
     }
