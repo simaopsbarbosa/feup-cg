@@ -37,7 +37,7 @@ export class MyScene extends CGFscene {
         this.wrapS = 0;
         this.wrapT = 0;
 
-        this.halfSphere = new CGFtexture(this, 'images/nature.jpg');
+        this.halfSphere = new CGFtexture(this, 'images/sky_09_2k.png');
         this.textures = [this.texture1, this.texture2, this.texture3];
         this.texCoords = [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
         this.wrappingMethods = ['REPEAT', 'CLAMP_TO_EDGE', 'MIRRORED_REPEAT'];
