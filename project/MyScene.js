@@ -137,7 +137,6 @@ export class MyScene extends CGFscene {
 
         this.pushMatrix();
         this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-        this.translate(0, -3 * this.scaleFactor, 0);   // sphere lower y
 
         // Sphere
         this.sphere.display();
@@ -162,6 +161,7 @@ export class MyScene extends CGFscene {
 
         // Plane
         this.pushMatrix();
+        this.scale(30, 30, 30);
         this.rotate(-Math.PI / 2, 1, 0, 0);
         this.plane.display();
         this.popMatrix();
