@@ -31,7 +31,7 @@ export class MyScene extends CGFscene {
         // populate cloud textures array
         this.cloudTextures = [];
         for (let i = 1; i <= 20; i++) {
-            this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`)); 
+            this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`));
         }
 
         //Initialize scene objects
@@ -50,9 +50,9 @@ export class MyScene extends CGFscene {
         let numberOfClouds = 50;
         for (let i = 0; i < numberOfClouds; i++) {
             let cloud = new MyCloud(this, this.cloudTextures);
-            
+
             // randomize inital clouds
-            cloud.x = -50 + Math.random() * 100; 
+            cloud.x = -50 + Math.random() * 100;
             this.clouds.push(cloud);
         }
 
@@ -106,7 +106,7 @@ export class MyScene extends CGFscene {
         let deltaTime = t - this.lastTime;
         this.lastTime = t;
 
-        let timeScale = 0.005; 
+        let timeScale = 0.005;
 
         for (let i = 0; i < this.clouds.length; i++) {
             this.clouds[i].update(deltaTime * timeScale);
@@ -137,13 +137,16 @@ export class MyScene extends CGFscene {
 
         this.pushMatrix();
         this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+        this.translate(0, -3 * this.scaleFactor, 0);   // sphere lower y
+
+        // Sphere
         this.sphere.display();
-        
-        //clouds
+
+        // Clouds
         this.gl.disable(this.gl.CULL_FACE);
         this.gl.enable(this.gl.BLEND);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-        this.gl.depthMask(false); 
+        this.gl.depthMask(false);
 
         for (let i = 0; i < this.clouds.length; i++) {
             if (this.clouds[i].isReady()) {
@@ -155,6 +158,12 @@ export class MyScene extends CGFscene {
         this.gl.disable(this.gl.BLEND);
         this.gl.enable(this.gl.CULL_FACE);
 
+        this.popMatrix();
+
+        // Plane
+        this.pushMatrix();
+        this.rotate(-Math.PI / 2, 1, 0, 0);
+        this.plane.display();
         this.popMatrix();
 
         // ---- END Primitive drawing section
