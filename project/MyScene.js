@@ -1,6 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
 import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
+import { MyCloud } from "./MyCloud.js";
 
 /**
  * MyScene
@@ -25,6 +26,14 @@ export class MyScene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
         this.enableTextures(true);
 
+        this.setUpdatePeriod(16);
+
+        // populate cloud textures array
+        this.cloudTextures = [];
+        for (let i = 1; i <= 20; i++) {
+            this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`)); 
+        }
+
         //Initialize scene objects
         this.axis = new CGFaxis(this);
         this.plane = new MyPlane(this, 20);
@@ -37,9 +46,21 @@ export class MyScene extends CGFscene {
         this.wrapS = 0;
         this.wrapT = 0;
 
+        this.clouds = [];
+        let numberOfClouds = 50;
+        for (let i = 0; i < numberOfClouds; i++) {
+            let cloud = new MyCloud(this, this.cloudTextures);
+            
+            // randomize inital clouds
+            cloud.x = -50 + Math.random() * 100; 
+            this.clouds.push(cloud);
+        }
+
+        this.lastTime = 0;
+
         this.sunDirection = [-1.0, 0.7, 0.3];
 
-        this.halfSphere = new CGFtexture(this, 'images/sky_09_2k.png');
+        this.halfSphere = new CGFtexture(this, 'images/sky.png');
         this.textures = [this.texture1, this.texture2, this.texture3];
         this.texCoords = [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
         this.wrappingMethods = ['REPEAT', 'CLAMP_TO_EDGE', 'MIRRORED_REPEAT'];
@@ -80,6 +101,18 @@ export class MyScene extends CGFscene {
         this.setShininess(10.0);
     }
 
+    update(t) {
+        if (this.lastTime == 0) this.lastTime = t;
+        let deltaTime = t - this.lastTime;
+        this.lastTime = t;
+
+        let timeScale = 0.005; 
+
+        for (let i = 0; i < this.clouds.length; i++) {
+            this.clouds[i].update(deltaTime * timeScale);
+        }
+    }
+
     display() {
 
         // ---- BEGIN Background, camera and axis setup
@@ -105,6 +138,23 @@ export class MyScene extends CGFscene {
         this.pushMatrix();
         this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
         this.sphere.display();
+        
+        //clouds
+        this.gl.disable(this.gl.CULL_FACE);
+        this.gl.enable(this.gl.BLEND);
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+        this.gl.depthMask(false); 
+
+        for (let i = 0; i < this.clouds.length; i++) {
+            if (this.clouds[i].isReady()) {
+                this.clouds[i].display();
+            }
+        }
+
+        this.gl.depthMask(true);
+        this.gl.disable(this.gl.BLEND);
+        this.gl.enable(this.gl.CULL_FACE);
+
         this.popMatrix();
 
         // ---- END Primitive drawing section
