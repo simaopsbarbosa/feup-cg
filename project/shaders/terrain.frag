@@ -8,6 +8,7 @@ varying float vHeight;
 uniform sampler2D uSampler;
 
 void main() {
+   // Change this later when applying texture
    vec3 deepGrass = vec3(0.15, 0.35, 0.10);
    vec3 grass = vec3(0.30, 0.55, 0.20);
    vec3 rock = vec3(0.50, 0.45, 0.40);

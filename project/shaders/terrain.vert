@@ -6,13 +6,15 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
+uniform vec2 u_random1;
+uniform float u_random2;
+
 varying vec2 vTextureCoord;
 varying float vHeight;
 
 // 2D random
 float random(in vec2 st) {
-   
-   return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
+   return fract(sin(dot(st.xy, u_random1)) * u_random2);
 }
 
 float noise(in vec2 st) {

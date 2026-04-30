@@ -41,6 +41,15 @@ export class MyScene extends CGFscene {
         // Shaders
         this.terrainShader = new CGFshader(this.gl, "shaders/terrain.vert", "shaders/terrain.frag");
 
+        // Different terrain every run
+        this.terrainShader.setUniformsValues({
+            u_random1: [
+                10.0 + Math.random() * 10.0,
+                70.0 + Math.random() * 20.0
+            ],
+            u_random2: 40000.0 + Math.random() * 10000.0
+        })
+
         //-------Objects connected to MyInterface
         this.displayAxis = true;
         this.textureFiltering = false;
