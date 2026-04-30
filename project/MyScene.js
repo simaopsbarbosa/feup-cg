@@ -1,4 +1,4 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture, CGFshader } from "../lib/CGF.js";
 import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyCloud } from "./MyCloud.js";
@@ -37,6 +37,9 @@ export class MyScene extends CGFscene {
         //Initialize scene objects
         this.axis = new CGFaxis(this);
         this.plane = new MyPlane(this, 20);
+
+        // Shaders
+        this.terrainShader = new CGFshader(this.gl, "shaders/terrain.vert", "shaders/terrain.frag");
 
         //-------Objects connected to MyInterface
         this.displayAxis = true;
@@ -163,7 +166,11 @@ export class MyScene extends CGFscene {
         this.pushMatrix();
         this.scale(30, 30, 30);
         this.rotate(-Math.PI / 2, 1, 0, 0);
+
+        this.setActiveShader(this.terrainShader);
         this.plane.display();
+        this.setActiveShader(this.defaultShader);
+
         this.popMatrix();
 
         // ---- END Primitive drawing section

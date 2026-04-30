@@ -1,4 +1,4 @@
-import {CGFobject} from '../lib/CGF.js';
+import { CGFobject } from '../lib/CGF.js';
 /**
 * MyPlane
 * @constructor
@@ -42,6 +42,14 @@ export class MyPlane extends CGFobject {
             xCoord += this.patchLength;
         }
 
+        // Generate texture coordinates
+        this.texCoords = [];
+        for (var i = 0; i <= this.nDivs; i++) {
+            var s = i / this.nDivs;
+            this.texCoords.push(s, 1);
+            this.texCoords.push(s, 1 - this.patchLength);
+        }
+
         // Generating indices
         /* for nDivs = 3 output will be [0, 1, 2, 3, 4, 5, 6, 7].
         Interpreting this index list as a TRIANGLE_STRIP will draw a row of the plane. */
@@ -82,9 +90,9 @@ export class MyPlane extends CGFobject {
      * Called when user interacts with GUI to change object's complexity.
      * @param {integer} complexity - changes number of nDivs
      */
-    updateBuffers(complexity){
-        this.nDivs = 1 +  Math.round(9 * complexity); //complexity varies 0-1, so nDivs varies 1-10
-        this.patchLength = 1.0 / this. nDivs;
+    updateBuffers(complexity) {
+        this.nDivs = 1 + Math.round(9 * complexity); //complexity varies 0-1, so nDivs varies 1-10
+        this.patchLength = 1.0 / this.nDivs;
 
         // reinitialize buffers
         this.initBuffers();
