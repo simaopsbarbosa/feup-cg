@@ -2,6 +2,7 @@ import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/
 import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyCloud } from "./MyCloud.js";
+import { MyRock } from "./MyRocks.js";
 
 /**
  * MyScene
@@ -60,17 +61,10 @@ export class MyScene extends CGFscene {
 
         this.sunDirection = [-1.0, 0.7, 0.3];
 
-        this.halfSphere = new CGFtexture(this, 'images/sky.png');
-        this.textures = [this.texture1, this.texture2, this.texture3];
-        this.texCoords = [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
-        this.wrappingMethods = ['REPEAT', 'CLAMP_TO_EDGE', 'MIRRORED_REPEAT'];
-
-        this.textureIds = { 'Board': 0, 'Floor': 1, 'Window': 2 };
-        this.wrappingS = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
-        this.wrappingT = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
-
-        this.sphere = new MyHalfSphere(this, 80, 100, this.halfSphere);
+        this.sphere = new MyHalfSphere(this, 80, 100);
+        this.rock=new MyRock(this,1,10,2,5);
         this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
+       
 
 
     }
@@ -138,7 +132,7 @@ export class MyScene extends CGFscene {
         this.pushMatrix();
         this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
         this.sphere.display();
-        
+        this.rock.display();
         //clouds
         this.gl.disable(this.gl.CULL_FACE);
         this.gl.enable(this.gl.BLEND);
