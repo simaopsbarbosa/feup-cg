@@ -9,12 +9,15 @@ export class MyRock extends CGFobject {
     constructor(scene,radius,stacks,x,z,rockShader,rockTexture,rockHeightMap) {
         super(scene);
         this.shape=new MySphere(scene,radius,stacks);
-        this.gl=scene.gl;
         this.radius=radius;
         this.shader=rockShader;
         this.rockTexture = rockTexture;
         this.rockHeightMap =rockHeightMap;
-        this.shader.setUniformsValues({ uSampler:0,uSampler2: 1 });
+        this.shader.setUniformsValues({ uSampler:0,uSampler2: 1,uCameraPos:[
+            scene.camera.position[0], 
+            scene.camera.position[1], 
+            scene.camera.position[2]
+        ]});
         this.x=x;
         this.z=z;
         this.initBuffers();

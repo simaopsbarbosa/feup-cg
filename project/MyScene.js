@@ -35,7 +35,7 @@ export class MyScene extends CGFscene {
             this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`)); 
         }
         //scatter Manager
-        this.ScatterManager = new ScatterManager(this, 100);
+        this.ScatterManager = new ScatterManager(this);
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
