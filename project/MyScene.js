@@ -1,8 +1,8 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture,CGFshader } from "../lib/CGF.js";
 import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyCloud } from "./MyCloud.js";
-import { MyRock } from "./MyRocks.js";
+import { ScatterManager } from "./ScatterManager.js";
 
 /**
  * MyScene
@@ -34,6 +34,8 @@ export class MyScene extends CGFscene {
         for (let i = 1; i <= 20; i++) {
             this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`)); 
         }
+        //scatter Manager
+        this.ScatterManager = new ScatterManager(this, 100);
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
@@ -56,13 +58,14 @@ export class MyScene extends CGFscene {
             cloud.x = -50 + Math.random() * 100; 
             this.clouds.push(cloud);
         }
+       
+     
 
         this.lastTime = 0;
 
         this.sunDirection = [-1.0, 0.7, 0.3];
 
         this.sphere = new MyHalfSphere(this, 80, 100);
-        this.rock=new MyRock(this,1,10,2,5);
         this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
        
 
@@ -132,7 +135,6 @@ export class MyScene extends CGFscene {
         this.pushMatrix();
         this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
         this.sphere.display();
-        this.rock.display();
         //clouds
         this.gl.disable(this.gl.CULL_FACE);
         this.gl.enable(this.gl.BLEND);
@@ -143,7 +145,9 @@ export class MyScene extends CGFscene {
             if (this.clouds[i].isReady()) {
                 this.clouds[i].display();
             }
-        }
+        }  
+        let camera=this.camera.position;
+        this.ScatterManager.display(camera);
 
         this.gl.depthMask(true);
         this.gl.disable(this.gl.BLEND);
