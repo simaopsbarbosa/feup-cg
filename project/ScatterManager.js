@@ -16,11 +16,11 @@ export class ScatterManager {
     ];
     this.rockHeightMap = new CGFtexture(scene, "images/rock/rockmap.jpg");
 
-    const poissonSampler = new PoissonDiskSampling(80, 5);
+    const poissonSampler = new PoissonDiskSampling(80, 15);
     this.GRID_OFFSET=80;
     this.gridSize = 30;
     this.grid = new Map();
-    this.viewDistSq = 100 * 100; // View distance squared for rock rendering
+    this.viewDistSq = 100 * 100; 
 
     for (let i = 0; i < poissonSampler.points.length; i++) {
       let x = poissonSampler.points[i][0];

@@ -1,5 +1,5 @@
 export class PoissonDiskSampling{
-    constructor(radius,minDistance,_maxAttemps=15){    
+    constructor(radius,minDistance,_maxAttemps=30){    
         this.radius=radius;
         this.minDistance = minDistance;
         this.maxAttempts = _maxAttemps;
@@ -56,7 +56,6 @@ export class PoissonDiskSampling{
         
         const col = Math.floor((p[0] + this.radius) / this.cellSize);
         const row = Math.floor((p[1] + this.radius) / this.cellSize);
-
         const searchRadius = 2;
         for (let x = col - searchRadius; x <= col + searchRadius; x++) {
             for (let y = row - searchRadius; y <= row + searchRadius; y++) {
