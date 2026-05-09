@@ -15,6 +15,7 @@ export class MySphere extends CGFobject {
     initBuffers() {
         this.vertices = [];
         this.indices = [];
+        this.texCoords=[];
         this.normals = [];
         const radsPerUnit = Math.PI / this.stacks;
         let latitude = -Math.PI / 2;
@@ -28,6 +29,9 @@ export class MySphere extends CGFobject {
                     let z = this.radius * Math.cos(latitude)*Math.sin(longitude)
                     this.vertices.push(x,y, z);
                     this.normals.push(x , y, z);
+                    let s = j / sliceVertCount;
+                    let t = i / this.stacks;
+                    this.texCoords.push(s, t); 
                     longitude += radsPerUnit;
 
                 }
@@ -54,5 +58,6 @@ export class MySphere extends CGFobject {
         
        
     }
+    
 }
 

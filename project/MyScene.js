@@ -2,6 +2,7 @@ import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture, CGFshader } fr
 import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyCloud } from "./MyCloud.js";
+import { ScatterManager } from "./ScatterManager.js";
 
 /**
  * MyScene
@@ -33,6 +34,8 @@ export class MyScene extends CGFscene {
         for (let i = 1; i <= 20; i++) {
             this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`));
         }
+        //scatter Manager
+        this.ScatterManager = new ScatterManager(this);
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
@@ -67,22 +70,16 @@ export class MyScene extends CGFscene {
             cloud.x = -50 + Math.random() * 100;
             this.clouds.push(cloud);
         }
+       
+     
 
         this.lastTime = 0;
 
         this.sunDirection = [-1.0, 0.7, 0.3];
 
-        this.halfSphere = new CGFtexture(this, 'images/sky.png');
-        this.textures = [this.texture1, this.texture2, this.texture3];
-        this.texCoords = [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
-        this.wrappingMethods = ['REPEAT', 'CLAMP_TO_EDGE', 'MIRRORED_REPEAT'];
-
-        this.textureIds = { 'Board': 0, 'Floor': 1, 'Window': 2 };
-        this.wrappingS = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
-        this.wrappingT = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
-
-        this.sphere = new MyHalfSphere(this, 80, 100, this.halfSphere);
+        this.sphere = new MyHalfSphere(this, 80, 100);
         this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
+       
 
 
     }
@@ -163,7 +160,9 @@ export class MyScene extends CGFscene {
             if (this.clouds[i].isReady()) {
                 this.clouds[i].display();
             }
-        }
+        }  
+        let camera=this.camera.position;
+        this.ScatterManager.display(camera);
 
         this.gl.depthMask(true);
         this.gl.disable(this.gl.BLEND);
