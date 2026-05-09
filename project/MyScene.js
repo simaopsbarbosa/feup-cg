@@ -3,6 +3,8 @@ import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyCloud } from "./MyCloud.js";
 import { ScatterManager } from "./ScatterManager.js";
+import{MyPlayer} from "./MyPlayer.js";
+import { TerrainHeightCalc } from "./TerrainHeightCalc.js";
 
 /**
  * MyScene
@@ -49,12 +51,17 @@ export class MyScene extends CGFscene {
                 70.0 + Math.random() * 20.0]
             
         this.u_random2= 40000.0 + Math.random() * 10000.0
+        this.terrainHeight= new TerrainHeightCalc(this.u_random1, this.u_random2)
         this.terrainShader.setUniformsValues({
             u_random1: this.u_random1,
             u_random2: this.u_random2
         })
         //scatter Manager
-        this.ScatterManager = new ScatterManager(this,this.u_random1,this.u_random2);
+        this.ScatterManager = new ScatterManager(this,this.terrainHeight);
+
+        //player
+        this.player=new MyPlayer(this,this.camera,this.terrainHeight,80)
+
         //-------Objects connected to MyInterface
         this.displayAxis = true;
         this.textureFiltering = false;
@@ -67,7 +74,6 @@ export class MyScene extends CGFscene {
         let numberOfClouds = 50;
         for (let i = 0; i < numberOfClouds; i++) {
             let cloud = new MyCloud(this, this.cloudTextures);
-
             // randomize inital clouds
             cloud.x = -50 + Math.random() * 100;
             this.clouds.push(cloud);
@@ -122,6 +128,9 @@ export class MyScene extends CGFscene {
         for (let i = 0; i < this.clouds.length; i++) {
             this.clouds[i].update(deltaTime * timeScale);
         }
+        if (this.gui.activeKeys) {
+            this.player.update(this.gui.activeKeys);
+        }
     }
 
     display() {
@@ -145,15 +154,12 @@ export class MyScene extends CGFscene {
         this.setDefaultAppearance();
 
         // ---- BEGIN Primitive drawing section
-
         this.pushMatrix();
         this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-
         // Sphere
-        this.sphere.display();
-
+        //this.sphere.display();
         // Clouds
-        this.gl.disable(this.gl.CULL_FACE);
+      /*   this.gl.disable(this.gl.CULL_FACE);
         this.gl.enable(this.gl.BLEND);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
         this.gl.depthMask(false);
@@ -162,15 +168,16 @@ export class MyScene extends CGFscene {
             if (this.clouds[i].isReady()) {
                 this.clouds[i].display();
             }
-        }  
-        let camera=this.camera.position;
-        this.ScatterManager.display(camera);
+        }   */
+      
 
         this.gl.depthMask(true);
         this.gl.disable(this.gl.BLEND);
         this.gl.enable(this.gl.CULL_FACE);
         this.popMatrix();
         // Plane
+        let camera=this.camera.position;
+        this.ScatterManager.display(camera);
         this.pushMatrix();
         this.scale(80, 80, 80);
         this.rotate(-Math.PI / 2, 1, 0, 0);

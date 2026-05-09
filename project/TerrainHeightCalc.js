@@ -48,6 +48,8 @@ export class TerrainHeightCalc {
     getGroundHeight(x, z, terrainSize) {
         let u = (x / terrainSize) + 0.5;
         let v = (z / terrainSize) + 0.5;
+        u = Math.max(0, Math.min(1, u));
+        v = Math.max(0, Math.min(1, v));
         let h = this.fbm([u * 3.0, v * 3.0]);
         return h * 0.1*terrainSize; 
     }
