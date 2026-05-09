@@ -157,23 +157,7 @@ export class MyScene extends CGFscene {
         this.pushMatrix();
         this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
         // Sphere
-        //this.sphere.display();
-        // Clouds
-      /*   this.gl.disable(this.gl.CULL_FACE);
-        this.gl.enable(this.gl.BLEND);
-        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-        this.gl.depthMask(false);
-
-        for (let i = 0; i < this.clouds.length; i++) {
-            if (this.clouds[i].isReady()) {
-                this.clouds[i].display();
-            }
-        }   */
-      
-
-        this.gl.depthMask(true);
-        this.gl.disable(this.gl.BLEND);
-        this.gl.enable(this.gl.CULL_FACE);
+        this.sphere.display();
         this.popMatrix();
         // Plane
         let camera=this.camera.position;
@@ -185,7 +169,22 @@ export class MyScene extends CGFscene {
         this.plane.display();
         this.setActiveShader(this.defaultShader);
         this.popMatrix();
-        
+        // Clouds
+        this.gl.disable(this.gl.CULL_FACE);
+        this.gl.enable(this.gl.BLEND);
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+        this.gl.depthMask(false);
+
+        for (let i = 0; i < this.clouds.length; i++) {
+            if (this.clouds[i].isReady()) {
+                this.clouds[i].display();
+            }
+        }   
+      
+
+        this.gl.depthMask(true);
+        this.gl.disable(this.gl.BLEND);
+        this.gl.enable(this.gl.CULL_FACE);
 
         // ---- END Primitive drawing section
     }

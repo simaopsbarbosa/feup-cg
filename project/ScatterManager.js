@@ -29,9 +29,6 @@ export class ScatterManager {
       let z = poissonSampler.points[i][1];
       let radius = Math.random() * 0.05 + 0.05;
       let groundY = this.height.getGroundHeight(x, z, 80);
-      // Debugging: check if a rock is within the plane
-      console.log(`Rock at X: ${x}, Z: ${z} | Calculated Height: ${groundY}`);
-      
       const rock = new MyRock(
         scene,
         radius,

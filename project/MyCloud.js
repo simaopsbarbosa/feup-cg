@@ -23,7 +23,7 @@ export class MyCloud extends CGFobject {
 
     reset() {
         this.x = -50 - Math.random() * 20; 
-        this.y = 60 + Math.random() * 5;
+        this.y = 25+ Math.random() * 5;
         this.z = -30 + Math.random() * 80;
         
 
