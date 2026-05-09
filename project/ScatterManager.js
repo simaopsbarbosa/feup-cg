@@ -1,9 +1,11 @@
 import { CGFtexture, CGFshader } from "../lib/CGF.js";
 import { MyRock } from "./MyRocks.js";
 import { PoissonDiskSampling } from "./Noise/PoissonDiskSampling.js";
+import { TerrainHeightCalc } from "./TerrainHeightCalc.js";
 
 export class ScatterManager {
-  constructor(scene) {
+  constructor(scene,u_random1,u_random2) {
+    this.terrainMath = new TerrainHeightCalc(u_random1, u_random2);
     this.rockShader = new CGFshader(
       scene.gl,
       "shaders/rock.vert",
@@ -16,7 +18,7 @@ export class ScatterManager {
     ];
     this.rockHeightMap = new CGFtexture(scene, "images/rock/rockmap.jpg");
 
-    const poissonSampler = new PoissonDiskSampling(80, 15);
+    const poissonSampler = new PoissonDiskSampling(6, 3);
     this.GRID_OFFSET=80;
     this.gridSize = 30;
     this.grid = new Map();
@@ -26,10 +28,14 @@ export class ScatterManager {
       let x = poissonSampler.points[i][0];
       let z = poissonSampler.points[i][1];
       let radius = Math.random() * 0.05 + 0.05;
-
+      let groundY = this.terrainMath.getGroundHeight(x, z, 50);
+      // Debugging: check if a rock is within the plane
+      console.log(`Rock at X: ${x}, Z: ${z} | Calculated Height: ${groundY}`);
+      
       const rock = new MyRock(
         scene,
         radius,
+        groundY,
         5,
         x,
         z,

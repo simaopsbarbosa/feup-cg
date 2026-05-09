@@ -34,8 +34,7 @@ export class MyScene extends CGFscene {
         for (let i = 1; i <= 20; i++) {
             this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`));
         }
-        //scatter Manager
-        this.ScatterManager = new ScatterManager(this);
+     
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
@@ -45,14 +44,17 @@ export class MyScene extends CGFscene {
         this.terrainShader = new CGFshader(this.gl, "shaders/terrain.vert", "shaders/terrain.frag");
 
         // Different terrain every run
-        this.terrainShader.setUniformsValues({
-            u_random1: [
+        this.u_random1=[
                 10.0 + Math.random() * 10.0,
-                70.0 + Math.random() * 20.0
-            ],
-            u_random2: 40000.0 + Math.random() * 10000.0
+                70.0 + Math.random() * 20.0]
+            
+        this.u_random2= 40000.0 + Math.random() * 10000.0
+        this.terrainShader.setUniformsValues({
+            u_random1: this.u_random1,
+            u_random2: this.u_random2
         })
-
+        //scatter Manager
+        this.ScatterManager = new ScatterManager(this,this.u_random1,this.u_random2);
         //-------Objects connected to MyInterface
         this.displayAxis = true;
         this.textureFiltering = false;
@@ -77,7 +79,7 @@ export class MyScene extends CGFscene {
 
         this.sunDirection = [-1.0, 0.7, 0.3];
 
-        this.sphere = new MyHalfSphere(this, 80, 100);
+        this.sphere = new MyHalfSphere(this, 6, 100);
         this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
        
 
@@ -167,19 +169,16 @@ export class MyScene extends CGFscene {
         this.gl.depthMask(true);
         this.gl.disable(this.gl.BLEND);
         this.gl.enable(this.gl.CULL_FACE);
-
         this.popMatrix();
-
         // Plane
         this.pushMatrix();
-        this.scale(30, 30, 30);
+        this.scale(80, 80, 80);
         this.rotate(-Math.PI / 2, 1, 0, 0);
-
         this.setActiveShader(this.terrainShader);
         this.plane.display();
         this.setActiveShader(this.defaultShader);
-
         this.popMatrix();
+        
 
         // ---- END Primitive drawing section
     }

@@ -6,11 +6,12 @@ import { MySphere } from "./Mysphere.js";
  * @param scene - Reference to MyScene object
  */
 export class MyRock extends CGFobject {
-    constructor(scene,radius,stacks,x,z,rockShader,rockTexture,rockHeightMap) {
+    constructor(scene,radius,height,stacks,x,z,rockShader,rockTexture,rockHeightMap) {
         super(scene);
         this.shape=new MySphere(scene,radius,stacks);
         this.radius=radius;
         this.shader=rockShader;
+        this.height=height;
         this.rockTexture = rockTexture;
         this.rockHeightMap =rockHeightMap;
         this.shader.setUniformsValues({ uSampler:0,uSampler2: 1,uCameraPos:[
@@ -29,7 +30,7 @@ export class MyRock extends CGFobject {
         this.rockTexture.bind(0);   
         this.rockHeightMap.bind(1);
         this.scene.pushMatrix();
-            this.scene.translate(this.x,this.radius,this.z);
+            this.scene.translate(this.x,this.radius+this.height,this.z);
             this.shape.display();
          this.scene.popMatrix();
         this.scene.setActiveShader(this.scene.defaultShader);
