@@ -55,7 +55,7 @@ void main() {
    vTextureCoord = aTextureCoord;
 
    // Sample noise using UV coords
-   float h = fbm(aTextureCoord * 3.0);
+   float h = fbm(aTextureCoord * 1.5);
    vHeight = h;
 
    // Displace along normal (0.1 can be changed)
