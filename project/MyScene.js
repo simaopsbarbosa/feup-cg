@@ -3,7 +3,7 @@ import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyCloud } from "./MyCloud.js";
 import { ScatterManager } from "./ScatterManager.js";
-import{MyPlayer} from "./MyPlayer.js";
+import { MyPlayer } from "./MyPlayer.js";
 import { TerrainHeightCalc } from "./TerrainHeightCalc.js";
 
 /**
@@ -36,7 +36,7 @@ export class MyScene extends CGFscene {
         for (let i = 1; i <= 20; i++) {
             this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`));
         }
-     
+
 
         //Initialize scene objects
         this.axis = new CGFaxis(this);
@@ -46,21 +46,21 @@ export class MyScene extends CGFscene {
         this.terrainShader = new CGFshader(this.gl, "shaders/terrain.vert", "shaders/terrain.frag");
 
         // Different terrain every run
-        this.u_random1=[
-                10.0 + Math.random() * 10.0,
-                70.0 + Math.random() * 20.0]
-            
-        this.u_random2= 40000.0 + Math.random() * 10000.0
-        this.terrainHeight= new TerrainHeightCalc(this.u_random1, this.u_random2)
+        this.u_random1 = [
+            10.0 + Math.random() * 10.0,
+            70.0 + Math.random() * 20.0]
+
+        this.u_random2 = 40000.0 + Math.random() * 10000.0
+        this.terrainHeight = new TerrainHeightCalc(this.u_random1, this.u_random2)
         this.terrainShader.setUniformsValues({
             u_random1: this.u_random1,
             u_random2: this.u_random2
         })
         //scatter Manager
-        this.ScatterManager = new ScatterManager(this,this.terrainHeight);
+        this.ScatterManager = new ScatterManager(this, 4);
 
         //player
-        this.player=new MyPlayer(this,this.camera,this.terrainHeight,80)
+        this.player = new MyPlayer(this, this.camera, this.terrainHeight, 80)
 
         //-------Objects connected to MyInterface
         this.displayAxis = true;
@@ -78,16 +78,16 @@ export class MyScene extends CGFscene {
             cloud.x = -50 + Math.random() * 100;
             this.clouds.push(cloud);
         }
-       
-     
+
+
 
         this.lastTime = 0;
 
         this.sunDirection = [-1.0, 0.7, 0.3];
 
-        this.sphere = new MyHalfSphere(this, 6, 100);
+        this.sphere = new MyHalfSphere(this, 80, 100);
         this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
-       
+
 
 
     }
@@ -160,10 +160,11 @@ export class MyScene extends CGFscene {
         this.sphere.display();
         this.popMatrix();
         // Plane
-        let camera=this.camera.position;
+        let camera = this.camera.position;
         this.ScatterManager.display(camera);
         this.pushMatrix();
-        this.scale(80, 80, 80);
+        this.translate(0, 3.3, 0);
+        this.scale(20, 20, 20);
         this.rotate(-Math.PI / 2, 1, 0, 0);
         this.setActiveShader(this.terrainShader);
         this.plane.display();
@@ -179,8 +180,8 @@ export class MyScene extends CGFscene {
             if (this.clouds[i].isReady()) {
                 this.clouds[i].display();
             }
-        }   
-      
+        }
+
 
         this.gl.depthMask(true);
         this.gl.disable(this.gl.BLEND);

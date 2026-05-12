@@ -4,8 +4,7 @@ import { PoissonDiskSampling } from "./Noise/PoissonDiskSampling.js";
 
 
 export class ScatterManager {
-  constructor(scene,height) {
-    this.height = height;
+  constructor(scene, rockBaseY = -0.5) {
     this.rockShader = new CGFshader(
       scene.gl,
       "shaders/rock.vert",
@@ -28,7 +27,7 @@ export class ScatterManager {
       let x = poissonSampler.points[i][0];
       let z = poissonSampler.points[i][1];
       let radius = Math.random() * 0.05 + 0.05;
-      let groundY = this.height.getGroundHeight(x, z, 80);
+      let groundY = rockBaseY;
       const rock = new MyRock(
         scene,
         radius,
