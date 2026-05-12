@@ -1,7 +1,7 @@
-import { CGFappearance } from "../lib/CGF";
-import { MyStem } from "./MyStem";
-import { MyPetal } from "./MyPetal";
-import { MyLeaf } from "./MyLeaf";
+import { CGFappearance } from "../lib/CGF.js";
+import { MyStem } from "./MyStem.js";
+import { MyPetal } from "./MyPetal.js";
+import { MyLeaf } from "./MyLeaf.js";
 
 const STEM_HEIGHT_MIN = 0.4, STEM_HEIGHT_MAX = 1.8;
 const PETAL_COUNT_MIN = 5, PETAL_COUNT_MAX = 12;
