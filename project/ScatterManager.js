@@ -2,7 +2,6 @@ import { CGFtexture, CGFshader } from "../lib/CGF.js";
 import { MyRock } from "./MyRocks.js";
 import { PoissonDiskSampling } from "./Noise/PoissonDiskSampling.js";
 
-
 export class ScatterManager {
   constructor(scene, rockBaseY = -0.5) {
     this.rockShader = new CGFshader(
@@ -18,10 +17,10 @@ export class ScatterManager {
     this.rockHeightMap = new CGFtexture(scene, "images/rock/rockmap.jpg");
 
     const poissonSampler = new PoissonDiskSampling(6, 3);
-    this.GRID_OFFSET=80;
+    this.GRID_OFFSET = 80;
     this.gridSize = 30;
     this.grid = new Map();
-    this.viewDistSq = 100 * 100; 
+    this.viewDistSq = 100 * 100;
 
     for (let i = 0; i < poissonSampler.points.length; i++) {
       let x = poissonSampler.points[i][0];

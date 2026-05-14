@@ -1,4 +1,11 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture, CGFshader } from "../lib/CGF.js";
+import {
+  CGFscene,
+  CGFcamera,
+  CGFaxis,
+  CGFappearance,
+  CGFtexture,
+  CGFshader,
+} from "../lib/CGF.js";
 import { MyHalfSphere } from "./halfsphere.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyCloud } from "./MyCloud.js";
@@ -11,182 +18,186 @@ import { TerrainHeightCalc } from "./TerrainHeightCalc.js";
  * @constructor
  */
 export class MyScene extends CGFscene {
-    constructor() {
-        super();
+  constructor() {
+    super();
+  }
+
+  init(application) {
+    super.init(application);
+    this.initCameras();
+    this.initLights();
+
+    //Background color
+    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+    this.gl.clearDepth(100.0);
+    this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl.enable(this.gl.CULL_FACE);
+    this.gl.depthFunc(this.gl.LEQUAL);
+    this.enableTextures(true);
+
+    this.setUpdatePeriod(16);
+
+    // populate cloud textures array
+    this.cloudTextures = [];
+    for (let i = 1; i <= 20; i++) {
+      this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`));
     }
 
-    init(application) {
-        super.init(application);
-        this.initCameras();
-        this.initLights();
+    //Initialize scene objects
+    this.axis = new CGFaxis(this);
+    this.plane = new MyPlane(this, 20);
 
-        //Background color
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    // Shaders
+    this.terrainShader = new CGFshader(
+      this.gl,
+      "shaders/terrain.vert",
+      "shaders/terrain.frag",
+    );
 
-        this.gl.clearDepth(100.0);
-        this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.enable(this.gl.CULL_FACE);
-        this.gl.depthFunc(this.gl.LEQUAL);
-        this.enableTextures(true);
+    // Different terrain every run
+    this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
 
-        this.setUpdatePeriod(16);
+    this.u_random2 = 40000.0 + Math.random() * 10000.0;
+    this.terrainHeight = new TerrainHeightCalc(this.u_random1, this.u_random2);
+    this.terrainShader.setUniformsValues({
+      u_random1: this.u_random1,
+      u_random2: this.u_random2,
+    });
+    //scatter Manager
+    this.ScatterManager = new ScatterManager(this, 4);
 
-        // populate cloud textures array
-        this.cloudTextures = [];
-        for (let i = 1; i <= 20; i++) {
-            this.cloudTextures.push(new CGFtexture(this, `images/clouds/${i}.png`));
-        }
+    //player
+    this.player = new MyPlayer(this, this.camera, this.terrainHeight, 80);
 
+    //-------Objects connected to MyInterface
+    this.displayAxis = true;
+    this.textureFiltering = false;
+    this.scaleFactor = 5;
+    this.selectedTexture = -1;
+    this.wrapS = 0;
+    this.wrapT = 0;
 
-        //Initialize scene objects
-        this.axis = new CGFaxis(this);
-        this.plane = new MyPlane(this, 20);
-
-        // Shaders
-        this.terrainShader = new CGFshader(this.gl, "shaders/terrain.vert", "shaders/terrain.frag");
-
-        // Different terrain every run
-        this.u_random1 = [
-            10.0 + Math.random() * 10.0,
-            70.0 + Math.random() * 20.0]
-
-        this.u_random2 = 40000.0 + Math.random() * 10000.0
-        this.terrainHeight = new TerrainHeightCalc(this.u_random1, this.u_random2)
-        this.terrainShader.setUniformsValues({
-            u_random1: this.u_random1,
-            u_random2: this.u_random2
-        })
-        //scatter Manager
-        this.ScatterManager = new ScatterManager(this, 4);
-
-        //player
-        this.player = new MyPlayer(this, this.camera, this.terrainHeight, 80)
-
-        //-------Objects connected to MyInterface
-        this.displayAxis = true;
-        this.textureFiltering = false;
-        this.scaleFactor = 5;
-        this.selectedTexture = -1;
-        this.wrapS = 0;
-        this.wrapT = 0;
-
-        this.clouds = [];
-        let numberOfClouds = 50;
-        for (let i = 0; i < numberOfClouds; i++) {
-            let cloud = new MyCloud(this, this.cloudTextures);
-            // randomize inital clouds
-            cloud.x = -50 + Math.random() * 100;
-            this.clouds.push(cloud);
-        }
-
-
-
-        this.lastTime = 0;
-
-        this.sunDirection = [-1.0, 0.7, 0.3];
-
-        this.sphere = new MyHalfSphere(this, 80, 100);
-        this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
-
-
-
+    this.clouds = [];
+    let numberOfClouds = 50;
+    for (let i = 0; i < numberOfClouds; i++) {
+      let cloud = new MyCloud(this, this.cloudTextures);
+      // randomize inital clouds
+      cloud.x = -50 + Math.random() * 100;
+      this.clouds.push(cloud);
     }
 
-    initLights() {
-        // Don't change this because of the default material for the sky
-        this.lights[0].setAmbient(0.1, 0.1, 0.1, 1.0);
-        // Can stay like this but test new values for a better effect
-        this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
-        this.lights[0].setSpecular(0.8, 0.8, 0.7, 1.0);
-        this.lights[0].enable();
+    this.lastTime = 0;
+
+    this.sunDirection = [-1.0, 0.7, 0.3];
+
+    this.sphere = new MyHalfSphere(this, 80, 100);
+    this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
+  }
+
+  initLights() {
+    // Don't change this because of the default material for the sky
+    this.lights[0].setAmbient(0.1, 0.1, 0.1, 1.0);
+    // Can stay like this but test new values for a better effect
+    this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+    this.lights[0].setSpecular(0.8, 0.8, 0.7, 1.0);
+    this.lights[0].enable();
+  }
+
+  updateLights() {
+    // Directional light
+    this.lights[0].setPosition(
+      this.sunDirection[0],
+      this.sunDirection[1],
+      this.sunDirection[2],
+      0.0,
+    );
+    this.lights[0].update();
+  }
+
+  initCameras() {
+    this.camera = new CGFcamera(
+      0.4,
+      0.1,
+      500,
+      vec3.fromValues(15, 15, 15),
+      vec3.fromValues(0, 0, 0),
+    );
+  }
+
+  setDefaultAppearance() {
+    this.setAmbient(0.2, 0.4, 0.8, 1.0);
+    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
+    this.setSpecular(0.2, 0.4, 0.8, 1.0);
+    this.setShininess(10.0);
+  }
+
+  update(t) {
+    if (this.lastTime == 0) this.lastTime = t;
+    let deltaTime = t - this.lastTime;
+    this.lastTime = t;
+
+    let timeScale = 0.005;
+
+    for (let i = 0; i < this.clouds.length; i++) {
+      this.clouds[i].update(deltaTime * timeScale);
+    }
+    if (this.gui.activeKeys) {
+      this.player.update(this.gui.activeKeys);
+    }
+  }
+
+  display() {
+    // ---- BEGIN Background, camera and axis setup
+    // Clear image and depth buffer everytime we update the scene
+    this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    // Initialize Model-View matrix as identity (no transformation
+    this.updateProjectionMatrix();
+    this.loadIdentity();
+    // Apply transformations corresponding to the camera position relative to the origin
+    this.applyViewMatrix();
+
+    this.updateLights();
+
+    // Draw axis
+    if (this.displayAxis) this.axis.display();
+
+    this.setDefaultAppearance();
+
+    // ---- BEGIN Primitive drawing section
+    this.pushMatrix();
+    this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+    // Sphere
+    this.sphere.display();
+    this.popMatrix();
+    // Plane
+    let camera = this.camera.position;
+    this.ScatterManager.display(camera);
+    this.pushMatrix();
+    this.translate(0, 3.3, 0);
+    this.scale(20, 20, 20);
+    this.rotate(-Math.PI / 2, 1, 0, 0);
+    this.setActiveShader(this.terrainShader);
+    this.plane.display();
+    this.setActiveShader(this.defaultShader);
+    this.popMatrix();
+    // Clouds
+    this.gl.disable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.BLEND);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.depthMask(false);
+
+    for (let i = 0; i < this.clouds.length; i++) {
+      if (this.clouds[i].isReady()) {
+        this.clouds[i].display();
+      }
     }
 
-    updateLights() {
-        // Directional light
-        this.lights[0].setPosition(this.sunDirection[0], this.sunDirection[1], this.sunDirection[2], 0.0);
-        this.lights[0].update();
-    }
+    this.gl.depthMask(true);
+    this.gl.disable(this.gl.BLEND);
+    this.gl.enable(this.gl.CULL_FACE);
 
-    initCameras() {
-        this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-    }
-
-    setDefaultAppearance() {
-        this.setAmbient(0.2, 0.4, 0.8, 1.0);
-        this.setDiffuse(0.2, 0.4, 0.8, 1.0);
-        this.setSpecular(0.2, 0.4, 0.8, 1.0);
-        this.setShininess(10.0);
-    }
-
-    update(t) {
-        if (this.lastTime == 0) this.lastTime = t;
-        let deltaTime = t - this.lastTime;
-        this.lastTime = t;
-
-        let timeScale = 0.005;
-
-        for (let i = 0; i < this.clouds.length; i++) {
-            this.clouds[i].update(deltaTime * timeScale);
-        }
-        if (this.gui.activeKeys) {
-            this.player.update(this.gui.activeKeys);
-        }
-    }
-
-    display() {
-
-        // ---- BEGIN Background, camera and axis setup
-        // Clear image and depth buffer everytime we update the scene
-        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-        // Initialize Model-View matrix as identity (no transformation
-        this.updateProjectionMatrix();
-        this.loadIdentity();
-        // Apply transformations corresponding to the camera position relative to the origin
-        this.applyViewMatrix();
-
-        this.updateLights();
-
-        // Draw axis
-        if (this.displayAxis)
-            this.axis.display();
-
-        this.setDefaultAppearance();
-
-        // ---- BEGIN Primitive drawing section
-        this.pushMatrix();
-        this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-        // Sphere
-        this.sphere.display();
-        this.popMatrix();
-        // Plane
-        let camera = this.camera.position;
-        this.ScatterManager.display(camera);
-        this.pushMatrix();
-        this.translate(0, 3.3, 0);
-        this.scale(20, 20, 20);
-        this.rotate(-Math.PI / 2, 1, 0, 0);
-        this.setActiveShader(this.terrainShader);
-        this.plane.display();
-        this.setActiveShader(this.defaultShader);
-        this.popMatrix();
-        // Clouds
-        this.gl.disable(this.gl.CULL_FACE);
-        this.gl.enable(this.gl.BLEND);
-        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-        this.gl.depthMask(false);
-
-        for (let i = 0; i < this.clouds.length; i++) {
-            if (this.clouds[i].isReady()) {
-                this.clouds[i].display();
-            }
-        }
-
-
-        this.gl.depthMask(true);
-        this.gl.disable(this.gl.BLEND);
-        this.gl.enable(this.gl.CULL_FACE);
-
-        // ---- END Primitive drawing section
-    }
+    // ---- END Primitive drawing section
+  }
 }
