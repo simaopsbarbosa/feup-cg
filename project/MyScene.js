@@ -82,8 +82,6 @@ export class MyScene extends CGFscene {
     let numberOfClouds = 50;
     for (let i = 0; i < numberOfClouds; i++) {
       let cloud = new MyCloud(this, this.cloudTextures);
-      // randomize inital clouds
-      cloud.x = -50 + Math.random() * 100;
       this.clouds.push(cloud);
     }
 
@@ -169,8 +167,29 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     // Sphere
+    this.gl.disable(this.gl.CULL_FACE);
     this.sphere.display();
+    this.gl.enable(this.gl.CULL_FACE);
     this.popMatrix();
+
+    // Clouds
+    this.gl.disable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.BLEND);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.depthMask(false);
+    this.gl.disable(this.gl.DEPTH_TEST);
+
+    for (let i = 0; i < this.clouds.length; i++) {
+      if (this.clouds[i].isReady()) {
+        this.clouds[i].display();
+      }
+    }
+
+    this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl.depthMask(true);
+    this.gl.disable(this.gl.BLEND);
+    this.gl.enable(this.gl.CULL_FACE);
+
     // Plane
     let camera = this.camera.position;
     this.ScatterManager.display(camera);
@@ -181,21 +200,6 @@ export class MyScene extends CGFscene {
     this.plane.display();
     this.setActiveShader(this.defaultShader);
     this.popMatrix();
-    // Clouds
-    this.gl.disable(this.gl.CULL_FACE);
-    this.gl.enable(this.gl.BLEND);
-    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-    this.gl.depthMask(false);
-
-    for (let i = 0; i < this.clouds.length; i++) {
-      if (this.clouds[i].isReady()) {
-        this.clouds[i].display();
-      }
-    }
-
-    this.gl.depthMask(true);
-    this.gl.disable(this.gl.BLEND);
-    this.gl.enable(this.gl.CULL_FACE);
 
     // ---- END Primitive drawing section
   }
