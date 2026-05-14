@@ -1,28 +1,27 @@
-import { CGFtexture, CGFshader } from "../lib/CGF.js";
-import { MyRock } from "./MyRocks.js";
-import { PoissonDiskSampling } from "./Noise/PoissonDiskSampling.js";
-
+import { CGFtexture, CGFshader } from '../lib/CGF.js';
+import { MyRock } from './MyRocks.js';
+import { PoissonDiskSampling } from './Noise/PoissonDiskSampling.js';
 
 export class ScatterManager {
-  constructor(scene,height) {
+  constructor(scene, height) {
     this.height = height;
     this.rockShader = new CGFshader(
       scene.gl,
-      "shaders/rock.vert",
-      "shaders/rock.frag",
+      'shaders/rock.vert',
+      'shaders/rock.frag'
     );
     this.rockTextures = [
-      new CGFtexture(scene, "images/rock/rockTex.jpg"),
-      new CGFtexture(scene, "images/rock/rockTex1.jpg"),
-      new CGFtexture(scene, "images/rock/rockTex2.jpg"),
+      new CGFtexture(scene, 'images/rock/rockTex.jpg'),
+      new CGFtexture(scene, 'images/rock/rockTex1.jpg'),
+      new CGFtexture(scene, 'images/rock/rockTex2.jpg'),
     ];
-    this.rockHeightMap = new CGFtexture(scene, "images/rock/rockmap.jpg");
+    this.rockHeightMap = new CGFtexture(scene, 'images/rock/rockmap.jpg');
 
     const poissonSampler = new PoissonDiskSampling(6, 3);
-    this.GRID_OFFSET=80;
+    this.GRID_OFFSET = 80;
     this.gridSize = 30;
     this.grid = new Map();
-    this.viewDistSq = 100 * 100; 
+    this.viewDistSq = 100 * 100;
 
     for (let i = 0; i < poissonSampler.points.length; i++) {
       let x = poissonSampler.points[i][0];
@@ -38,7 +37,7 @@ export class ScatterManager {
         z,
         this.rockShader,
         this.rockTextures[i % this.rockTextures.length],
-        this.rockHeightMap,
+        this.rockHeightMap
       );
       this.addRockToGrid(rock);
     }

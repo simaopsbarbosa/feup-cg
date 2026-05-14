@@ -1,42 +1,51 @@
 import { CGFobject } from '../lib/CGF.js';
-import { MySphere } from "./Mysphere.js";
+import { MySphere } from './MySphere.js';
 /**
  * MyTHalfSphere
  * @constructor
  * @param scene - Reference to MyScene object
  */
 export class MyRock extends CGFobject {
-    constructor(scene,radius,height,stacks,x,z,rockShader,rockTexture,rockHeightMap) {
-        super(scene);
-        this.shape=new MySphere(scene,radius,stacks);
-        this.radius=radius;
-        this.shader=rockShader;
-        this.height=height;
-        this.rockTexture = rockTexture;
-        this.rockHeightMap =rockHeightMap;
-        this.shader.setUniformsValues({ uSampler:0,uSampler2: 1,uCameraPos:[
-            scene.camera.position[0], 
-            scene.camera.position[1], 
-            scene.camera.position[2]
-        ]});
-        this.x=x;
-        this.z=z;
-        this.initBuffers();
-    }
+  constructor(
+    scene,
+    radius,
+    height,
+    stacks,
+    x,
+    z,
+    rockShader,
+    rockTexture,
+    rockHeightMap
+  ) {
+    super(scene);
+    this.shape = new MySphere(scene, radius, stacks);
+    this.radius = radius;
+    this.shader = rockShader;
+    this.height = height;
+    this.rockTexture = rockTexture;
+    this.rockHeightMap = rockHeightMap;
+    this.shader.setUniformsValues({
+      uSampler: 0,
+      uSampler2: 1,
+      uCameraPos: [
+        scene.camera.position[0],
+        scene.camera.position[1],
+        scene.camera.position[2],
+      ],
+    });
+    this.x = x;
+    this.z = z;
+    this.initBuffers();
+  }
 
-    
-    display() {
-        this.scene.setActiveShader(this.shader);
-        this.rockTexture.bind(0);   
-        this.rockHeightMap.bind(1);
-        this.scene.pushMatrix();
-            this.scene.translate(this.x,this.radius+this.height,this.z);
-            this.shape.display();
-         this.scene.popMatrix();
-        this.scene.setActiveShader(this.scene.defaultShader);
-    }
-
-   
-    
+  display() {
+    this.scene.setActiveShader(this.shader);
+    this.rockTexture.bind(0);
+    this.rockHeightMap.bind(1);
+    this.scene.pushMatrix();
+    this.scene.translate(this.x, this.radius + this.height, this.z);
+    this.shape.display();
+    this.scene.popMatrix();
+    this.scene.setActiveShader(this.scene.defaultShader);
+  }
 }
-
