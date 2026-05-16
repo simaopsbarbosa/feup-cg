@@ -10,8 +10,10 @@ export class MyCloud extends CGFobject {
     this.quad = new MyQuad(scene);
 
     this.material = new CGFappearance(scene);
-    this.material.setAmbient(1, 1, 1, 1);
-    this.material.setDiffuse(1, 1, 1, 1);
+    this.material.setAmbient(0.4, 0.4, 0.4, 1);
+    this.material.setDiffuse(0.4, 0.4, 0.4, 1);
+    this.material.setSpecular(0, 0, 0, 1);
+    this.material.setEmission(0.5, 0.5, 0.5, 1);
 
     this.reset();
   }
@@ -21,11 +23,11 @@ export class MyCloud extends CGFobject {
   }
 
   reset() {
-    this.x = -50 - Math.random() * 20;
-    this.y = 25 + Math.random() * 5;
-    this.z = -30 + Math.random() * 80;
+    this.radius = 29;
+    this.theta = Math.random() * 2 * Math.PI;
+    this.phi = (Math.PI / 4) + Math.random() * (Math.PI / 4);
 
-    this.speedX = 0.05 + Math.random() * 0.1;
+    this.speedTheta = 0.001 + Math.random() * 0.002;
 
     // pick random texture
     let randomIndex = Math.floor(Math.random() * this.textures.length);
@@ -34,21 +36,17 @@ export class MyCloud extends CGFobject {
   }
 
   update(deltaTime) {
-    this.x += this.speedX * deltaTime;
-
-    if (this.x > 50) {
-      this.reset();
-    }
+    this.theta += this.speedTheta * deltaTime;
   }
 
   display() {
     this.scene.pushMatrix();
 
-    this.scene.translate(this.x, this.y, this.z);
+    this.scene.rotate(this.theta, 0, 1, 0);
+    this.scene.rotate(-this.phi, 1, 0, 0);
+    this.scene.translate(0, 0, this.radius);
 
-    this.scene.scale(10, 10, 10);
-
-    this.scene.rotate(-Math.PI / 2, 1, 0, 0);
+    this.scene.scale(5, 5, 1);
 
     this.material.apply();
     this.quad.display();
