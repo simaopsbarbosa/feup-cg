@@ -26,8 +26,8 @@ export class MyPlayer {
     if (key['KeyS']) this.move(forward, -this.speed);
     if (key['KeyA']) this.move(right, -this.speed);
     if (key['KeyD']) this.move(right, this.speed);
-    if (key['Space']) this.moveUp(this.speed);
-    if (key['ShiftLeft']) this.moveUp(-this.speed);
+    if (key['Space']) this.moveVertically(this.speed);
+    if (key['ShiftLeft']) this.moveVertically(-this.speed);
 
     this.applyGravity();
   }
@@ -39,7 +39,7 @@ export class MyPlayer {
     this.camera.target[2] += direction[2] * speed;
   }
 
-  moveUp(speed) {
+  moveVertically(speed) {
     this.camera.position[1] += speed;
     this.camera.target[1] += speed;
   }
