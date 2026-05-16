@@ -17,17 +17,17 @@ export class ScatterManager {
     ];
     this.rockHeightMap = new CGFtexture(scene, 'images/rock/rockmap.jpg');
 
-    const poissonSampler = new PoissonDiskSampling(6, 3);
-    this.GRID_OFFSET = 80;
-    this.gridSize = 30;
+    const poissonSampler = new PoissonDiskSampling(12, 6);
+    this.GRID_OFFSET = 160;
+    this.gridSize = 60;
     this.grid = new Map();
-    this.viewDistSq = 100 * 100;
+    this.viewDistSq = 200 * 200;
 
     for (let i = 0; i < poissonSampler.points.length; i++) {
       let x = poissonSampler.points[i][0];
       let z = poissonSampler.points[i][1];
       let radius = Math.random() * 0.05 + 0.05;
-      let groundY = this.height.getGroundHeight(x, z, 80);
+      let groundY = this.height.getGroundHeight(x, z, 160);
       const rock = new MyRock(
         scene,
         radius,

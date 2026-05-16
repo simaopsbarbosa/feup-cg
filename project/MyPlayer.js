@@ -5,7 +5,7 @@ export class MyPlayer {
     this.height = height;
     this.terrainSize = terrainSize;
     this.eyeHeight = 1.5;
-    this.speed = 0.5;
+    this.speed = 0.2
   }
 
   update(key) {
@@ -26,6 +26,8 @@ export class MyPlayer {
     if (key['KeyS']) this.move(forward, -this.speed);
     if (key['KeyA']) this.move(right, -this.speed);
     if (key['KeyD']) this.move(right, this.speed);
+    if (key['Space']) this.moveUp(this.speed);
+    if (key['ShiftLeft']) this.moveUp(-this.speed);
 
     this.applyGravity();
   }
@@ -37,12 +39,22 @@ export class MyPlayer {
     this.camera.target[2] += direction[2] * speed;
   }
 
+  moveUp(speed) {
+    this.camera.position[1] += speed;
+    this.camera.target[1] += speed;
+  }
+
   applyGravity() {
     let pos = this.camera.position;
 
     let groundY = this.height.getGroundHeight(pos[0], pos[2], this.terrainSize);
 
-    this.camera.position[1] = groundY + this.eyeHeight;
-    this.camera.target[1] = this.camera.position[1];
+    let minHeight = groundY + this.eyeHeight;
+    
+    if (this.camera.position[1] < minHeight) {
+      let diffY = minHeight - this.camera.position[1];
+      this.camera.position[1] += diffY;
+      this.camera.target[1] += diffY;
+    }
   }
 }

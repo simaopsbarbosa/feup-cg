@@ -1,3 +1,5 @@
+precision mediump float;
+
 attribute vec3 aVertexPosition;
 attribute vec3 aVertexNormal;
 attribute vec2 aTextureCoord;
@@ -54,12 +56,20 @@ float fbm(vec2 st) {
 void main() {
    vTextureCoord = aTextureCoord;
 
-   // Sample noise using UV coords
-   float h = fbm(aTextureCoord * 1.5);
+   // distance from center
+   float dist = distance(aTextureCoord, vec2(0.5, 0.5));
+   // flatter in the middle, mountainous at outskirts
+   float centerMask = smoothstep(0.10, 0.35, dist);
+
+   float h = fbm(aTextureCoord * 2.0);
+   // sharpen the peaks
+   h = pow(h, 1.2);
+   
+   h *= centerMask;
    vHeight = h;
 
-   // Displace along normal (0.1 can be changed)
-   vec3 displaced = aVertexPosition + aVertexNormal * h * 0.1;
+   // Displace along normal
+   vec3 displaced = aVertexPosition + aVertexNormal * h * 0.15;
 
    gl_Position = uPMatrix * uMVMatrix * vec4(displaced, 1.0);
 }
