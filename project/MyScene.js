@@ -83,6 +83,7 @@ export class MyScene extends CGFscene {
 
     //-------Objects connected to MyInterface
     this.displayAxis = true;
+    this.displaySky = true;
     this.textureFiltering = false;
     this.scaleFactor = 5;
     this.selectedTexture = -1;
@@ -175,35 +176,39 @@ export class MyScene extends CGFscene {
     this.setDefaultAppearance();
 
     // ---- BEGIN Primitive drawing section
-    this.pushMatrix();
-    this.scale(
-      this.scaleFactor * 2,
-      this.scaleFactor * 2,
-      this.scaleFactor * 2
-    );
-    // Sphere
-    this.gl.disable(this.gl.CULL_FACE);
-    this.sphere.display();
-    this.gl.enable(this.gl.CULL_FACE);
-    this.popMatrix();
-
-    // Clouds
-    this.gl.disable(this.gl.CULL_FACE);
-    this.gl.enable(this.gl.BLEND);
-    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-    this.gl.depthMask(false);
-    this.gl.disable(this.gl.DEPTH_TEST);
-
-    for (let i = 0; i < this.clouds.length; i++) {
-      if (this.clouds[i].isReady()) {
-        this.clouds[i].display();
-      }
+    if (this.displaySky) {
+      this.pushMatrix();
+      this.scale(
+        this.scaleFactor * 2,
+        this.scaleFactor * 2,
+        this.scaleFactor * 2
+      );
+      // Sphere
+      this.gl.disable(this.gl.CULL_FACE);
+      this.sphere.display();
+      this.gl.enable(this.gl.CULL_FACE);
+      this.popMatrix();
     }
 
-    this.gl.enable(this.gl.DEPTH_TEST);
-    this.gl.depthMask(true);
-    this.gl.disable(this.gl.BLEND);
-    this.gl.enable(this.gl.CULL_FACE);
+    // Clouds
+    if (this.displaySky) {
+      this.gl.disable(this.gl.CULL_FACE);
+      this.gl.enable(this.gl.BLEND);
+      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+      this.gl.depthMask(false);
+      this.gl.disable(this.gl.DEPTH_TEST);
+
+      for (let i = 0; i < this.clouds.length; i++) {
+        if (this.clouds[i].isReady()) {
+          this.clouds[i].display();
+        }
+      }
+
+      this.gl.enable(this.gl.DEPTH_TEST);
+      this.gl.depthMask(true);
+      this.gl.disable(this.gl.BLEND);
+      this.gl.enable(this.gl.CULL_FACE);
+    }
 
     // Plane
     let camera = this.camera.position;
