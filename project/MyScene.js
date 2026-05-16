@@ -176,7 +176,11 @@ export class MyScene extends CGFscene {
 
     // ---- BEGIN Primitive drawing section
     this.pushMatrix();
-    this.scale(this.scaleFactor * 2, this.scaleFactor * 2, this.scaleFactor * 2);
+    this.scale(
+      this.scaleFactor * 2,
+      this.scaleFactor * 2,
+      this.scaleFactor * 2
+    );
     // Sphere
     this.gl.disable(this.gl.CULL_FACE);
     this.sphere.display();

@@ -5,7 +5,7 @@ export class MyPlayer {
     this.height = height;
     this.terrainSize = terrainSize;
     this.eyeHeight = 1.5;
-    this.speed = 0.2
+    this.speed = 0.2;
   }
 
   update(key) {
@@ -50,7 +50,7 @@ export class MyPlayer {
     let groundY = this.height.getGroundHeight(pos[0], pos[2], this.terrainSize);
 
     let minHeight = groundY + this.eyeHeight;
-    
+
     if (this.camera.position[1] < minHeight) {
       let diffY = minHeight - this.camera.position[1];
       this.camera.position[1] += diffY;

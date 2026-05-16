@@ -48,19 +48,19 @@ export class TerrainHeightCalc {
     let v = z / terrainSize + 0.5;
     u = Math.max(0, Math.min(1, u));
     v = Math.max(0, Math.min(1, v));
-    
+
     // distance from center
     let du = u - 0.5;
     let dv = v - 0.5;
     let dist = Math.sqrt(du * du + dv * dv);
-    
+
     // make ground flatter in the middle (dist < 0.1), mountainous at outskirts (dist > 0.35)
-    let centerMask = Math.max(0, Math.min(1, (dist - 0.10) / 0.25));
+    let centerMask = Math.max(0, Math.min(1, (dist - 0.1) / 0.25));
 
     let h = this.fbm([u * 2.0, v * 2.0]);
     // sharpen the peaks
     h = Math.pow(h, 1.2);
-    
+
     h *= centerMask;
 
     return h * 0.15 * terrainSize;
