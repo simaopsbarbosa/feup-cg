@@ -1,61 +1,56 @@
-import { CGFobject, CGFappearance } from "../lib/CGF.js";
-import { MyQuad } from "./MyQuad.js";
+import { CGFobject, CGFappearance } from '../lib/CGF.js';
+import { MyQuad } from './MyQuad.js';
 
 export class MyCloud extends CGFobject {
-    constructor(scene, texturesArray) {
-        super(scene);
-        this.scene = scene;
-        this.textures = texturesArray;
-        
+  constructor(scene, texturesArray) {
+    super(scene);
+    this.scene = scene;
+    this.textures = texturesArray;
 
-        this.quad = new MyQuad(scene);
-        
-        this.material = new CGFappearance(scene);
-        this.material.setAmbient(1, 1, 1, 1);
-        this.material.setDiffuse(1, 1, 1, 1);
-        
-        this.reset();
-    }
+    this.quad = new MyQuad(scene);
 
-    isReady() {
-        return this.material.texture && this.material.texture.texID !== -1;
-    }
+    this.material = new CGFappearance(scene);
+    this.material.setAmbient(0.4, 0.4, 0.4, 1);
+    this.material.setDiffuse(0.4, 0.4, 0.4, 1);
+    this.material.setSpecular(0, 0, 0, 1);
+    this.material.setEmission(0.5, 0.5, 0.5, 1);
 
-    reset() {
-        this.x = -50 - Math.random() * 20; 
-        this.y = 25+ Math.random() * 5;
-        this.z = -30 + Math.random() * 80;
-        
+    this.reset();
+  }
 
-        this.speedX = 0.05 + Math.random() * 0.1;
-        
-        // pick random texture
-        let randomIndex = Math.floor(Math.random() * this.textures.length);
-        this.material.setTexture(this.textures[randomIndex]);
-        this.material.setTextureWrap('REPEAT', 'REPEAT');
-    }
+  isReady() {
+    return this.material.texture && this.material.texture.texID !== -1;
+  }
 
-    update(deltaTime) {
+  reset() {
+    this.radius = 29;
+    this.theta = Math.random() * 2 * Math.PI;
+    this.phi = (Math.PI / 4) + Math.random() * (Math.PI / 4);
 
-        this.x += this.speedX * deltaTime;
+    this.speedTheta = 0.001 + Math.random() * 0.002;
 
-        if (this.x > 50) {
-            this.reset();
-        }
-    }
+    // pick random texture
+    let randomIndex = Math.floor(Math.random() * this.textures.length);
+    this.material.setTexture(this.textures[randomIndex]);
+    this.material.setTextureWrap('REPEAT', 'REPEAT');
+  }
 
-    display() {
-        this.scene.pushMatrix();
-        
-        this.scene.translate(this.x, this.y, this.z);
+  update(deltaTime) {
+    this.theta += this.speedTheta * deltaTime;
+  }
 
-        this.scene.scale(10, 10, 10); 
-        
-        this.scene.rotate(-Math.PI / 2, 1, 0, 0); 
+  display() {
+    this.scene.pushMatrix();
 
-        this.material.apply();
-        this.quad.display();
-        
-        this.scene.popMatrix();
-    }
+    this.scene.rotate(this.theta, 0, 1, 0);
+    this.scene.rotate(-this.phi, 1, 0, 0);
+    this.scene.translate(0, 0, this.radius);
+
+    this.scene.scale(5, 5, 1);
+
+    this.material.apply();
+    this.quad.display();
+
+    this.scene.popMatrix();
+  }
 }
