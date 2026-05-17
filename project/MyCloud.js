@@ -25,7 +25,7 @@ export class MyCloud extends CGFobject {
   reset() {
     this.radius = 29;
     this.theta = Math.random() * 2 * Math.PI;
-    this.phi = (Math.PI / 4) + Math.random() * (Math.PI / 4);
+    this.phi = Math.PI / 4 + Math.random() * (Math.PI / 4);
 
     this.speedTheta = 0.001 + Math.random() * 0.002;
 

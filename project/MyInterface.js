@@ -19,7 +19,7 @@ export class MyInterface extends CGFinterface {
 
     //Checkbox element in GUI
     this.gui.add(this.scene, 'displayAxis').name('Display Axis');
-    this.processKeyboard = function () { };
+    this.processKeyboard = function () {};
     this.activeKeys = {};
     this.scene.gui = this;
     return true;

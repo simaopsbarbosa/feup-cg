@@ -49,7 +49,11 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 20);
 
     // Shaders
-    this.terrainShader = new CGFshader(this.gl, 'shaders/terrain.vert', 'shaders/terrain.frag');
+    this.terrainShader = new CGFshader(
+      this.gl,
+      'shaders/terrain.vert',
+      'shaders/terrain.frag'
+    );
 
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
@@ -100,12 +104,23 @@ export class MyScene extends CGFscene {
 
   updateLights() {
     // Directional light
-    this.lights[0].setPosition(this.sunDirection[0], this.sunDirection[1], this.sunDirection[2], 0.0);
+    this.lights[0].setPosition(
+      this.sunDirection[0],
+      this.sunDirection[1],
+      this.sunDirection[2],
+      0.0
+    );
     this.lights[0].update();
   }
 
   initCameras() {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(
+      0.4,
+      0.1,
+      500,
+      vec3.fromValues(15, 15, 15),
+      vec3.fromValues(0, 0, 0)
+    );
   }
 
   setDefaultAppearance() {

@@ -1,4 +1,4 @@
-import { CGFobject, CGFappearance, CGFtexture } from "../lib/CGF.js";
+import { CGFobject, CGFappearance, CGFtexture } from '../lib/CGF.js';
 /**
  * MyTHalfSphere
  * @constructor
@@ -10,7 +10,7 @@ export class MyHalfSphere extends CGFobject {
     this.stacks = stacks;
     this.radius = radius;
     this.gl = scene.gl;
-    this.texture = new CGFtexture(this, "images/sky.png");
+    this.texture = new CGFtexture(this, 'images/sky.png');
     this.appearance = new CGFappearance(scene);
     this.appearance.setAmbient(0.1, 0.1, 0.1, 1);
     this.appearance.setDiffuse(0.9, 0.9, 0.9, 1);
@@ -20,7 +20,7 @@ export class MyHalfSphere extends CGFobject {
   }
   applyTexture() {
     this.appearance.setTexture(this.texture);
-    this.appearance.setTextureWrap("REPEAT", "REPEAT");
+    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.appearance.apply();
     const filter = this.scene.textureFiltering
       ? this.scene.gl.NEAREST
@@ -28,7 +28,7 @@ export class MyHalfSphere extends CGFobject {
     this.scene.gl.texParameteri(
       this.scene.gl.TEXTURE_2D,
       this.scene.gl.TEXTURE_MAG_FILTER,
-      filter,
+      filter
     );
   }
 
