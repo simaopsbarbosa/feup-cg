@@ -1,5 +1,5 @@
-import { CGFobject } from "../lib/CGF.js";
-import { MySphere } from "./Mysphere.js";
+import { CGFobject } from '../lib/CGF.js';
+import { MySphere } from './MySphere.js';
 /**
  * MyTHalfSphere
  * @constructor
@@ -15,7 +15,7 @@ export class MyRock extends CGFobject {
     z,
     rockShader,
     rockTexture,
-    rockHeightMap,
+    rockHeightMap
   ) {
     super(scene);
     this.shape = new MySphere(scene, radius, stacks);

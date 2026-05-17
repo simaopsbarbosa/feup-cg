@@ -1,4 +1,4 @@
-import { CGFobject } from "../lib/CGF.js";
+import { CGFobject } from '../lib/CGF.js';
 /**
  * MyQuad
  * @constructor
@@ -35,12 +35,12 @@ export class MyQuad extends CGFobject {
     this.normals = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
 
     /*
-		Texture coords (s,t)
-		+----------> s
+    Texture coords (s,t)
+    +----------> s
         |
         |
-		|
-		v
+    |
+    v
         t
         */
 

@@ -59,7 +59,7 @@ void main() {
    vHeight = h;
 
    // Displace along normal (0.1 can be changed)
-   vec3 displaced = aVertexPosition + aVertexNormal * h * 0.1;
+   vec3 displaced = aVertexPosition + aVertexNormal * h * 0.05;
 
    gl_Position = uPMatrix * uMVMatrix * vec4(displaced, 1.0);
 }

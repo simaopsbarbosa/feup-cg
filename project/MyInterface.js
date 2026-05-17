@@ -1,4 +1,4 @@
-import { CGFinterface, dat } from "../lib/CGF.js";
+import { CGFinterface, dat } from '../lib/CGF.js';
 
 /**
  * MyInterface
@@ -18,8 +18,8 @@ export class MyInterface extends CGFinterface {
     this.gui = new dat.GUI();
 
     //Checkbox element in GUI
-    this.gui.add(this.scene, "displayAxis").name("Display Axis");
-    this.processKeyboard = function () {};
+    this.gui.add(this.scene, 'displayAxis').name('Display Axis');
+    this.processKeyboard = function () { };
     this.activeKeys = {};
     this.scene.gui = this;
     return true;

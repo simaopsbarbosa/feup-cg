@@ -1,20 +1,22 @@
-import { CGFtexture, CGFshader } from "../lib/CGF.js";
-import { MyRock } from "./MyRocks.js";
-import { PoissonDiskSampling } from "./Noise/PoissonDiskSampling.js";
+import { CGFtexture, CGFshader } from '../lib/CGF.js';
+import { MyRock } from './MyRocks.js';
+import { PoissonDiskSampling } from './Noise/PoissonDiskSampling.js';
 
 export class ScatterManager {
-  constructor(scene, rockBaseY = -0.5) {
+  constructor(scene, terrainHeight, terrainSize = 80) {
+    this.height = terrainHeight;
+    this.terrainSize = terrainSize;
     this.rockShader = new CGFshader(
       scene.gl,
-      "shaders/rock.vert",
-      "shaders/rock.frag",
+      'shaders/rock.vert',
+      'shaders/rock.frag'
     );
     this.rockTextures = [
-      new CGFtexture(scene, "images/rock/rockTex.jpg"),
-      new CGFtexture(scene, "images/rock/rockTex1.jpg"),
-      new CGFtexture(scene, "images/rock/rockTex2.jpg"),
+      new CGFtexture(scene, 'images/rock/rockTex.jpg'),
+      new CGFtexture(scene, 'images/rock/rockTex1.jpg'),
+      new CGFtexture(scene, 'images/rock/rockTex2.jpg'),
     ];
-    this.rockHeightMap = new CGFtexture(scene, "images/rock/rockmap.jpg");
+    this.rockHeightMap = new CGFtexture(scene, 'images/rock/rockmap.jpg');
 
     const poissonSampler = new PoissonDiskSampling(6, 3);
     this.GRID_OFFSET = 80;
@@ -26,7 +28,10 @@ export class ScatterManager {
       let x = poissonSampler.points[i][0];
       let z = poissonSampler.points[i][1];
       let radius = Math.random() * 0.05 + 0.05;
-      let groundY = rockBaseY;
+      let groundY = -0.5;
+      if (this.height && typeof this.height.getGroundHeight === 'function') {
+        groundY = this.height.getGroundHeight(x, z, this.terrainSize);
+      }
       const rock = new MyRock(
         scene,
         radius,
@@ -36,7 +41,7 @@ export class ScatterManager {
         z,
         this.rockShader,
         this.rockTextures[i % this.rockTextures.length],
-        this.rockHeightMap,
+        this.rockHeightMap
       );
       this.addRockToGrid(rock);
     }

@@ -5,13 +5,13 @@ import {
   CGFappearance,
   CGFtexture,
   CGFshader,
-} from "../lib/CGF.js";
-import { MyHalfSphere } from "./halfsphere.js";
-import { MyPlane } from "./MyPlane.js";
-import { MyCloud } from "./MyCloud.js";
-import { ScatterManager } from "./ScatterManager.js";
-import { MyPlayer } from "./MyPlayer.js";
-import { TerrainHeightCalc } from "./TerrainHeightCalc.js";
+} from '../lib/CGF.js';
+import { MyHalfSphere } from './halfSphere.js';
+import { MyPlane } from './MyPlane.js';
+import { MyCloud } from './MyCloud.js';
+import { ScatterManager } from './ScatterManager.js';
+import { MyPlayer } from './MyPlayer.js';
+import { TerrainHeightCalc } from './TerrainHeightCalc.js';
 
 /**
  * MyScene
@@ -49,11 +49,7 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 20);
 
     // Shaders
-    this.terrainShader = new CGFshader(
-      this.gl,
-      "shaders/terrain.vert",
-      "shaders/terrain.frag",
-    );
+    this.terrainShader = new CGFshader(this.gl, 'shaders/terrain.vert', 'shaders/terrain.frag');
 
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
@@ -65,7 +61,7 @@ export class MyScene extends CGFscene {
       u_random2: this.u_random2,
     });
     //scatter Manager
-    this.ScatterManager = new ScatterManager(this, 4);
+    this.ScatterManager = new ScatterManager(this, this.terrainHeight);
 
     //player
     this.player = new MyPlayer(this, this.camera, this.terrainHeight, 80);
@@ -82,8 +78,6 @@ export class MyScene extends CGFscene {
     let numberOfClouds = 50;
     for (let i = 0; i < numberOfClouds; i++) {
       let cloud = new MyCloud(this, this.cloudTextures);
-      // randomize inital clouds
-      cloud.x = -50 + Math.random() * 100;
       this.clouds.push(cloud);
     }
 
@@ -91,7 +85,7 @@ export class MyScene extends CGFscene {
 
     this.sunDirection = [-1.0, 0.7, 0.3];
 
-    this.sphere = new MyHalfSphere(this, 80, 100);
+    this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
   }
 
@@ -106,23 +100,12 @@ export class MyScene extends CGFscene {
 
   updateLights() {
     // Directional light
-    this.lights[0].setPosition(
-      this.sunDirection[0],
-      this.sunDirection[1],
-      this.sunDirection[2],
-      0.0,
-    );
+    this.lights[0].setPosition(this.sunDirection[0], this.sunDirection[1], this.sunDirection[2], 0.0);
     this.lights[0].update();
   }
 
   initCameras() {
-    this.camera = new CGFcamera(
-      0.4,
-      0.1,
-      500,
-      vec3.fromValues(15, 15, 15),
-      vec3.fromValues(0, 0, 0),
-    );
+    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
   }
 
   setDefaultAppearance() {
@@ -168,25 +151,16 @@ export class MyScene extends CGFscene {
     // ---- BEGIN Primitive drawing section
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-    // Sphere
+    this.gl.disable(this.gl.CULL_FACE);
     this.sphere.display();
-    this.popMatrix();
-    // Plane
-    let camera = this.camera.position;
-    this.ScatterManager.display(camera);
-    this.pushMatrix();
-    this.translate(0, 3.3, 0);
-    this.scale(20, 20, 20);
-    this.rotate(-Math.PI / 2, 1, 0, 0);
-    this.setActiveShader(this.terrainShader);
-    this.plane.display();
-    this.setActiveShader(this.defaultShader);
+    this.gl.enable(this.gl.CULL_FACE);
     this.popMatrix();
     // Clouds
     this.gl.disable(this.gl.CULL_FACE);
     this.gl.enable(this.gl.BLEND);
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     this.gl.depthMask(false);
+    this.gl.disable(this.gl.DEPTH_TEST);
 
     for (let i = 0; i < this.clouds.length; i++) {
       if (this.clouds[i].isReady()) {
@@ -194,10 +168,21 @@ export class MyScene extends CGFscene {
       }
     }
 
+    this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthMask(true);
     this.gl.disable(this.gl.BLEND);
     this.gl.enable(this.gl.CULL_FACE);
 
+    // Plane
+    let camera = this.camera.position;
+    this.ScatterManager.display(camera);
+    this.pushMatrix();
+    this.scale(80, 80, 80);
+    this.rotate(-Math.PI / 2, 1, 0, 0);
+    this.setActiveShader(this.terrainShader);
+    this.plane.display();
+    this.setActiveShader(this.defaultShader);
+    this.popMatrix();
     // ---- END Primitive drawing section
   }
 }

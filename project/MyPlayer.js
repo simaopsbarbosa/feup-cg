@@ -22,12 +22,12 @@ export class MyPlayer {
 
     let right = [-forward[2], 0, forward[0]];
 
-    if (key["KeyW"]) this.move(forward, this.speed);
-    if (key["KeyS"]) this.move(forward, -this.speed);
-    if (key["KeyA"]) this.move(right, -this.speed);
-    if (key["KeyD"]) this.move(right, this.speed);
+    if (key['KeyW']) this.move(forward, this.speed);
+    if (key['KeyS']) this.move(forward, -this.speed);
+    if (key['KeyA']) this.move(right, -this.speed);
+    if (key['KeyD']) this.move(right, this.speed);
 
-    //this.applyGravity();
+    this.applyGravity();
   }
 
   move(direction, speed) {
