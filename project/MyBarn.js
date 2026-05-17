@@ -1,69 +1,81 @@
-import { CGFappearance, CGFtexture } from "../lib/CGF";
-import { MyBox } from "./MyBox.js";
-import { MyRoof } from "./MyRoof.js";
+import { CGFappearance, CGFtexture } from '../lib/CGF.js';
+import { MyBox } from './MyBox.js';
+import { MyRoof } from './MyRoof.js';
 
 export class MyBarn {
-   constructor(scene) {
-      this.scene = scene;
+  constructor(scene) {
+    this.scene = scene;
 
-      this.box = new MyBox(scene, 1.0, 0.7, 1.4);
-      this.roof = new MyRoof(scene, 1.0, 0.4, 1.4);
+    this.box = new MyBox(scene, 1.0, 0.7, 1.4);
+    this.roof = new MyRoof(scene, 1.0, 0.4, 1.4);
 
-      this.initAppearances();
-   }
+    this.initAppearances();
+  }
 
-   initAppearances() {
-      let scene = this.scene;
+  initAppearances() {
+    let scene = this.scene;
 
-      // Wall appearance
-      this.wallApp = new CGFappearance(scene);
-      this.wallApp.setAmbient(0.3, 0.05, 0.05, 1);
-      this.wallApp.setDiffuse(0.7, 0.1, 0.1, 1);
-      this.wallApp.setSpecular(0.05, 0.0, 0.0, 1);
-      this.wallApp.setShininess(5);
-      // TODO: change to a texture
+    this.wallTex = new CGFtexture(scene, 'images/barn/wood_plank.jpeg');
+    this.frontTex = new CGFtexture(scene, 'images/barn/front_door.jpeg');
+    this.roofTex = new CGFtexture(scene, 'images/barn/wood_roof.jpeg');
 
-      // Front wall (with door)
-      this.frontApp = new CGFappearance(scene);
-      this.frontApp.setAmbient(0.3, 0.05, 0.05, 1);
-      this.frontApp.setDiffuse(0.7, 0.1, 0.1, 1);
-      this.frontApp.setSpecular(0.05, 0.0, 0.0, 1);
-      this.frontApp.setShininess(5);
-      // TODO: change to a texture with a door
+    // A stronger ambient term keeps the side away from the sun readable.
+    const ambientBoost = [0.45, 0.45, 0.45, 1.0];
+    const diffuseBoost = [0.9, 0.9, 0.9, 1.0];
+    const specularBoost = [0.08, 0.08, 0.08, 1.0];
 
-      // Roof appearance
-      this.roofApp = new CGFappearance(scene);
-      this.roofApp.setAmbient(0.15, 0.15, 0.15, 1);
-      this.roofApp.setDiffuse(0.35, 0.35, 0.35, 1);
-      this.roofApp.setSpecular(0.1, 0.1, 0.1, 1);
-      this.roofApp.setShininess(20);
-      // TODO: change to a texture
-   }
+    // Wall appearance
+    this.wallApp = new CGFappearance(scene);
+    this.wallApp.setAmbient(...ambientBoost);
+    this.wallApp.setDiffuse(...diffuseBoost);
+    this.wallApp.setSpecular(...specularBoost);
+    this.wallApp.setShininess(8);
+    this.wallApp.setTexture(this.wallTex);
+    this.wallApp.setTextureWrap('REPEAT', 'REPEAT');
 
-   display() {
-      let scene = this.scene;
+    // Front wall (with door)
+    this.frontApp = new CGFappearance(scene);
+    this.frontApp.setAmbient(...ambientBoost);
+    this.frontApp.setDiffuse(...diffuseBoost);
+    this.frontApp.setSpecular(...specularBoost);
+    this.frontApp.setShininess(8);
+    this.frontApp.setTexture(this.frontTex);
+    this.frontApp.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 
-      // Box walls
-      this.wallApp.apply();
-      this.box.displaySides();
-      this.box.displayBack();
+    // Roof appearance
+    this.roofApp = new CGFappearance(scene);
+    this.roofApp.setAmbient(0.35, 0.35, 0.35, 1.0);
+    this.roofApp.setDiffuse(0.8, 0.8, 0.8, 1.0);
+    this.roofApp.setSpecular(0.06, 0.06, 0.06, 1.0);
+    this.roofApp.setShininess(12);
+    this.roofApp.setTexture(this.roofTex);
+    this.roofApp.setTextureWrap('REPEAT', 'REPEAT');
+  }
 
-      // Front wall
-      this.frontApp.apply();
-      this.box.displayFront();
+  display() {
+    let scene = this.scene;
 
-      // Roof
-      scene.pushMatrix();
-      scene.translate(0, 0.7, 0);
+    // Box walls
+    this.wallApp.apply();
+    this.box.displaySides();
+    this.box.displayBack();
 
-      // Roof surfaces
-      this.roofApp.apply();
-      this.roof.displayRoofSurfaces();
+    // Front wall
+    this.frontApp.apply();
+    this.box.displayFront();
 
-      // Roof front and back
-      this.wallApp.apply();
-      this.roof.displayFrontBack();
+    // Roof
+    scene.pushMatrix();
+    scene.translate(0, 0.35, 0);
 
-      scene.popMatrix();
-   }
+    // Roof surfaces
+    this.roofApp.apply();
+    this.roof.displayRoofSurfaces();
+
+    // Roof front and back
+    this.wallApp.apply();
+    this.roof.displayFrontBack();
+
+    scene.popMatrix();
+  }
 }
