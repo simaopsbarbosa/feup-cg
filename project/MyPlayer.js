@@ -29,7 +29,7 @@ export class MyPlayer {
     if (key['Space']) this.moveVertically(this.speed);
     if (key['ShiftLeft']) this.moveVertically(-this.speed);
 
-    this.applyGravity();
+    //this.applyGravity();
   }
 
   move(direction, speed) {
