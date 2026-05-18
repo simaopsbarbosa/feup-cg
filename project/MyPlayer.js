@@ -27,7 +27,7 @@ export class MyPlayer {
     if (key['KeyA']) this.move(right, -this.speed);
     if (key['KeyD']) this.move(right, this.speed);
 
-    this.applyGravity();
+    //this.applyGravity();
   }
 
   move(direction, speed) {
