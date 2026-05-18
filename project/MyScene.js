@@ -54,6 +54,11 @@ export class MyScene extends CGFscene {
       'shaders/terrain.vert',
       'shaders/terrain.frag'
     );
+    this.heightmapBakeQuad = new MyPlane(this, 1);
+    // Different terrain every run
+    this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
+    this.u_random2 = 40000.0 + Math.random() * 20000.0;
+ 
 
     // Terrain textures
     this.grassTexture = new CGFtexture(this, 'images/ground/grass.jpg');
@@ -62,11 +67,7 @@ export class MyScene extends CGFscene {
     this.dirtTexture = new CGFtexture(this, 'images/ground/dirt.jpg');
     this.generatedHeightmap = this.generateHeightmapTexture(1024);
    
-    // Different terrain every run
-    this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
 
-    this.u_random2 = 40000.0 + Math.random() * 20000.0;
-    this.terrainHeight = new TerrainHeightCalc(this.u_random1, this.u_random2);
 
     this.terrainShader.setUniformsValues({
       uSamplerGrass: 0,
@@ -75,12 +76,10 @@ export class MyScene extends CGFscene {
       uSamplerDirt: 3,
       u_random1: this.u_random1,
       u_random2: this.u_random2,
-    });
-    this.terrainMaterial=new CGFappearance(this);
-    this.terrainMaterial.setTexture(this.generatedHeightmap);
+    });  
 
     //scatter Manager
-    this.ScatterManager = new ScatterManager(this);
+    this.ScatterManager = new ScatterManager(this,this.generatedHeightmap);
 
     //player
     this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
@@ -130,14 +129,15 @@ export class MyScene extends CGFscene {
 
     
     const genShader = new CGFshader(gl, 'shaders/heightmap.vert', 'shaders/heightmap.frag');
+
     this.setActiveShader(genShader);
     genShader.setUniformsValues({
         u_random1: this.u_random1,
         u_random2: this.u_random2
     });
-
     gl.viewport(0, 0, resolution, resolution);
-
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    this.heightmapBakeQuad.display();
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     this.setActiveShader(this.defaultShader);
@@ -258,12 +258,12 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.scale(160, 160, 160);
     this.rotate(-Math.PI / 2, 1, 0, 0);
-    this.terrainMaterial.apply();
     this.setActiveShader(this.terrainShader);
     this.grassTexture.bind(0);
     this.rockTexture.bind(1);
     this.pathTexture.bind(2);
     this.dirtTexture.bind(3);
+    this.generatedHeightmap.bind(4);
     this.plane.display();
     this.setActiveShader(this.defaultShader);
     this.popMatrix();

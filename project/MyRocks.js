@@ -14,7 +14,8 @@ export class MyRock extends CGFobject {
     z,
     rockShader,
     rockTexture,
-    rockHeightMap
+    rockHeightMap,
+    terrainHeightMap
   ) {
     super(scene);
     this.shape = new MySphere(scene, radius, stacks);
@@ -22,24 +23,29 @@ export class MyRock extends CGFobject {
     this.shader = rockShader;
     this.rockTexture = rockTexture;
     this.rockHeightMap = rockHeightMap;
-    this.shader.setUniformsValues({
-      uSampler: 0,
-      uSampler2: 1,
-      uCameraPos: [
-        scene.camera.position[0],
-        scene.camera.position[1],
-        scene.camera.position[2],
-      ],
-    });
     this.x = x;
     this.z = z;
     this.initBuffers();
+    this.terrainHeightMap=terrainHeightMap;
   }
 
   display() {
     this.scene.setActiveShader(this.shader);
     this.rockTexture.bind(0);
     this.rockHeightMap.bind(1);
+    this.terrainHeightMap.bind(2);
+    this.shader.setUniformsValues({
+      uSampler: 0,
+      uSamplerRockHeight: 1,
+      uSamplerTerrainHeight: 2,
+      u_rockRadius: this.radius,
+      u_rockWorldPos: [this.x, 0.0, this.z],
+      uCameraPos: [
+        this.scene.camera.position[0],
+        this.scene.camera.position[1],
+        this.scene.camera.position[2],
+      ],
+    });
     this.scene.pushMatrix();
     this.scene.translate(this.x, this.radius, this.z);
     this.shape.display();
