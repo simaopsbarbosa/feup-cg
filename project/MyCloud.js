@@ -23,7 +23,7 @@ export class MyCloud extends CGFobject {
   }
 
   reset() {
-    this.radius = 29;
+    this.radius = 59;
     this.theta = Math.random() * 2 * Math.PI;
     this.phi = Math.PI / 4 + Math.random() * (Math.PI / 4);
 
@@ -46,7 +46,7 @@ export class MyCloud extends CGFobject {
     this.scene.rotate(-this.phi, 1, 0, 0);
     this.scene.translate(0, 0, this.radius);
 
-    this.scene.scale(5, 5, 1);
+    this.scene.scale(10, 10, 1);
 
     this.material.apply();
     this.quad.display();
