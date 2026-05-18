@@ -34,33 +34,7 @@ float fbm(vec2 st) {
 
 void main() {
   
-    float h = fbm(vTextureCoord * 1.0);
-  
+   float h = fbm(vTextureCoord * 1.0);
+   
     gl_FragColor = vec4(vec3(h), 1.0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

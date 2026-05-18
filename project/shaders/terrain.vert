@@ -18,8 +18,8 @@ void main() {
     float h = texture2D(uSamplerHeightmap, aTextureCoord).r;
     vHeight = h;
 
-   
-    vec3 displaced = aVertexPosition + aVertexNormal * h * 0.05;
+    //if you chnage the terrain vert displacment change it in the rock vert  please
+    vec3 displaced = aVertexPosition + aVertexNormal * h * 0.02;
 
     gl_Position = uPMatrix * uMVMatrix * vec4(displaced, 1.0);
 }
