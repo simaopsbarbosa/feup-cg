@@ -1,9 +1,7 @@
 import { CGFobject, CGFappearance } from '../lib/CGF.js';
-import { MyCylinder } from './MyCylinder.js'; 
-import { MySphere } from './MySphere.js';
 
 export class Tree extends CGFobject {
-  constructor(scene, maxDepth, baseHeight, baseRadius, x, z, trunkTexture, leafTexture,terrainHeightMap,treeShader) {
+  constructor(scene, maxDepth, baseHeight, baseRadius, x, z, trunkTexture, leafMaterial,terrainHeightMap,treeShader,trunkprimitive,leafprimitive) {
     super(scene);
     this.scene = scene;
     this.x = x;
@@ -15,25 +13,13 @@ export class Tree extends CGFobject {
     this.treeShader = treeShader;
     this.terrainHeightMap = terrainHeightMap;
     
-    this.trunkPrimitive = new MyCylinder(this.scene, 12, 1); 
-    this.leafPrimitive = new MySphere(this.scene,1,8); 
+    this.trunkPrimitive = trunkprimitive; 
+    this.leafPrimitive = leafprimitive; 
+    this.trunkTexture=trunkTexture;
+    this.leafMaterial=leafMaterial;
     
-  
-    this.woodMaterial = new CGFappearance(this.scene);
-    this.woodMaterial.setAmbient(0.3, 0.2, 0.1, 1.0);
-    this.woodMaterial.setDiffuse(0.6, 0.4, 0.2, 1.0);
-    this.woodMaterial.setSpecular(0.1, 0.1, 0.1, 1.0);
-    this.woodMaterial.setShininess(5.0);
-    this.woodMaterial.setTexture(trunkTexture);
-    
-    this.leafMaterial = new CGFappearance(this.scene);
-    this.leafMaterial.setAmbient(0.3, 0.4, 0.3, 1.0);
-    this.leafMaterial.setDiffuse(0.5, 0.8, 0.5, 1.0);
-    this.leafMaterial.setSpecular(0.1, 0.1, 0.1, 1.0);
-    this.leafMaterial.setShininess(2.0);
-    this.leafMaterial.setTexture(leafTexture);
+   
 
-    
   }
 
   
@@ -41,8 +27,6 @@ export class Tree extends CGFobject {
 
   display() {
     this.scene.setActiveShader(this.treeShader);
-
-    
     this.terrainHeightMap.bind(1); 
     this.treeShader.setUniformsValues({
       uTerrainHeightMap: 1,
@@ -53,7 +37,7 @@ export class Tree extends CGFobject {
     this.scene.pushMatrix();
       this.scene.translate(this.x, 0, this.z);
       this.scene.pushMatrix();
-        this.woodMaterial.apply();
+        this.trunkTexture.bind();
         this.scene.rotate(-Math.PI / 2, 1, 0, 0);
         this.scene.scale(this.baseRadius, this.baseRadius, this.baseHeight);
         this.trunkPrimitive.display();

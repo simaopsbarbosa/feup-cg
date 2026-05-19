@@ -6,26 +6,29 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
-uniform sampler2D uTerrainHeightMap;
-uniform float uTerrainSize;   
-uniform float uTerrainScale; 
 
+uniform sampler2D uTerrainHeightMap; // Replaces uSampler2
 
-uniform vec2 uTreePos; 
+uniform float uTerrainSize;          
+uniform float uTerrainScale;        
+uniform vec2 uTreePos;               
 
 varying vec2 vTextureCoord;
 
 void main() {
+   
     vTextureCoord = aTextureCoord;
-
-    vec2 terrainUV = (uTreePos + vec2(uTerrainSize / 2.0)) / uTerrainSize;
-
     
-    vec4 heightData = texture2D(uTerrainHeightMap, terrainUV);
-    float groundHeight = heightData.r * uTerrainScale;
+    
+    vec2 terrainUV = (uTreePos / uTerrainSize) + vec2(0.5);
 
+    float rawHeightValue = texture2D(uTerrainHeightMap, terrainUV).r; 
+    
+    
+    float worldGroundHeight = rawHeightValue * uTerrainScale; 
+    
     vec3 modifiedPosition = aVertexPosition;
-    modifiedPosition.y += groundHeight;
+    modifiedPosition.y += worldGroundHeight;
 
     gl_Position = uPMatrix * uMVMatrix * vec4(modifiedPosition, 1.0);
 }

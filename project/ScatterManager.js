@@ -1,7 +1,10 @@
-import { CGFtexture, CGFshader } from '../lib/CGF.js';
+import { CGFtexture, CGFshader,CGFappearance } from '../lib/CGF.js';
 import { MyRock } from './MyRocks.js';
 import { PoissonDiskSampling } from './Noise/PoissonDiskSampling.js';
 import { Tree } from './Tree.js';
+import { MyCylinder } from './MyCylinder.js'; 
+import { MySphere } from './MySphere.js';
+
 
 export class ScatterManager {
   constructor(scene,terrainHeightMap,terrainSize = 80) {
@@ -27,7 +30,16 @@ export class ScatterManager {
       new CGFtexture(scene, 'images/tree/trunk1.jpg'),
       new CGFtexture(scene, 'images/tree/trunk2.jpg')
     ];
+    this.trunkPrimitive=new MyCylinder(scene, 12, 1);
+    this.leafPrimitive= new MySphere(scene,1,8);
     this.leafTex=new CGFtexture(scene, 'images/tree/cluster.jpg');
+    this.leafMaterial = new CGFappearance(scene);
+    this.leafMaterial.setAmbient(0.3, 0.4, 0.3, 1.0);
+    this.leafMaterial.setDiffuse(0.5, 0.8, 0.5, 1.0);
+    this.leafMaterial.setSpecular(0.1, 0.1, 0.1, 1.0);
+    this.leafMaterial.setShininess(2.0);
+    this.leafMaterial.setTexture(this.leafTex);
+
     const poissonSampler = new PoissonDiskSampling(40, 6);
     this.GRID_OFFSET = 160;
     this.gridSize = 60;
@@ -49,9 +61,11 @@ export class ScatterManager {
           x, 
           z, 
           this.treeBarkTexture[i % this.treeBarkTexture.length],
-          this.leafTex,
+          this.leafMaterial,
           this.terrainHeightMap,
-          this.treeShader
+          this.treeShader,
+          this.trunkPrimitive,
+          this.leafPrimitive=this.leafPrimitive
         );
         
         this.addElementToGrid(tree);
@@ -90,7 +104,6 @@ export class ScatterManager {
   display(camera) {
     const camX = camera[0];
     const camZ = camera[2];
-
     const gridX = Math.floor((camX + this.GRID_OFFSET) / this.gridSize);
     const gridZ = Math.floor((camZ + this.GRID_OFFSET) / this.gridSize);
     const viewDistSq = this.viewDistSq;
