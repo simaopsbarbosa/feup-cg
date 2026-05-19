@@ -1,4 +1,4 @@
-import { CGFappearance, CGFtexture } from '../lib/CGF.js';
+import { CGFappearance, CGFtexture } from '../../lib/CGF.js';
 import { MyBox } from './MyBox.js';
 import { MyRoof } from './MyRoof.js';
 
@@ -6,7 +6,7 @@ export class MyBarn {
   constructor(scene) {
     this.scene = scene;
 
-    this.box = new MyBox(scene, 1.0, 0.7, 1.4);
+    this.box = new MyBox(scene, 1.0, 0.9, 1.4);
     this.roof = new MyRoof(scene, 1.0, 0.4, 1.4);
 
     this.initAppearances();
@@ -44,9 +44,9 @@ export class MyBarn {
 
     // Roof appearance
     this.roofApp = new CGFappearance(scene);
-    this.roofApp.setAmbient(0.35, 0.35, 0.35, 1.0);
-    this.roofApp.setDiffuse(0.8, 0.8, 0.8, 1.0);
-    this.roofApp.setSpecular(0.06, 0.06, 0.06, 1.0);
+    this.roofApp.setAmbient(...ambientBoost);
+    this.roofApp.setDiffuse(...diffuseBoost);
+    this.roofApp.setSpecular(...specularBoost);
     this.roofApp.setShininess(12);
     this.roofApp.setTexture(this.roofTex);
     this.roofApp.setTextureWrap('REPEAT', 'REPEAT');
@@ -66,7 +66,7 @@ export class MyBarn {
 
     // Roof
     scene.pushMatrix();
-    scene.translate(0, 0.35, 0);
+    scene.translate(0, 0.45, 0);
 
     // Roof surfaces
     this.roofApp.apply();

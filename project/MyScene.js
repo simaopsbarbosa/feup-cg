@@ -11,7 +11,7 @@ import { MyPlane } from './MyPlane.js';
 import { MyCloud } from './MyCloud.js';
 import { ScatterManager } from './ScatterManager.js';
 import { MyPlayer } from './MyPlayer.js';
-
+import { MyBarn } from './barn/MyBarn.js';
 
 /**
  * MyScene
@@ -47,6 +47,7 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
+    this.barn = new MyBarn(this);
 
     // Shaders
     this.terrainShader = new CGFshader(
@@ -58,7 +59,6 @@ export class MyScene extends CGFscene {
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
- 
 
     // Terrain textures
     this.grassTexture = new CGFtexture(this, 'images/ground/grass.jpg');
@@ -66,8 +66,6 @@ export class MyScene extends CGFscene {
     this.pathTexture = new CGFtexture(this, 'images/ground/path.jpg');
     this.dirtTexture = new CGFtexture(this, 'images/ground/dirt.jpg');
     this.generatedHeightmap = this.generateHeightmapTexture(1024);
-   
-
 
     this.terrainShader.setUniformsValues({
       uSamplerGrass: 0,
@@ -76,10 +74,10 @@ export class MyScene extends CGFscene {
       uSamplerDirt: 3,
       u_random1: this.u_random1,
       u_random2: this.u_random2,
-    });  
+    });
 
     //scatter Manager
-    this.ScatterManager = new ScatterManager(this,this.generatedHeightmap);
+    this.ScatterManager = new ScatterManager(this, this.generatedHeightmap);
 
     //player
     this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
@@ -110,30 +108,46 @@ export class MyScene extends CGFscene {
   generateHeightmapTexture(resolution = 512) {
     const gl = this.gl;
 
-
     const fb = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 
-  
     const heightmapTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, heightmapTexture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, resolution, resolution, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-    
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      resolution,
+      resolution,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      null
+    );
+
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-    
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, heightmapTexture, 0);
+    gl.framebufferTexture2D(
+      gl.FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      gl.TEXTURE_2D,
+      heightmapTexture,
+      0
+    );
 
-    
-    const genShader = new CGFshader(gl, 'shaders/heightmap.vert', 'shaders/heightmap.frag');
+    const genShader = new CGFshader(
+      gl,
+      'shaders/heightmap.vert',
+      'shaders/heightmap.frag'
+    );
 
     this.setActiveShader(genShader);
     genShader.setUniformsValues({
-        u_random1: this.u_random1,
-        u_random2: this.u_random2
+      u_random1: this.u_random1,
+      u_random2: this.u_random2,
     });
     gl.viewport(0, 0, resolution, resolution);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -142,7 +156,9 @@ export class MyScene extends CGFscene {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     this.setActiveShader(this.defaultShader);
 
-    const cgfTex = new CGFtexture(this);
+    const cgfTex = Object.create(CGFtexture.prototype);
+    cgfTex.scene = this;
+    cgfTex.gl = gl;
     cgfTex.texID = heightmapTexture;
     return cgfTex;
   }
@@ -267,6 +283,15 @@ export class MyScene extends CGFscene {
     this.plane.display();
     this.setActiveShader(this.defaultShader);
     this.popMatrix();
+
+    // Barn
+    this.pushMatrix();
+    this.rotate(Math.PI / 2, 0, -1, 0);
+    this.scale(7, 7, 7);
+    this.translate(0, 0.17, -0.3);
+    this.barn.display();
+    this.popMatrix();
+
     // ---- END Primitive drawing section
   }
 }
