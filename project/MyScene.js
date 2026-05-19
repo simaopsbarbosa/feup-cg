@@ -11,7 +11,7 @@ import { MyPlane } from './MyPlane.js';
 import { MyCloud } from './MyCloud.js';
 import { ScatterManager } from './ScatterManager.js';
 import { MyPlayer } from './MyPlayer.js';
-import { TerrainHeightCalc } from './TerrainHeightCalc.js';
+
 
 /**
  * MyScene
@@ -46,7 +46,7 @@ export class MyScene extends CGFscene {
 
     //Initialize scene objects
     this.axis = new CGFaxis(this);
-    this.plane = new MyPlane(this, 20);
+    this.plane = new MyPlane(this, 80);
 
     // Shaders
     this.terrainShader = new CGFshader(
@@ -54,24 +54,39 @@ export class MyScene extends CGFscene {
       'shaders/terrain.vert',
       'shaders/terrain.frag'
     );
-
+    this.heightmapBakeQuad = new MyPlane(this, 1);
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
+    this.u_random2 = 40000.0 + Math.random() * 20000.0;
+ 
 
-    this.u_random2 = 40000.0 + Math.random() * 10000.0;
-    this.terrainHeight = new TerrainHeightCalc(this.u_random1, this.u_random2);
+    // Terrain textures
+    this.grassTexture = new CGFtexture(this, 'images/ground/grass.jpg');
+    this.rockTexture = new CGFtexture(this, 'images/ground/rock.jpg');
+    this.pathTexture = new CGFtexture(this, 'images/ground/path.jpg');
+    this.dirtTexture = new CGFtexture(this, 'images/ground/dirt.jpg');
+    this.generatedHeightmap = this.generateHeightmapTexture(1024);
+   
+
+
     this.terrainShader.setUniformsValues({
+      uSamplerGrass: 0,
+      uSamplerRock: 1,
+      uSamplerPath: 2,
+      uSamplerDirt: 3,
       u_random1: this.u_random1,
       u_random2: this.u_random2,
-    });
+    });  
+
     //scatter Manager
-    this.ScatterManager = new ScatterManager(this, this.terrainHeight);
+    this.ScatterManager = new ScatterManager(this,this.generatedHeightmap);
 
     //player
-    this.player = new MyPlayer(this, this.camera, this.terrainHeight, 80);
+    this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
 
     //-------Objects connected to MyInterface
     this.displayAxis = true;
+    this.displaySky = true;
     this.textureFiltering = false;
     this.scaleFactor = 5;
     this.selectedTexture = -1;
@@ -91,6 +106,45 @@ export class MyScene extends CGFscene {
 
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
+  }
+  generateHeightmapTexture(resolution = 512) {
+    const gl = this.gl;
+
+
+    const fb = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+
+  
+    const heightmapTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, heightmapTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, resolution, resolution, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, heightmapTexture, 0);
+
+    
+    const genShader = new CGFshader(gl, 'shaders/heightmap.vert', 'shaders/heightmap.frag');
+
+    this.setActiveShader(genShader);
+    genShader.setUniformsValues({
+        u_random1: this.u_random1,
+        u_random2: this.u_random2
+    });
+    gl.viewport(0, 0, resolution, resolution);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    this.heightmapBakeQuad.display();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    this.setActiveShader(this.defaultShader);
+
+    const cgfTex = new CGFtexture(this);
+    cgfTex.texID = heightmapTexture;
+    return cgfTex;
   }
 
   initLights() {
@@ -115,7 +169,7 @@ export class MyScene extends CGFscene {
 
   initCameras() {
     this.camera = new CGFcamera(
-      0.4,
+      0.7,
       0.1,
       500,
       vec3.fromValues(15, 15, 15),
@@ -164,43 +218,55 @@ export class MyScene extends CGFscene {
     this.setDefaultAppearance();
 
     // ---- BEGIN Primitive drawing section
-    this.pushMatrix();
-    this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-    // Sphere
-    this.gl.disable(this.gl.CULL_FACE);
-    this.sphere.display();
-    this.gl.enable(this.gl.CULL_FACE);
-    this.popMatrix();
-
-    // Clouds
-    this.gl.disable(this.gl.CULL_FACE);
-    this.gl.enable(this.gl.BLEND);
-    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-    this.gl.depthMask(false);
-    this.gl.disable(this.gl.DEPTH_TEST);
-
-    for (let i = 0; i < this.clouds.length; i++) {
-      if (this.clouds[i].isReady()) {
-        this.clouds[i].display();
-      }
+    if (this.displaySky) {
+      this.pushMatrix();
+      this.scale(
+        this.scaleFactor * 2,
+        this.scaleFactor * 2,
+        this.scaleFactor * 2
+      );
+      // Sphere
+      this.gl.disable(this.gl.CULL_FACE);
+      this.sphere.display();
+      this.gl.enable(this.gl.CULL_FACE);
+      this.popMatrix();
     }
 
-    this.gl.enable(this.gl.DEPTH_TEST);
-    this.gl.depthMask(true);
-    this.gl.disable(this.gl.BLEND);
-    this.gl.enable(this.gl.CULL_FACE);
+    // Clouds
+    if (this.displaySky) {
+      this.gl.disable(this.gl.CULL_FACE);
+      this.gl.enable(this.gl.BLEND);
+      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+      this.gl.depthMask(false);
+      this.gl.disable(this.gl.DEPTH_TEST);
+
+      for (let i = 0; i < this.clouds.length; i++) {
+        if (this.clouds[i].isReady()) {
+          this.clouds[i].display();
+        }
+      }
+
+      this.gl.enable(this.gl.DEPTH_TEST);
+      this.gl.depthMask(true);
+      this.gl.disable(this.gl.BLEND);
+      this.gl.enable(this.gl.CULL_FACE);
+    }
 
     // Plane
     let camera = this.camera.position;
     this.ScatterManager.display(camera);
     this.pushMatrix();
-    this.scale(80, 80, 80);
+    this.scale(160, 160, 160);
     this.rotate(-Math.PI / 2, 1, 0, 0);
     this.setActiveShader(this.terrainShader);
+    this.grassTexture.bind(0);
+    this.rockTexture.bind(1);
+    this.pathTexture.bind(2);
+    this.dirtTexture.bind(3);
+    this.generatedHeightmap.bind(4);
     this.plane.display();
     this.setActiveShader(this.defaultShader);
     this.popMatrix();
-
     // ---- END Primitive drawing section
   }
 }
