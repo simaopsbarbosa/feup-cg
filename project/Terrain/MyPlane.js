@@ -23,16 +23,19 @@ export class MyPlane extends CGFobject {
     this.maxT = maxT || 1;
     this.q = (this.maxS - this.minS) / this.nrDivs;
     this.w = (this.maxT - this.minT) / this.nrDivs;
-    this.initBuffers();
+    // Different terrain every run
+    this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
+    this.u_random2 = 40000.0 + Math.random() * 20000.0;
+    this.initBuffers();    
     this.terrainShader = new CGFshader(
         scene.gl,
         'shaders/terrain.vert',
         'shaders/terrain.frag'
     );
-      this.grassTexture = new CGFtexture(this, 'images/ground/grass.jpg');
-      this.rockTexture = new CGFtexture(this, 'images/ground/rock.jpg');
-      this.pathTexture = new CGFtexture(this, 'images/ground/path.jpg');
-      this.dirtTexture = new CGFtexture(this, 'images/ground/dirt.jpg');
+      this.grassTexture = new CGFtexture(this.scene, 'images/ground/grass.jpg');
+      this.rockTexture = new CGFtexture(this.scene, 'images/ground/rock.jpg');
+      this.pathTexture = new CGFtexture(this.scene, 'images/ground/path.jpg');
+      this.dirtTexture = new CGFtexture(this.scene, 'images/ground/dirt.jpg');
       this.terrainShader.setUniformsValues({
         uSamplerGrass: 0,
         uSamplerRock: 1,

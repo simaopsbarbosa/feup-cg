@@ -39,7 +39,7 @@ export class ScatterManager {
 
     // this creates the positions for the rocks
     const poissonSampler = new PoissonDiskSampling(40, 6);
-    this.viewDistSq = 50 * 50;
+    this.viewDistSq = 200 * 200;
     this.rocks=[];
     this.trees=[];
     let element;
