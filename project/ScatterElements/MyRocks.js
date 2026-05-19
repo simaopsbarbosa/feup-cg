@@ -20,17 +20,16 @@ export class MyRock extends CGFobject {
     super(scene);
     this.shape = shape;
     this.radius = radius;
-    this.shader=shader;
+    this.shader = shader;
     this.rockTexture = rockTexture;
     this.rockHeightMap = rockHeightMap;
     this.x = x;
     this.z = z;
     this.initBuffers();
-    this.terrainHeightMap=terrainHeightMap;
+    this.terrainHeightMap = terrainHeightMap;
   }
 
   display() {
-    
     this.rockTexture.bind(0);
     this.rockHeightMap.bind(1);
     this.shader.setUniformsValues({
@@ -45,8 +44,8 @@ export class MyRock extends CGFobject {
       ],
     });
     this.scene.pushMatrix();
-    this.scene.translate(this.x, this.radius+0.6, this.z);
-    this.scene.scale(this.radius,this.radius,this.radius);
+    this.scene.translate(this.x, this.radius + 0.6, this.z);
+    this.scene.scale(this.radius, this.radius, this.radius);
     this.shape.display();
     this.scene.popMatrix();
   }

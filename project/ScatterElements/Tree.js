@@ -8,19 +8,14 @@ export class Tree extends CGFobject {
     this.z = z;
     this.baseHeight = baseHeight || 2.0;
     this.baseRadius = baseRadius || 0.3;
-    this.leafcopula=baseRadius+0.5;
+    this.leafcopula = baseRadius + 0.5;
     this.terrainHeightMap = terrainHeightMap;
     this.trunkPrimitive = trunkprimitive; 
     this.leafPrimitive = leafprimitive; 
     this.trunkTexture=trunkTexture;
     this.leafMaterial=leafMaterial;
-    this.trunkMaterial=trunkMaterial;
-    this.trunkMaterial.setTexture(trunkTexture);
 
   }
-
-  
-
 
   display() {
     this.scene.pushMatrix();
@@ -40,6 +35,4 @@ export class Tree extends CGFobject {
       this.scene.popMatrix();
     this.scene.popMatrix();
   }
-
-  
 }

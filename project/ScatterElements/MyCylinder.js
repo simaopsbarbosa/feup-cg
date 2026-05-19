@@ -5,14 +5,14 @@ import { CGFobject } from '../../lib/CGF.js';
  * @param scene - Reference to MyScene object
  */
 export class MyCylinder extends CGFobject {
-    constructor(scene, slices, stacks) {
-        super(scene);
+  constructor(scene, slices, stacks) {
+    super(scene);
 
-        this.slices = slices;
-        this.stacks = stacks;
+    this.slices = slices;
+    this.stacks = stacks;
 
-        this.initBuffers();
-    }
+    this.initBuffers();
+  }
 
     initBuffers() {
 
@@ -21,11 +21,11 @@ export class MyCylinder extends CGFobject {
         this.normals = [];
         this.texCoords=[];
 
-        var angleIncrement = 2 * Math.PI / this.slices;
+    var angleIncrement = (2 * Math.PI) / this.slices;
 
         for (var i = 0; i < this.slices; i++) {
             var angle1 = i * angleIncrement;
-            var s=i/this.slices;
+        
             
             for (var stack = 0; stack <= this.stacks; stack++) {
                 // populate vertices
@@ -34,8 +34,7 @@ export class MyCylinder extends CGFobject {
                 
                 // populate normals
                 this.normals.push(Math.cos(angle1),Math.sin(angle1),0);
-                var t= t/this.stacks;
-                this.texCoords.push(s,t);
+                
             }
             
           
@@ -54,11 +53,10 @@ export class MyCylinder extends CGFobject {
             }
         }
 
-        //The defined indices (and corresponding vertices)
-        //will be read in groups of three to draw triangles
-        this.primitiveType = this.scene.gl.TRIANGLES;
+    //The defined indices (and corresponding vertices)
+    //will be read in groups of three to draw triangles
+    this.primitiveType = this.scene.gl.TRIANGLES;
 
-        this.initGLBuffers();
-    }
+    this.initGLBuffers();
+  }
 }
-
