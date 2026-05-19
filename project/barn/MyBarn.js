@@ -15,8 +15,8 @@ export class MyBarn {
   initAppearances() {
     let scene = this.scene;
 
-    this.wallTex = new CGFtexture(scene, 'images/barn/wood_plank.jpeg');
-    this.frontTex = new CGFtexture(scene, 'images/barn/front_door.jpeg');
+    this.wallTex = new CGFtexture(scene, 'images/barn/wood_plank.jpg');
+    this.frontTex = new CGFtexture(scene, 'images/barn/front_door.png');
     this.roofTex = new CGFtexture(scene, 'images/barn/wood_roof.jpeg');
 
     // A stronger ambient term keeps the side away from the sun readable.
