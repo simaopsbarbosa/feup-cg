@@ -1,13 +1,13 @@
-import { CGFtexture, CGFshader,CGFappearance } from '../lib/CGF.js';
+import { CGFtexture, CGFshader,CGFappearance } from '../../lib/CGF.js';
 import { MyRock } from './MyRocks.js';
-import { PoissonDiskSampling } from './Noise/PoissonDiskSampling.js';
+import { PoissonDiskSampling } from '../Noise/PoissonDiskSampling.js';
 import { Tree } from './Tree.js';
 import { MyCylinder } from './MyCylinder.js'; 
 import { MySphere } from './MySphere.js';
 
 
 export class ScatterManager {
-  constructor(scene,terrainHeightMap,terrainSize = 80) {
+  constructor(scene,terrainSize = 80) {
     this.terrainSize = terrainSize;
     this.scene=scene;
     this.rockShader = new CGFshader(
@@ -16,7 +16,6 @@ export class ScatterManager {
       'shaders/rock.frag'
     );
    
-    this.terrainHeightMap=terrainHeightMap;
     this.rockTextures = [
       new CGFtexture(scene, 'images/rock/rockTex.jpg'),
       new CGFtexture(scene, 'images/rock/rockTex1.jpg'),
@@ -108,8 +107,7 @@ export class ScatterManager {
       const tree= this.trees[i];
       const dx = tree.x - camX;
       const dz = tree.z - camZ;
-      if (dx * dx + dz * dz < viewDistSq) {
-        this.terrainHeightMap.bind(1); 
+      if (dx * dx + dz * dz < viewDistSq) { 
         tree.display();
       }
     }
