@@ -33,11 +33,9 @@ export class MyRock extends CGFobject {
     
     this.rockTexture.bind(0);
     this.rockHeightMap.bind(1);
-    this.terrainHeightMap.bind(2);
     this.shader.setUniformsValues({
       uSampler: 0,
       uSamplerRockHeight: 1,
-      uSamplerTerrainHeight: 2,
       u_rockRadius: this.radius,
       u_rockWorldPos: [this.x, 0.0, this.z],
       uCameraPos: [
@@ -47,7 +45,7 @@ export class MyRock extends CGFobject {
       ],
     });
     this.scene.pushMatrix();
-    this.scene.translate(this.x, this.radius, this.z);
+    this.scene.translate(this.x, this.radius+0.6, this.z);
     this.scene.scale(this.radius,this.radius,this.radius);
     this.shape.display();
     this.scene.popMatrix();
