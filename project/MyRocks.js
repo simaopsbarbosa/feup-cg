@@ -26,7 +26,7 @@ export class MyRock extends CGFobject {
     this.x = x;
     this.z = z;
     this.initBuffers();
-    this.terrainHeightMap=terrainHeightMap;
+    this.terrainHeightMap = terrainHeightMap;
   }
 
   display() {
