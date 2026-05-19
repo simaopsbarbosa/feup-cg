@@ -34,7 +34,7 @@ export class MyCylinder extends CGFobject {
                 
                 // populate normals
                 this.normals.push(Math.cos(angle1),Math.sin(angle1),0);
-                var t= t/this.stacks;
+                var t= stack/this.stacks;
                 this.texCoords.push(s,t);
             }
             
