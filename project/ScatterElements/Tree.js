@@ -1,7 +1,7 @@
 import { CGFobject, CGFappearance } from '../../lib/CGF.js';
 
 export class Tree extends CGFobject {
-  constructor(scene, maxDepth, baseHeight, baseRadius, x, z, trunkTexture, leafMaterial,terrainHeightMap,trunkprimitive,leafprimitive) {
+  constructor(scene, maxDepth, baseHeight, baseRadius, x, z, trunkTexture, leafMaterial,terrainHeightMap,trunkprimitive,leafprimitive,trunkMaterial) {
     super(scene);
     this.scene = scene;
     this.x = x;
@@ -14,6 +14,8 @@ export class Tree extends CGFobject {
     this.leafPrimitive = leafprimitive; 
     this.trunkTexture=trunkTexture;
     this.leafMaterial=leafMaterial;
+    this.trunkMaterial=trunkMaterial;
+    this.trunkMaterial.setTexture(trunkTexture);
 
   }
 
@@ -24,7 +26,7 @@ export class Tree extends CGFobject {
     this.scene.pushMatrix();
       this.scene.translate(this.x, 0, this.z);
       this.scene.pushMatrix();
-        this.trunkTexture.bind();
+        this.trunkMaterial.apply();
         this.scene.translate(0,this.baseHeight/2,0);
         this.scene.rotate(-Math.PI / 2, 1, 0, 0);
         this.scene.scale(this.baseRadius, this.baseRadius, this.baseHeight);

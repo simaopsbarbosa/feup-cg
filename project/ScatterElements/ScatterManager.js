@@ -27,7 +27,14 @@ export class ScatterManager {
       new CGFtexture(scene, 'images/tree/trunk2.jpg')
     ];
     this.rockShape = new MySphere(scene, 1, 5);
+    this.trunkMaterial=new CGFappearance(scene);
+    this.trunkMaterial.setAmbient(0.4, 0.2, 0.1, 1.0);
+    this.trunkMaterial.setDiffuse(0.5, 0.3, 0.15, 1.0);
+    this.trunkMaterial.setSpecular(0.05, 0.05, 0.05, 1.0);
+    this.trunkMaterial.setShininess(2.0);
     this.trunkPrimitive=new MyCylinder(scene, 12, 1);
+
+    
     this.leafPrimitive= new MySphere(scene,1,8);
     this.leafTex=new CGFtexture(scene, 'images/tree/cluster.jpg');
     this.leafMaterial = new CGFappearance(scene);
@@ -62,7 +69,8 @@ export class ScatterManager {
           this.leafMaterial,
           this.terrainHeightMap,
           this.trunkPrimitive,
-          this.leafPrimitive=this.leafPrimitive
+          this.leafPrimitive=this.leafPrimitive,
+          this.trunkMaterial
         );
         
        this.trees.push(element);
