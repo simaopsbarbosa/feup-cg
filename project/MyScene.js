@@ -294,7 +294,7 @@ export class MyScene extends CGFscene {
     // Flowers
     for (let f of this.flowers) {
       this.pushMatrix();
-      this.translate(f.x, 1.4, f.z);
+      this.translate(f.x, 1.3, f.z);
       this.rotate(f.rotation, 0, 1, 0);
       this.scale(f.scale, f.scale, f.scale);
       f.flower.display();

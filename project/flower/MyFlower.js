@@ -128,7 +128,7 @@ export class MyFlower {
       scene.pushMatrix();
       scene.translate(0, this.stemHeight, 0);
       scene.rotate(angle, 0, 1, 0);
-      scene.rotate(-Math.PI / 6, 1, 0, 0);
+      scene.rotate(0.3, 1, 0, 0);
       scene.scale(this.petalSize, this.petalSize, this.petalSize);
       this.petal.display();
       scene.popMatrix();
@@ -137,7 +137,7 @@ export class MyFlower {
     // Center disc
     this.centerApp.apply();
     scene.pushMatrix();
-    scene.translate(0, this.stemHeight, 0);
+    scene.translate(0, this.stemHeight * 1.03, 0);
     scene.scale(0.15, 0.08, 0.15);
     this.petal.display();
     scene.popMatrix();
