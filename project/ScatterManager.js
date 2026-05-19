@@ -31,6 +31,7 @@ export class ScatterManager {
       new CGFtexture(scene, 'images/tree/trunk1.jpg'),
       new CGFtexture(scene, 'images/tree/trunk2.jpg')
     ];
+    this.rockShape = new MySphere(scene, 1, 5);
     this.trunkPrimitive=new MyCylinder(scene, 12, 1);
     this.leafPrimitive= new MySphere(scene,1,8);
     this.leafTex=new CGFtexture(scene, 'images/tree/cluster.jpg');
@@ -41,6 +42,7 @@ export class ScatterManager {
     this.leafMaterial.setShininess(2.0);
     this.leafMaterial.setTexture(this.leafTex);
 
+    // this creates the positions for the rocks
     const poissonSampler = new PoissonDiskSampling(40, 6);
     this.viewDistSq = 50 * 50;
     this.rocks=[];
@@ -71,11 +73,11 @@ export class ScatterManager {
        this.trees.push(element);
       } 
       else {
-        let radius = Math.random() * 0.05 + 0.05;
+        let radius = Math.random() * 0.25 + 0.25;
         element = new MyRock(
           scene,
           radius,
-          5,
+          this.rockShape,
           x,
           z,
           this.rockTextures[i % this.rockTextures.length],
@@ -101,9 +103,11 @@ export class ScatterManager {
       if (dx * dx + dz * dz < viewDistSq) {
         this.scene.setActiveShader(this.rockShader);
         rock.display();
-        this.scene.setActiveShader(this.scene.defaultShader);
+
       }
+
     }
+    this.scene.setActiveShader(this.scene.defaultShader);
      for(let i = 0; i <this.trees.length; i++){
       const tree= this.trees[i];
       const dx = tree.x - camX;
@@ -118,10 +122,9 @@ export class ScatterManager {
           uTreePos: [this.x, this.z]
         });
         tree.display();
-        this.scene.setActiveShader(this.scene.defaultShader);
       }
     }
-
+    this.scene.setActiveShader(this.scene.defaultShader);
 
   }
 }

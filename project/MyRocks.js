@@ -9,7 +9,7 @@ export class MyRock extends CGFobject {
   constructor(
     scene,
     radius,
-    stacks,
+    shape,
     x,
     z,
     rockTexture,
@@ -18,7 +18,7 @@ export class MyRock extends CGFobject {
     shader
   ) {
     super(scene);
-    this.shape = new MySphere(scene, radius, stacks);
+    this.shape = shape;
     this.radius = radius;
     this.shader=shader;
     this.rockTexture = rockTexture;
