@@ -14,6 +14,8 @@ export class Tree extends CGFobject {
     this.leafPrimitive = leafprimitive; 
     this.trunkTexture=trunkTexture;
     this.leafMaterial=leafMaterial;
+    this.trunkMaterial=trunkMaterial;
+    this.trunkMaterial.setTexture(trunkTexture);
 
   }
 

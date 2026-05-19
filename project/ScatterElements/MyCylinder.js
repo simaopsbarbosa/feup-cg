@@ -25,7 +25,7 @@ export class MyCylinder extends CGFobject {
 
         for (var i = 0; i < this.slices; i++) {
             var angle1 = i * angleIncrement;
-        
+            var s=i/this.slices;
             
             for (var stack = 0; stack <= this.stacks; stack++) {
                 // populate vertices
@@ -34,7 +34,8 @@ export class MyCylinder extends CGFobject {
                 
                 // populate normals
                 this.normals.push(Math.cos(angle1),Math.sin(angle1),0);
-                
+                var t= t/this.stacks;
+                this.texCoords.push(s,t);
             }
             
           
