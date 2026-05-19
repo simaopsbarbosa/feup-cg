@@ -7,9 +7,9 @@ import {
   CGFshader,
 } from '../lib/CGF.js';
 import { MyHalfSphere } from './halfSphere.js';
-import { MyPlane } from './MyPlane.js';
+import { MyPlane } from './Terrain/MyPlane.js';
 import { MyCloud } from './MyCloud.js';
-import { ScatterManager } from './ScatterManager.js';
+import { ScatterManager } from './ScatterElements/ScatterManager.js';
 import { MyPlayer } from './MyPlayer.js';
 import { MyFlower } from './flower/MyFlower.js';
 
@@ -59,34 +59,13 @@ export class MyScene extends CGFscene {
     }
 
     // Shaders
-    this.terrainShader = new CGFshader(
-      this.gl,
-      'shaders/terrain.vert',
-      'shaders/terrain.frag'
-    );
     this.heightmapBakeQuad = new MyPlane(this, 1);
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
 
-    // Terrain textures
-    this.grassTexture = new CGFtexture(this, 'images/ground/grass.jpg');
-    this.rockTexture = new CGFtexture(this, 'images/ground/rock.jpg');
-    this.pathTexture = new CGFtexture(this, 'images/ground/path.jpg');
-    this.dirtTexture = new CGFtexture(this, 'images/ground/dirt.jpg');
-    this.generatedHeightmap = this.generateHeightmapTexture(1024);
-
-    this.terrainShader.setUniformsValues({
-      uSamplerGrass: 0,
-      uSamplerRock: 1,
-      uSamplerPath: 2,
-      uSamplerDirt: 3,
-      u_random1: this.u_random1,
-      u_random2: this.u_random2,
-    });
-
     //scatter Manager
-    this.ScatterManager = new ScatterManager(this, this.generatedHeightmap);
+    this.ScatterManager = new ScatterManager(this);
 
     //player
     this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
@@ -278,18 +257,7 @@ export class MyScene extends CGFscene {
     // Plane
     let camera = this.camera.position;
     this.ScatterManager.display(camera);
-    this.pushMatrix();
-    this.scale(160, 160, 160);
-    this.rotate(-Math.PI / 2, 1, 0, 0);
-    this.setActiveShader(this.terrainShader);
-    this.grassTexture.bind(0);
-    this.rockTexture.bind(1);
-    this.pathTexture.bind(2);
-    this.dirtTexture.bind(3);
-    this.generatedHeightmap.bind(4);
     this.plane.display();
-    this.setActiveShader(this.defaultShader);
-    this.popMatrix();
 
     // Flowers
     for (let f of this.flowers) {
