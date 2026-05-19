@@ -11,6 +11,7 @@ import { MyPlane } from './Terrain/MyPlane.js';
 import { MyCloud } from './MyCloud.js';
 import { ScatterManager } from './ScatterElements/ScatterManager.js';
 import { MyPlayer } from './MyPlayer.js';
+import { MyFlower } from './flower/MyFlower.js';
 
 /**
  * MyScene
@@ -46,6 +47,16 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
+    this.flowers = [];
+    for (let i = 0; i < 50; i++) {
+      this.flowers.push({
+        flower: new MyFlower(this, i * 53.7),
+        x: (Math.random() - 0.5) * 80,
+        z: (Math.random() - 0.5) * 80,
+        rotation: Math.random() * Math.PI * 2,
+        scale: 0.2 + Math.random() * 0.4,
+      });
+    }
 
     // Shaders
     this.heightmapBakeQuad = new MyPlane(this, 1);
@@ -247,6 +258,16 @@ export class MyScene extends CGFscene {
     let camera = this.camera.position;
     this.ScatterManager.display(camera);
     this.plane.display();
+
+    // Flowers
+    for (let f of this.flowers) {
+      this.pushMatrix();
+      this.translate(f.x, 1.3, f.z);
+      this.rotate(f.rotation, 0, 1, 0);
+      this.scale(f.scale, f.scale, f.scale);
+      f.flower.display();
+      this.popMatrix();
+    }
     // ---- END Primitive drawing section
   }
 }
