@@ -9,6 +9,7 @@ import { MySphere } from './MySphere.js';
 export class ScatterManager {
   constructor(scene,terrainHeightMap,terrainSize = 80) {
     this.terrainSize = terrainSize;
+    this.scene=scene;
     this.rockShader = new CGFshader(
       scene.gl,
       'shaders/rock.vert',
@@ -41,10 +42,10 @@ export class ScatterManager {
     this.leafMaterial.setTexture(this.leafTex);
 
     const poissonSampler = new PoissonDiskSampling(40, 6);
-    this.GRID_OFFSET = 160;
-    this.gridSize = 60;
-    this.grid = new Map();
-    this.viewDistSq = 200 * 200;
+    this.viewDistSq = 50 * 50;
+    this.rocks=[];
+    this.trees=[];
+    let element;
     for (let i = 0; i < poissonSampler.points.length; i++) {
       let x = poissonSampler.points[i][0];
       let z = poissonSampler.points[i][1];
@@ -53,7 +54,7 @@ export class ScatterManager {
         const treeMaxDepth = 4;
         const baseHeight = 2.0 + Math.random() * 1.0; // Add variation thresholds
         const baseRadius = 0.2 + Math.random() * 0.1;
-        const tree = new Tree(
+        element = new Tree(
           scene, 
           treeMaxDepth, 
           baseHeight, 
@@ -63,66 +64,64 @@ export class ScatterManager {
           this.treeBarkTexture[i % this.treeBarkTexture.length],
           this.leafMaterial,
           this.terrainHeightMap,
-          this.treeShader,
           this.trunkPrimitive,
           this.leafPrimitive=this.leafPrimitive
         );
         
-        this.addElementToGrid(tree);
+       this.trees.push(element);
       } 
       else {
         let radius = Math.random() * 0.05 + 0.05;
-        const rock = new MyRock(
+        element = new MyRock(
           scene,
           radius,
           5,
           x,
           z,
-          this.rockShader,
           this.rockTextures[i % this.rockTextures.length],
           this.rockHeightMap,
           this.terrainHeightMap,
+          this.rockShader
         );
-
-        this.addElementToGrid(rock);
+        this.rocks.push(element);
       }
+  
     }
   }
   
 
-  addElementToGrid(rock) {
-    const gridX = Math.floor((rock.x + this.GRID_OFFSET) / this.gridSize);
-    const gridZ = Math.floor((rock.z + this.GRID_OFFSET) / this.gridSize);
-    const key = `${gridX},${gridZ}`;
-
-    if (!this.grid.has(key)) {
-      this.grid.set(key, []);
-    }
-    this.grid.get(key).push(rock);
-  }
-
   display(camera) {
     const camX = camera[0];
     const camZ = camera[2];
-    const gridX = Math.floor((camX + this.GRID_OFFSET) / this.gridSize);
-    const gridZ = Math.floor((camZ + this.GRID_OFFSET) / this.gridSize);
     const viewDistSq = this.viewDistSq;
-
-    for (let x = gridX - 1; x <= gridX + 1; x++) {
-      for (let z = gridZ - 1; z <= gridZ + 1; z++) {
-        const key = `${x},${z}`;
-        const rocksInCell = this.grid.get(key);
-        if (rocksInCell) {
-          for (let i = 0; i < rocksInCell.length; i++) {
-            const rock = rocksInCell[i];
-            const dx = rock.x - camX;
-            const dz = rock.z - camZ;
-            if (dx * dx + dz * dz < viewDistSq) {
-              rock.display();
-            }
-          }
-        }
+    for(let i = 0; i <this.rocks.length-1; i=i+2){
+      const rock= this.rocks[i];
+      const dx = rock.x - camX;
+      const dz = rock.z - camZ;
+      if (dx * dx + dz * dz < viewDistSq) {
+        this.scene.setActiveShader(this.rockShader);
+        rock.display();
+        this.scene.setActiveShader(this.scene.defaultShader);
       }
     }
+     for(let i = 0; i <this.trees.length; i++){
+      const tree= this.trees[i];
+      const dx = tree.x - camX;
+      const dz = tree.z - camZ;
+      if (dx * dx + dz * dz < viewDistSq) {
+        this.scene.setActiveShader(this.treeShader);
+        this.terrainHeightMap.bind(1); 
+        this.treeShader.setUniformsValues({
+          uTerrainHeightMap: 1,
+          uTerrainSize: 6.0,       
+          uTerrainScale: 10.0,       
+          uTreePos: [this.x, this.z]
+        });
+        tree.display();
+        this.scene.setActiveShader(this.scene.defaultShader);
+      }
+    }
+
+
   }
 }
