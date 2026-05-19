@@ -11,7 +11,7 @@ import { MyPlane } from './MyPlane.js';
 import { MyCloud } from './MyCloud.js';
 import { ScatterManager } from './ScatterManager.js';
 import { MyPlayer } from './MyPlayer.js';
-
+import { MyFlower } from './flower/MyFlower.js';
 
 /**
  * MyScene
@@ -47,6 +47,16 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
+    this.flowers = [];
+    for (let i = 0; i < 50; i++) {
+      this.flowers.push({
+        flower: new MyFlower(this, i * 53.7),
+        x: (Math.random() - 0.5) * 80,
+        z: (Math.random() - 0.5) * 80,
+        rotation: Math.random() * Math.PI * 2,
+        scale: 0.2 + Math.random() * 0.4,
+      });
+    }
 
     // Shaders
     this.terrainShader = new CGFshader(
@@ -58,7 +68,6 @@ export class MyScene extends CGFscene {
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
- 
 
     // Terrain textures
     this.grassTexture = new CGFtexture(this, 'images/ground/grass.jpg');
@@ -66,8 +75,6 @@ export class MyScene extends CGFscene {
     this.pathTexture = new CGFtexture(this, 'images/ground/path.jpg');
     this.dirtTexture = new CGFtexture(this, 'images/ground/dirt.jpg');
     this.generatedHeightmap = this.generateHeightmapTexture(1024);
-   
-
 
     this.terrainShader.setUniformsValues({
       uSamplerGrass: 0,
@@ -76,10 +83,10 @@ export class MyScene extends CGFscene {
       uSamplerDirt: 3,
       u_random1: this.u_random1,
       u_random2: this.u_random2,
-    });  
+    });
 
     //scatter Manager
-    this.ScatterManager = new ScatterManager(this,this.generatedHeightmap);
+    this.ScatterManager = new ScatterManager(this, this.generatedHeightmap);
 
     //player
     this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
@@ -110,30 +117,46 @@ export class MyScene extends CGFscene {
   generateHeightmapTexture(resolution = 512) {
     const gl = this.gl;
 
-
     const fb = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 
-  
     const heightmapTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, heightmapTexture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, resolution, resolution, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-    
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      resolution,
+      resolution,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      null
+    );
+
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-    
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, heightmapTexture, 0);
+    gl.framebufferTexture2D(
+      gl.FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      gl.TEXTURE_2D,
+      heightmapTexture,
+      0
+    );
 
-    
-    const genShader = new CGFshader(gl, 'shaders/heightmap.vert', 'shaders/heightmap.frag');
+    const genShader = new CGFshader(
+      gl,
+      'shaders/heightmap.vert',
+      'shaders/heightmap.frag'
+    );
 
     this.setActiveShader(genShader);
     genShader.setUniformsValues({
-        u_random1: this.u_random1,
-        u_random2: this.u_random2
+      u_random1: this.u_random1,
+      u_random2: this.u_random2,
     });
     gl.viewport(0, 0, resolution, resolution);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -267,6 +290,16 @@ export class MyScene extends CGFscene {
     this.plane.display();
     this.setActiveShader(this.defaultShader);
     this.popMatrix();
+
+    // Flowers
+    for (let f of this.flowers) {
+      this.pushMatrix();
+      this.translate(f.x, 1.3, f.z);
+      this.rotate(f.rotation, 0, 1, 0);
+      this.scale(f.scale, f.scale, f.scale);
+      f.flower.display();
+      this.popMatrix();
+    }
     // ---- END Primitive drawing section
   }
 }
