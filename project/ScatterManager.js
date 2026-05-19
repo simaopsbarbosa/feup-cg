@@ -3,13 +3,14 @@ import { MyRock } from './MyRocks.js';
 import { PoissonDiskSampling } from './Noise/PoissonDiskSampling.js';
 
 export class ScatterManager {
-  constructor(scene, height) {
-    this.height = height;
+  constructor(scene,terrainHeightMap,terrainSize = 80) {
+    this.terrainSize = terrainSize;
     this.rockShader = new CGFshader(
       scene.gl,
       'shaders/rock.vert',
       'shaders/rock.frag'
     );
+    this.terrainHeightMap=terrainHeightMap;
     this.rockTextures = [
       new CGFtexture(scene, 'images/rock/rockTex.jpg'),
       new CGFtexture(scene, 'images/rock/rockTex1.jpg'),
@@ -17,27 +18,26 @@ export class ScatterManager {
     ];
     this.rockHeightMap = new CGFtexture(scene, 'images/rock/rockmap.jpg');
 
-    const poissonSampler = new PoissonDiskSampling(6, 3);
-    this.GRID_OFFSET = 80;
-    this.gridSize = 30;
+    const poissonSampler = new PoissonDiskSampling(12, 6);
+    this.GRID_OFFSET = 160;
+    this.gridSize = 60;
     this.grid = new Map();
-    this.viewDistSq = 100 * 100;
+    this.viewDistSq = 200 * 200;
 
     for (let i = 0; i < poissonSampler.points.length; i++) {
       let x = poissonSampler.points[i][0];
       let z = poissonSampler.points[i][1];
       let radius = Math.random() * 0.05 + 0.05;
-      let groundY = this.height.getGroundHeight(x, z, 80);
       const rock = new MyRock(
         scene,
         radius,
-        groundY,
         5,
         x,
         z,
         this.rockShader,
         this.rockTextures[i % this.rockTextures.length],
-        this.rockHeightMap
+        this.rockHeightMap,
+        this.terrainHeightMap,
       );
       this.addRockToGrid(rock);
     }
