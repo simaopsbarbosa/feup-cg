@@ -12,7 +12,6 @@ import { MyCloud } from './MyCloud.js';
 import { ScatterManager } from './ScatterElements/ScatterManager.js';
 import { MyPlayer } from './MyPlayer.js';
 
-
 /**
  * MyScene
  * @constructor
@@ -53,7 +52,6 @@ export class MyScene extends CGFscene {
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
- 
 
     //scatter Manager
     this.ScatterManager = new ScatterManager(this);
@@ -87,30 +85,46 @@ export class MyScene extends CGFscene {
   generateHeightmapTexture(resolution = 512) {
     const gl = this.gl;
 
-
     const fb = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 
-  
     const heightmapTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, heightmapTexture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, resolution, resolution, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-    
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      resolution,
+      resolution,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      null
+    );
+
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-    
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, heightmapTexture, 0);
+    gl.framebufferTexture2D(
+      gl.FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      gl.TEXTURE_2D,
+      heightmapTexture,
+      0
+    );
 
-    
-    const genShader = new CGFshader(gl, 'shaders/heightmap.vert', 'shaders/heightmap.frag');
+    const genShader = new CGFshader(
+      gl,
+      'shaders/heightmap.vert',
+      'shaders/heightmap.frag'
+    );
 
     this.setActiveShader(genShader);
     genShader.setUniformsValues({
-        u_random1: this.u_random1,
-        u_random2: this.u_random2
+      u_random1: this.u_random1,
+      u_random2: this.u_random2,
     });
     gl.viewport(0, 0, resolution, resolution);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -208,7 +222,7 @@ export class MyScene extends CGFscene {
       this.gl.enable(this.gl.CULL_FACE);
       this.popMatrix();
     }
- 
+
     // Clouds
     if (this.displaySky) {
       this.gl.disable(this.gl.CULL_FACE);
@@ -227,12 +241,12 @@ export class MyScene extends CGFscene {
       this.gl.depthMask(true);
       this.gl.disable(this.gl.BLEND);
       this.gl.enable(this.gl.CULL_FACE);
-    } 
+    }
 
     // Plane
     let camera = this.camera.position;
     this.ScatterManager.display(camera);
-    this.plane.display(); 
+    this.plane.display();
     // ---- END Primitive drawing section
   }
 }
