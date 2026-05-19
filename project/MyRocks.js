@@ -48,6 +48,7 @@ export class MyRock extends CGFobject {
     });
     this.scene.pushMatrix();
     this.scene.translate(this.x, this.radius, this.z);
+    this.scene.scale(this.radius,this.radius,this.radius);
     this.shape.display();
     this.scene.popMatrix();
   }

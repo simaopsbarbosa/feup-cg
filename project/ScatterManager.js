@@ -15,11 +15,7 @@ export class ScatterManager {
       'shaders/rock.vert',
       'shaders/rock.frag'
     );
-    this.treeShader=new CGFshader(
-      scene.gl,
-      'shaders/tree.vert',
-      'shaders/tree.frag'
-    );
+   
     this.terrainHeightMap=terrainHeightMap;
     this.rockTextures = [
       new CGFtexture(scene, 'images/rock/rockTex.jpg'),
@@ -113,18 +109,10 @@ export class ScatterManager {
       const dx = tree.x - camX;
       const dz = tree.z - camZ;
       if (dx * dx + dz * dz < viewDistSq) {
-        this.scene.setActiveShader(this.treeShader);
         this.terrainHeightMap.bind(1); 
-        this.treeShader.setUniformsValues({
-          uTerrainHeightMap: 1,
-          uTerrainSize: 6.0,       
-          uTerrainScale: 10.0,       
-          uTreePos: [this.x, this.z]
-        });
         tree.display();
       }
     }
-    this.scene.setActiveShader(this.scene.defaultShader);
 
   }
 }

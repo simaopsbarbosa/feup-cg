@@ -218,7 +218,7 @@ export class MyScene extends CGFscene {
     this.setDefaultAppearance();
 
     // ---- BEGIN Primitive drawing section
-    /* if (this.displaySky) {
+    if (this.displaySky) {
       this.pushMatrix();
       this.scale(
         this.scaleFactor * 2,
@@ -231,8 +231,8 @@ export class MyScene extends CGFscene {
       this.gl.enable(this.gl.CULL_FACE);
       this.popMatrix();
     }
- */
-  /*   // Clouds
+ 
+    // Clouds
     if (this.displaySky) {
       this.gl.disable(this.gl.CULL_FACE);
       this.gl.enable(this.gl.BLEND);
@@ -250,12 +250,12 @@ export class MyScene extends CGFscene {
       this.gl.depthMask(true);
       this.gl.disable(this.gl.BLEND);
       this.gl.enable(this.gl.CULL_FACE);
-    } */
+    } 
 
     // Plane
     let camera = this.camera.position;
     this.ScatterManager.display(camera);
-   /*  this.pushMatrix();
+    this.pushMatrix();
     this.scale(160, 160, 160);
     this.rotate(-Math.PI / 2, 1, 0, 0);
     this.setActiveShader(this.terrainShader);
@@ -266,7 +266,7 @@ export class MyScene extends CGFscene {
     this.generatedHeightmap.bind(4);
     this.plane.display();
     this.setActiveShader(this.defaultShader);
-    this.popMatrix(); */
+    this.popMatrix(); 
     // ---- END Primitive drawing section
   }
 }
