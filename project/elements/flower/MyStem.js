@@ -1,4 +1,4 @@
-import { CGFobject } from '../../lib/CGF.js';
+import { CGFobject } from '../../../lib/CGF.js';
 
 export class MyStem extends CGFobject {
   constructor(scene, height = 1.0, radius = 0.04, slices = 8) {

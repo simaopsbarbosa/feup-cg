@@ -1,6 +1,6 @@
-import { CGFobject } from '../../lib/CGF.js';
+import { CGFobject } from '../../../lib/CGF.js';
 
-export class Tree extends CGFobject {
+export class MyTree extends CGFobject {
   constructor(scene, maxDepth, baseHeight, baseRadius, x, z, trunkTexture, leafMaterial, terrainHeightMap, trunkprimitive, leafprimitive, trunkMaterial) {
     super(scene);
     this.scene = scene;

@@ -1,9 +1,9 @@
-import { CGFtexture, CGFshader, CGFappearance } from '../../lib/CGF.js';
-import { MyRock } from './MyRocks.js';
-import { PoissonDiskSampling } from '../Noise/PoissonDiskSampling.js';
-import { Tree } from './Tree.js';
-import { MyCylinder } from './MyCylinder.js';
-import { MySphere } from './MySphere.js';
+import { CGFtexture, CGFshader, CGFappearance } from '../../../lib/CGF.js';
+import { MyRock } from '../rock/MyRock.js';
+import { PoissonDiskSampling } from '../../utils/PoissonDiskSampling.js';
+import { MyTree } from '../tree/MyTree.js';
+import { MyCylinder } from '../../primitives/MyCylinder.js';
+import { MySphere } from '../../primitives/MySphere.js';
 
 export class ScatterManager {
   constructor(scene, terrainSize = 80) {
@@ -26,16 +26,15 @@ export class ScatterManager {
       new CGFtexture(scene, 'images/tree/trunk2.jpg'),
     ];
     this.rockShape = new MySphere(scene, 1, 5);
-    this.trunkMaterial=new CGFappearance(scene);
+    this.trunkMaterial = new CGFappearance(scene);
     this.trunkMaterial.setAmbient(0.4, 0.2, 0.1, 1.0);
     this.trunkMaterial.setDiffuse(0.5, 0.3, 0.15, 1.0);
     this.trunkMaterial.setSpecular(0.05, 0.05, 0.05, 1.0);
     this.trunkMaterial.setShininess(2.0);
-    this.trunkPrimitive=new MyCylinder(scene, 12, 1);
+    this.trunkPrimitive = new MyCylinder(scene, 12, 1);
 
-    
-    this.leafPrimitive= new MySphere(scene,1,8);
-    this.leafTex=new CGFtexture(scene, 'images/tree/cluster.jpg');
+    this.leafPrimitive = new MySphere(scene, 1, 8);
+    this.leafTex = new CGFtexture(scene, 'images/tree/cluster.jpg');
     this.leafMaterial = new CGFappearance(scene);
     this.leafMaterial.setAmbient(0.3, 0.4, 0.3, 1.0);
     this.leafMaterial.setDiffuse(0.5, 0.8, 0.5, 1.0);
@@ -57,7 +56,7 @@ export class ScatterManager {
         const treeMaxDepth = 3.0+ Math.random()*2.0;
         const baseHeight = 2.0 + Math.random() * 1.0; 
         const baseRadius = 0.2 + Math.random() * 0.1;
-        element = new Tree(
+        element = new MyTree(
           scene,
           treeMaxDepth,
           baseHeight,
@@ -68,7 +67,7 @@ export class ScatterManager {
           this.leafMaterial,
           this.terrainHeightMap,
           this.trunkPrimitive,
-          this.leafPrimitive=this.leafPrimitive,
+          (this.leafPrimitive = this.leafPrimitive),
           this.trunkMaterial
         );
 
