@@ -54,8 +54,8 @@ export class ScatterManager {
       let z = poissonSampler.points[i][1];
       let spawnChoice = Math.random();
       if (spawnChoice < 0.4) {
-        const treeMaxDepth = 4;
-        const baseHeight = 2.0 + Math.random() * 1.0; // Add variation thresholds
+        const treeMaxDepth = 3.0+ Math.random()*2.0;
+        const baseHeight = 2.0 + Math.random() * 1.0; 
         const baseRadius = 0.2 + Math.random() * 0.1;
         element = new Tree(
           scene,
@@ -95,12 +95,12 @@ export class ScatterManager {
     const camX = camera[0];
     const camZ = camera[2];
     const viewDistSq = this.viewDistSq;
-    for (let i = 0; i < this.rocks.length - 1; i = i + 2) {
+    this.scene.setActiveShader(this.rockShader);
+    for (let i = 0; i < this.rocks.length ; i ++) {
       const rock = this.rocks[i];
       const dx = rock.x - camX;
       const dz = rock.z - camZ;
       if (dx * dx + dz * dz < viewDistSq) {
-        this.scene.setActiveShader(this.rockShader);
         rock.display();
       }
     }
