@@ -5,13 +5,14 @@ import {
   CGFappearance,
   CGFtexture,
   CGFshader,
-} from '../../lib/CGF.js';
-import { MyHalfSphere } from '../primitives/MyHalfSphere.js';
-import { MyPlane } from '../primitives/MyPlane.js';
-import { MyCloud } from '../elements/cloud/MyCloud.js';
-import { ScatterManager } from '../elements/scatter/ScatterManager.js';
-import { MyPlayer } from '../elements/player/MyPlayer.js';
-import { MyFlower } from '../elements/flower/MyFlower.js';
+} from '../lib/CGF.js';
+import { MyHalfSphere } from './halfSphere.js';
+import { MyPlane } from './Terrain/MyPlane.js';
+import { MyCloud } from './MyCloud.js';
+import { ScatterManager } from './ScatterElements/ScatterManager.js';
+import { MyPlayer } from './MyPlayer.js';
+import { MyFlower } from './flower/MyFlower.js';
+import { MyBarn } from './barn/MyBarn.js';
 
 /**
  * MyScene
@@ -57,6 +58,7 @@ export class MyScene extends CGFscene {
         scale: 0.2 + Math.random() * 0.4,
       });
     }
+    this.barn = new MyBarn(this);
 
     // Shaders
     this.heightmapBakeQuad = new MyPlane(this, 1);
@@ -268,6 +270,15 @@ export class MyScene extends CGFscene {
       f.flower.display();
       this.popMatrix();
     }
+
+    // Barn
+    this.pushMatrix();
+    this.rotate(Math.PI / 2, 0, -1, 0);
+    this.scale(7, 7, 7);
+    this.translate(0, 0.17, -0.3);
+    this.barn.display();
+    this.popMatrix();
+
     // ---- END Primitive drawing section
   }
 }
