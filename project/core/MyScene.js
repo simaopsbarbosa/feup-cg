@@ -5,14 +5,14 @@ import {
   CGFappearance,
   CGFtexture,
   CGFshader,
-} from '../lib/CGF.js';
-import { MyHalfSphere } from './halfSphere.js';
-import { MyPlane } from './Terrain/MyPlane.js';
-import { MyCloud } from './MyCloud.js';
-import { ScatterManager } from './ScatterElements/ScatterManager.js';
-import { MyPlayer } from './MyPlayer.js';
-import { MyFlower } from './flower/MyFlower.js';
-import { MyBarn } from './barn/MyBarn.js';
+} from '../../lib/CGF.js';
+import { MyHalfSphere } from '../primitives/MyHalfSphere.js';
+import { MyPlane } from '../primitives/MyPlane.js';
+import { MyCloud } from '../elements/cloud/MyCloud.js';
+import { ScatterManager } from '../elements/scatter/ScatterManager.js';
+import { MyBarn } from '../elements/barn/MyBarn.js';
+import {MyPlayer} from "../elements/player/MyPlayer.js"
+import { MyFlower } from '../elements/flower/MyFlower.js';
 
 /**
  * MyScene

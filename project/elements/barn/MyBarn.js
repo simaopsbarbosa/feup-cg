@@ -1,4 +1,4 @@
-import { CGFappearance, CGFtexture } from '../../lib/CGF.js';
+import { CGFappearance, CGFtexture } from '../../../lib/CGF.js';
 import { MyBox } from './MyBox.js';
 import { MyRoof } from './MyRoof.js';
 
