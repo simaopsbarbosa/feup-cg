@@ -273,9 +273,9 @@ export class MyScene extends CGFscene {
 
     // Barn
     this.pushMatrix();
+    this.translate(3,1,3);
     this.rotate(Math.PI / 2, 0, -1, 0);
     this.scale(7, 7, 7);
-    this.translate(0, 0.17, -0.3);
     this.barn.display();
     this.popMatrix();
 

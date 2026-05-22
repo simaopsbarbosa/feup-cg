@@ -50,6 +50,17 @@ export class PoissonDiskSampling {
   isValid(p) {
     const distFromCenter = p[0] ** 2 + p[1] ** 2;
     if (distFromCenter >= this.radius ** 2) return false;
+    
+    const barnMinX = -9;
+    const barnMaxX =  3;
+    const barnMinZ = -3;
+    const barnMaxZ =  9;
+
+   
+    if (p[0] >= barnMinX && p[0] <= barnMaxX &&
+        p[1] >= barnMinZ && p[1] <= barnMaxZ) {
+      return false;
+    }
 
     const col = Math.floor((p[0] + this.radius) / this.cellSize);
     const row = Math.floor((p[1] + this.radius) / this.cellSize);
