@@ -1,9 +1,9 @@
-import { CGFtexture, CGFshader, CGFappearance } from '../../lib/CGF.js';
-import { MyRock } from './MyRocks.js';
-import { PoissonDiskSampling } from '../Noise/PoissonDiskSampling.js';
-import { Tree } from './Tree.js';
-import { MyCylinder } from './MyCylinder.js';
-import { MySphere } from './MySphere.js';
+import { CGFtexture, CGFshader, CGFappearance } from '../../../lib/CGF.js';
+import { MyRock } from '../rock/MyRock.js';
+import { PoissonDiskSampling } from '../../utils/PoissonDiskSampling.js';
+import { MyTree } from '../tree/MyTree.js';
+import { MyCylinder } from '../../primitives/MyCylinder.js';
+import { MySphere } from '../../primitives/MySphere.js';
 
 export class ScatterManager {
   constructor(scene, terrainSize = 80) {
@@ -57,7 +57,7 @@ export class ScatterManager {
         const treeMaxDepth = 4;
         const baseHeight = 2.0 + Math.random() * 1.0; // Add variation thresholds
         const baseRadius = 0.2 + Math.random() * 0.1;
-        element = new Tree(
+        element = new MyTree(
           scene,
           treeMaxDepth,
           baseHeight,

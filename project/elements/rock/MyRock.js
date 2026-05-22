@@ -1,5 +1,5 @@
-import { CGFobject } from '../../lib/CGF.js';
-import { MySphere } from './MySphere.js';
+import { CGFobject } from '../../../lib/CGF.js';
+import { MySphere } from '../../primitives/MySphere.js';
 /**
  * MyTHalfSphere
  * @constructor
