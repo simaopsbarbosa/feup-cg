@@ -4,6 +4,7 @@ import { PoissonDiskSampling } from '../../utils/PoissonDiskSampling.js';
 import { MyTree } from '../tree/MyTree.js';
 import { MyCylinder } from '../../primitives/MyCylinder.js';
 import { MySphere } from '../../primitives/MySphere.js';
+import { MyFlower } from '../flower/MyFlower.js';
 
 export class ScatterManager {
   constructor(scene, terrainSize = 80) {
@@ -48,12 +49,13 @@ export class ScatterManager {
     this.viewDistSq = 200 * 200;
     this.rocks = [];
     this.trees = [];
+    this.flowers=[];
     let element;
     for (let i = 0; i < poissonSampler.points.length; i++) {
       let x = poissonSampler.points[i][0];
       let z = poissonSampler.points[i][1];
       let spawnChoice = Math.random();
-      if (spawnChoice < 0.4) {
+      if (spawnChoice < 0.2) {
         const treeMaxDepth = 3.0+ Math.random()*2.0;
         const baseHeight = 2.0 + Math.random() * 1.0; 
         const baseRadius = 0.2 + Math.random() * 0.1;
@@ -73,7 +75,7 @@ export class ScatterManager {
         );
 
         this.trees.push(element);
-      } else {
+      } else if(spawnChoice<0.40) {
         let radius = Math.random() * 0.25 + 0.25;
         element = new MyRock(
           scene,
@@ -87,6 +89,15 @@ export class ScatterManager {
           this.rockShader
         );
         this.rocks.push(element);
+      }
+      else{
+        this.flowers.push({
+          flowerObject: new MyFlower(scene, i * 53.7), 
+          x: x, 
+          z: z,
+          rotation: Math.random() * Math.PI * 2,
+          scale: 0.2 + Math.random() * 0.4,
+        });
       }
     }
   }
@@ -111,6 +122,19 @@ export class ScatterManager {
       const dz = tree.z - camZ;
       if (dx * dx + dz * dz < viewDistSq) {
         tree.display();
+      }
+    }
+     for (let i = 0; i < this.flowers.length; i++) {
+      const flower = this.flowers[i];
+      const dx = flower.x - camX;
+      const dz = flower.z - camZ;
+      if (dx * dx + dz * dz < viewDistSq) {
+        this.scene.pushMatrix();
+        this.scene.translate(flower.x, 1.3, flower.z);
+        this.scene.rotate(flower.rotation, 0, 1, 0);
+        this.scene.scale(flower.scale, flower.scale, flower.scale);
+        flower.flowerObject.display();
+        this.scene.popMatrix();
       }
     }
   }

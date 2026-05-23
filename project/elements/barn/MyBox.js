@@ -1,4 +1,4 @@
-import { CGFobject } from '../../lib/CGF.js';
+import { CGFobject } from '../../../lib/CGF.js';
 
 export class MyBox extends CGFobject {
   constructor(scene, width = 1, height = 1, depth = 1) {

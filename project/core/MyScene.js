@@ -5,14 +5,13 @@ import {
   CGFappearance,
   CGFtexture,
   CGFshader,
-} from '../lib/CGF.js';
-import { MyHalfSphere } from './halfSphere.js';
-import { MyPlane } from './Terrain/MyPlane.js';
-import { MyCloud } from './MyCloud.js';
-import { ScatterManager } from './ScatterElements/ScatterManager.js';
-import { MyPlayer } from './MyPlayer.js';
-import { MyFlower } from './flower/MyFlower.js';
-import { MyBarn } from './barn/MyBarn.js';
+} from '../../lib/CGF.js';
+import { MyHalfSphere } from '../primitives/MyHalfSphere.js';
+import { MyPlane } from '../primitives/MyPlane.js';
+import { MyCloud } from '../elements/cloud/MyCloud.js';
+import { ScatterManager } from '../elements/scatter/ScatterManager.js';
+import { MyBarn } from '../elements/barn/MyBarn.js';
+import {MyPlayer} from "../elements/player/MyPlayer.js"
 
 /**
  * MyScene
@@ -48,16 +47,6 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
-    this.flowers = [];
-    for (let i = 0; i < 50; i++) {
-      this.flowers.push({
-        flower: new MyFlower(this, i * 53.7),
-        x: (Math.random() - 0.5) * 80,
-        z: (Math.random() - 0.5) * 80,
-        rotation: Math.random() * Math.PI * 2,
-        scale: 0.2 + Math.random() * 0.4,
-      });
-    }
     this.barn = new MyBarn(this);
 
     // Shaders
@@ -261,21 +250,12 @@ export class MyScene extends CGFscene {
     this.ScatterManager.display(camera);
     this.plane.display();
 
-    // Flowers
-    for (let f of this.flowers) {
-      this.pushMatrix();
-      this.translate(f.x, 1.3, f.z);
-      this.rotate(f.rotation, 0, 1, 0);
-      this.scale(f.scale, f.scale, f.scale);
-      f.flower.display();
-      this.popMatrix();
-    }
 
     // Barn
     this.pushMatrix();
+    this.translate(3,1,3);
     this.rotate(Math.PI / 2, 0, -1, 0);
     this.scale(7, 7, 7);
-    this.translate(0, 0.17, -0.3);
     this.barn.display();
     this.popMatrix();
 
