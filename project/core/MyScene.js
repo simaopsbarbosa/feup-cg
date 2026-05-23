@@ -5,13 +5,13 @@ import {
   CGFappearance,
   CGFtexture,
   CGFshader,
-} from '../lib/CGF.js';
-import { MyHalfSphere } from './halfSphere.js';
-import { MyPlane } from './MyPlane.js';
-import { MyCloud } from './MyCloud.js';
-import { ScatterManager } from './ScatterManager.js';
-import { MyPlayer } from './MyPlayer.js';
-
+} from '../../lib/CGF.js';
+import { MyHalfSphere } from '../primitives/MyHalfSphere.js';
+import { MyPlane } from '../primitives/MyPlane.js';
+import { MyCloud } from '../elements/cloud/MyCloud.js';
+import { ScatterManager } from '../elements/scatter/ScatterManager.js';
+import { MyBarn } from '../elements/barn/MyBarn.js';
+import {MyPlayer} from "../elements/player/MyPlayer.js"
 
 /**
  * MyScene
@@ -47,39 +47,16 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
+    this.barn = new MyBarn(this);
 
     // Shaders
-    this.terrainShader = new CGFshader(
-      this.gl,
-      'shaders/terrain.vert',
-      'shaders/terrain.frag'
-    );
     this.heightmapBakeQuad = new MyPlane(this, 1);
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
- 
-
-    // Terrain textures
-    this.grassTexture = new CGFtexture(this, 'images/ground/grass.jpg');
-    this.rockTexture = new CGFtexture(this, 'images/ground/rock.jpg');
-    this.pathTexture = new CGFtexture(this, 'images/ground/path.jpg');
-    this.dirtTexture = new CGFtexture(this, 'images/ground/dirt.jpg');
-    this.generatedHeightmap = this.generateHeightmapTexture(1024);
-   
-
-
-    this.terrainShader.setUniformsValues({
-      uSamplerGrass: 0,
-      uSamplerRock: 1,
-      uSamplerPath: 2,
-      uSamplerDirt: 3,
-      u_random1: this.u_random1,
-      u_random2: this.u_random2,
-    });  
 
     //scatter Manager
-    this.ScatterManager = new ScatterManager(this,this.generatedHeightmap);
+    this.ScatterManager = new ScatterManager(this);
 
     //player
     this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
@@ -110,30 +87,46 @@ export class MyScene extends CGFscene {
   generateHeightmapTexture(resolution = 512) {
     const gl = this.gl;
 
-
     const fb = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 
-  
     const heightmapTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, heightmapTexture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, resolution, resolution, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-    
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      resolution,
+      resolution,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      null
+    );
+
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-    
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, heightmapTexture, 0);
+    gl.framebufferTexture2D(
+      gl.FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      gl.TEXTURE_2D,
+      heightmapTexture,
+      0
+    );
 
-    
-    const genShader = new CGFshader(gl, 'shaders/heightmap.vert', 'shaders/heightmap.frag');
+    const genShader = new CGFshader(
+      gl,
+      'shaders/heightmap.vert',
+      'shaders/heightmap.frag'
+    );
 
     this.setActiveShader(genShader);
     genShader.setUniformsValues({
-        u_random1: this.u_random1,
-        u_random2: this.u_random2
+      u_random1: this.u_random1,
+      u_random2: this.u_random2,
     });
     gl.viewport(0, 0, resolution, resolution);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -255,18 +248,17 @@ export class MyScene extends CGFscene {
     // Plane
     let camera = this.camera.position;
     this.ScatterManager.display(camera);
-    this.pushMatrix();
-    this.scale(160, 160, 160);
-    this.rotate(-Math.PI / 2, 1, 0, 0);
-    this.setActiveShader(this.terrainShader);
-    this.grassTexture.bind(0);
-    this.rockTexture.bind(1);
-    this.pathTexture.bind(2);
-    this.dirtTexture.bind(3);
-    this.generatedHeightmap.bind(4);
     this.plane.display();
-    this.setActiveShader(this.defaultShader);
+
+
+    // Barn
+    this.pushMatrix();
+    this.translate(3,1,3);
+    this.rotate(Math.PI / 2, 0, -1, 0);
+    this.scale(7, 7, 7);
+    this.barn.display();
     this.popMatrix();
+
     // ---- END Primitive drawing section
   }
 }

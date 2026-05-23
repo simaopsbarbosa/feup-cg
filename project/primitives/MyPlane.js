@@ -1,4 +1,4 @@
-import { CGFobject } from '../lib/CGF.js';
+import { CGFobject, CGFshader, CGFtexture } from '../../lib/CGF.js';
 /**
  * MyPlane
  * @constructor
@@ -12,6 +12,7 @@ import { CGFobject } from '../lib/CGF.js';
 export class MyPlane extends CGFobject {
   constructor(scene, nrDivs, minS, maxS, minT, maxT) {
     super(scene);
+    this.scene = scene;
     // nrDivs = 1 if not provided
     nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 1;
     this.nrDivs = nrDivs;
@@ -22,7 +23,27 @@ export class MyPlane extends CGFobject {
     this.maxT = maxT || 1;
     this.q = (this.maxS - this.minS) / this.nrDivs;
     this.w = (this.maxT - this.minT) / this.nrDivs;
+    // Different terrain every run
+    this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
+    this.u_random2 = 40000.0 + Math.random() * 20000.0;
     this.initBuffers();
+    this.terrainShader = new CGFshader(
+      scene.gl,
+      'shaders/terrain.vert',
+      'shaders/terrain.frag'
+    );
+    this.grassTexture = new CGFtexture(this.scene, 'images/ground/grass.jpg');
+    this.rockTexture = new CGFtexture(this.scene, 'images/ground/rock.jpg');
+    this.pathTexture = new CGFtexture(this.scene, 'images/ground/path.jpg');
+    this.dirtTexture = new CGFtexture(this.scene, 'images/ground/dirt.jpg');
+    this.terrainShader.setUniformsValues({
+      uSamplerGrass: 0,
+      uSamplerRock: 1,
+      uSamplerPath: 2,
+      uSamplerDirt: 3,
+      u_random1: this.u_random1,
+      u_random2: this.u_random2,
+    });
   }
   initBuffers() {
     // Generate vertices, normals, and texCoords
@@ -65,5 +86,18 @@ export class MyPlane extends CGFobject {
 
   setLineMode() {
     this.primitiveType = this.scene.gl.LINES;
+  }
+  display() {
+    this.scene.pushMatrix();
+    this.scene.scale(160, 160, 160);
+    this.scene.rotate(-Math.PI / 2, 1, 0, 0);
+    this.scene.setActiveShader(this.terrainShader);
+    this.grassTexture.bind(0);
+    this.rockTexture.bind(1);
+    this.pathTexture.bind(2);
+    this.dirtTexture.bind(3);
+    super.display();
+    this.scene.setActiveShader(this.scene.defaultShader);
+    this.scene.popMatrix();
   }
 }

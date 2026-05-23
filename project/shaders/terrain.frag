@@ -45,7 +45,7 @@ void main() {
     vec4 terrainBase = mix(grassWithDirt, pathColor, pathMask);
 
     
-    float heightMask = smoothstep(0.2, 0.5, vHeight);
+    float heightMask = smoothstep(0.04, 0.25, vHeight);
     vec4 finalColor = mix(terrainBase, rockColor, heightMask);
 
     gl_FragColor = finalColor;
