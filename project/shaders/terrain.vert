@@ -45,8 +45,7 @@ void main() {
    
     vHeight = heightOffset; 
    
-    // 5. O centro mantém-se na sua posição original (plano 0.5 padrão da malha)
-    // e as bordas sobem suavemente na direção da normal
+    
     vec3 displaced = aVertexPosition + aVertexNormal * heightOffset;
 
     gl_Position = uPMatrix * uMVMatrix * vec4(displaced, 1.0);
