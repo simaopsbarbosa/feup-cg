@@ -1,3 +1,5 @@
+precision mediump float;
+
 attribute vec3 aVertexPosition;
 attribute vec3 aVertexNormal;
 attribute vec2 aTextureCoord;
@@ -6,20 +8,46 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
-uniform sampler2D uSamplerHeightmap; 
+uniform vec2 u_random1;
+uniform float u_random2;
 
 varying vec2 vTextureCoord;
 varying float vHeight;
 
+
+float random(in vec2 st) {
+    return fract(sin(dot(st.xy, u_random1)) * u_random2);
+}
+
+float noise(in vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+
 void main() {
     vTextureCoord = aTextureCoord;
-
     
-    float h = texture2D(uSamplerHeightmap, aTextureCoord).r;
-    vHeight = h;
+   
+    float baseNoise = noise(aTextureCoord * 3.0); 
 
-    //if you chnage the terrain vert displacment change it in the rock vert  please
-    vec3 displaced = aVertexPosition + aVertexNormal * h * 0.02;
+    float distFromCenter = distance(aTextureCoord, vec2(0.5, 0.5));
+
+    float edgeTransition = smoothstep(0.30, 0.65, distFromCenter);
+
+    float heightOffset = mix(0.005, baseNoise * 0.6, edgeTransition);
+    
+   
+    vHeight = heightOffset; 
+   
+    // 5. O centro mantém-se na sua posição original (plano 0.5 padrão da malha)
+    // e as bordas sobem suavemente na direção da normal
+    vec3 displaced = aVertexPosition + aVertexNormal * heightOffset;
 
     gl_Position = uPMatrix * uMVMatrix * vec4(displaced, 1.0);
 }
