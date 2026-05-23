@@ -39,7 +39,7 @@ void main() {
     float distFromCenter = distance(aTextureCoord, vec2(0.5, 0.5));
 
     float edgeTransition = smoothstep(0.30, 0.65, distFromCenter);
-\
+
     float heightOffset = mix(centerNoise * 0.015, baseNoise * 0.6, edgeTransition);
     
     
