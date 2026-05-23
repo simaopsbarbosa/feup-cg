@@ -12,7 +12,6 @@ import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import {MyPlayer} from "../elements/player/MyPlayer.js"
-import { MyFlower } from '../elements/flower/MyFlower.js';
 
 /**
  * MyScene
@@ -48,16 +47,6 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
-    this.flowers = [];
-    for (let i = 0; i < 50; i++) {
-      this.flowers.push({
-        flower: new MyFlower(this, i * 53.7),
-        x: (Math.random() - 0.5) * 80,
-        z: (Math.random() - 0.5) * 80,
-        rotation: Math.random() * Math.PI * 2,
-        scale: 0.2 + Math.random() * 0.4,
-      });
-    }
     this.barn = new MyBarn(this);
 
     // Shaders
@@ -261,15 +250,6 @@ export class MyScene extends CGFscene {
     this.ScatterManager.display(camera);
     this.plane.display();
 
-    // Flowers
-    for (let f of this.flowers) {
-      this.pushMatrix();
-      this.translate(f.x, 1.3, f.z);
-      this.rotate(f.rotation, 0, 1, 0);
-      this.scale(f.scale, f.scale, f.scale);
-      f.flower.display();
-      this.popMatrix();
-    }
 
     // Barn
     this.pushMatrix();
