@@ -17,10 +17,10 @@ export class MyGrassField extends CGFobject {
     let vertexIndex = 0;
 
     // prevent grass from spawning inside the barn
-    const barnMinX = -8;
-    const barnMaxX =  6;
-    const barnMinZ = -2;
-    const barnMaxZ =  15;
+    const barnMinX = -2.5;
+    const barnMaxX =  8.5;
+    const barnMinZ = -1.1;
+    const barnMaxZ =  7.1;
 
     for (let i = 0; i < this.nrBlades; i++) {
       let angle = Math.random() * Math.PI * 2;

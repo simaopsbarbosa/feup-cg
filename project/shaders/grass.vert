@@ -12,6 +12,7 @@ uniform float u_random2;
 uniform float u_time;
 
 varying vec2 vTextureCoord;
+varying float vDirtFactor;
 
 float random(in vec2 st) {
     return fract(sin(dot(st.xy, u_random1)) * u_random2);
@@ -50,10 +51,18 @@ void main() {
     float pathDist = abs(terrainUV.x - 0.5 + pathWarp);
     float pathExclusion = smoothstep(0.025, 0.045, pathDist);
 
+    // Sample the same dirt noise pattern as the terrain shader to blend into dead grass
+    float dirtNoise = noise(terrainUV * 20.0);
+    vDirtFactor = smoothstep(0.7, 0.9, dirtNoise);
+
     vec3 displacedPosition = aVertexPosition;
 
-    // Displace by pre-packed shape offset
-    displacedPosition += aVertexNormal * pathExclusion;
+    // Scale up the blade height on dry dirt patches
+    vec3 localOffset = aVertexNormal;
+    localOffset.y *= (1.0 + vDirtFactor);
+
+    // Displace vertex height based on culling
+    displacedPosition += localOffset * pathExclusion;
     displacedPosition.y += terrainHeight;
 
     float windWeight = aTextureCoord.y;
