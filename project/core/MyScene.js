@@ -12,6 +12,7 @@ import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import {MyPlayer} from "../elements/player/MyPlayer.js"
+import { horse } from '../elements/horse/horse.js';
 
 /**
  * MyScene
@@ -60,6 +61,9 @@ export class MyScene extends CGFscene {
 
     //player
     this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
+
+    //horse
+    this.horse=new horse(this);
 
     //-------Objects connected to MyInterface
     this.displayAxis = true;
@@ -258,6 +262,10 @@ export class MyScene extends CGFscene {
     this.scale(7, 7, 7);
     this.barn.display();
     this.popMatrix();
+
+
+    //horse 
+    this.horse.display();
 
     // ---- END Primitive drawing section
   }
