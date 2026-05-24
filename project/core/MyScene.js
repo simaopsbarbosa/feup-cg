@@ -11,7 +11,7 @@ import { MyPlane } from '../primitives/MyPlane.js';
 import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
-import {MyPlayer} from "../elements/player/MyPlayer.js"
+import { MyPlayer } from "../elements/player/MyPlayer.js"
 
 /**
  * MyScene
@@ -253,7 +253,7 @@ export class MyScene extends CGFscene {
 
     // Barn
     this.pushMatrix();
-    this.translate(3,1,3);
+    this.translate(3, 1, 3);
     this.rotate(Math.PI / 2, 0, -1, 0);
     this.scale(7, 7, 7);
     this.barn.display();
