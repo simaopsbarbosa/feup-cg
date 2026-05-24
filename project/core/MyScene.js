@@ -12,6 +12,7 @@ import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import {MyPlayer} from "../elements/player/MyPlayer.js"
+import { MyGrassField } from '../elements/grass/MyGrassField.js';
 import { horse } from '../elements/horse/horse.js';
 
 /**
@@ -50,11 +51,19 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 80);
     this.barn = new MyBarn(this);
 
-    // Shaders
-    this.heightmapBakeQuad = new MyPlane(this, 1);
+  
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
+
+    // Grass Field
+    this.grassField = new MyGrassField(this, 160000, 50);
+    this.grassShader = new CGFshader(
+      this.gl,
+      'shaders/grass.vert',
+      'shaders/grass.frag'
+    );
+    this.timeSeconds = 0.0;
 
     //scatter Manager
     this.ScatterManager = new ScatterManager(this);
@@ -66,8 +75,9 @@ export class MyScene extends CGFscene {
     this.horse=new horse(this);
 
     //-------Objects connected to MyInterface
-    this.displayAxis = true;
+    this.displayAxis = false;
     this.displaySky = true;
+    this.displayGrass = true;
     this.textureFiltering = false;
     this.scaleFactor = 5;
     this.selectedTexture = -1;
@@ -88,61 +98,7 @@ export class MyScene extends CGFscene {
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
   }
-  generateHeightmapTexture(resolution = 512) {
-    const gl = this.gl;
 
-    const fb = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-
-    const heightmapTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, heightmapTexture);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      resolution,
-      resolution,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      null
-    );
-
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      heightmapTexture,
-      0
-    );
-
-    const genShader = new CGFshader(
-      gl,
-      'shaders/heightmap.vert',
-      'shaders/heightmap.frag'
-    );
-
-    this.setActiveShader(genShader);
-    genShader.setUniformsValues({
-      u_random1: this.u_random1,
-      u_random2: this.u_random2,
-    });
-    gl.viewport(0, 0, resolution, resolution);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    this.heightmapBakeQuad.display();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    this.setActiveShader(this.defaultShader);
-
-    const cgfTex = new CGFtexture(this);
-    cgfTex.texID = heightmapTexture;
-    return cgfTex;
-  }
 
   initLights() {
     // Don't change this because of the default material for the sky
@@ -185,6 +141,7 @@ export class MyScene extends CGFscene {
     if (this.lastTime == 0) this.lastTime = t;
     let deltaTime = t - this.lastTime;
     this.lastTime = t;
+    this.timeSeconds = t / 1000.0;
 
     let timeScale = 0.005;
 
@@ -194,6 +151,71 @@ export class MyScene extends CGFscene {
     if (this.gui.activeKeys) {
       this.player.update(this.gui.activeKeys);
     }
+  }
+
+  displaySkyAndClouds() {
+    this.pushMatrix();
+    this.scale(
+      this.scaleFactor * 2,
+      this.scaleFactor * 2,
+      this.scaleFactor * 2
+    );
+    this.gl.disable(this.gl.CULL_FACE);
+    this.sphere.display();
+    this.gl.enable(this.gl.CULL_FACE);
+    this.popMatrix();
+
+    this.gl.disable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.BLEND);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.depthMask(false);
+    this.gl.disable(this.gl.DEPTH_TEST);
+
+    for (let i = 0; i < this.clouds.length; i++) {
+      if (this.clouds[i].isReady()) {
+        this.clouds[i].display();
+      }
+    }
+
+    this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl.depthMask(true);
+    this.gl.disable(this.gl.BLEND);
+    this.gl.enable(this.gl.CULL_FACE);
+  }
+
+  displayPlane() {
+    let camera = this.camera.position;
+    this.ScatterManager.display(camera);
+    this.plane.display();
+  }
+
+  displayGrassField() {
+    this.pushMatrix();
+    this.gl.disable(this.gl.CULL_FACE); // render both sides of the blade
+    this.setActiveShader(this.grassShader);
+    
+    this.plane.grassTexture.bind(0);
+
+    let currentTime = performance.now() / 1000.0;
+
+    this.grassShader.setUniformsValues({
+      u_random1: this.plane.u_random1,
+      u_random2: this.plane.u_random2,
+      u_time: currentTime
+    });
+    this.grassField.display();
+    this.setActiveShader(this.defaultShader);
+    this.gl.enable(this.gl.CULL_FACE); // Restore backface culling for the rest of the scene
+    this.popMatrix();
+  }
+
+  displayBarn() {
+    this.pushMatrix();
+    this.translate(3,1,3);
+    this.rotate(Math.PI / 2, 0, -1, 0);
+    this.scale(7, 7, 7);
+    this.barn.display();
+    this.popMatrix();
   }
 
   display() {
@@ -210,58 +232,24 @@ export class MyScene extends CGFscene {
     this.updateLights();
 
     // Draw axis
-    if (this.displayAxis) this.axis.display();
+    if (this.displayAxis) {
+      this.axis.display();
+    }
 
     this.setDefaultAppearance();
 
     // ---- BEGIN Primitive drawing section
     if (this.displaySky) {
-      this.pushMatrix();
-      this.scale(
-        this.scaleFactor * 2,
-        this.scaleFactor * 2,
-        this.scaleFactor * 2
-      );
-      // Sphere
-      this.gl.disable(this.gl.CULL_FACE);
-      this.sphere.display();
-      this.gl.enable(this.gl.CULL_FACE);
-      this.popMatrix();
+      this.displaySkyAndClouds();
     }
 
-    // Clouds
-    if (this.displaySky) {
-      this.gl.disable(this.gl.CULL_FACE);
-      this.gl.enable(this.gl.BLEND);
-      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-      this.gl.depthMask(false);
-      this.gl.disable(this.gl.DEPTH_TEST);
+    this.displayPlane();
 
-      for (let i = 0; i < this.clouds.length; i++) {
-        if (this.clouds[i].isReady()) {
-          this.clouds[i].display();
-        }
-      }
-
-      this.gl.enable(this.gl.DEPTH_TEST);
-      this.gl.depthMask(true);
-      this.gl.disable(this.gl.BLEND);
-      this.gl.enable(this.gl.CULL_FACE);
+    if (this.displayGrass) {
+      this.displayGrassField();
     }
 
-    // Plane
-    let camera = this.camera.position;
-    this.ScatterManager.display(camera);
-    this.plane.display();
-
-
-    // Barn
-    this.pushMatrix();
-    this.translate(3,1,3);
-    this.rotate(Math.PI / 2, 0, -1, 0);
-    this.scale(7, 7, 7);
-    this.barn.display();
-    this.popMatrix();
+    this.displayBarn();
 
 
     //horse 
