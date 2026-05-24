@@ -57,7 +57,7 @@ export class MyScene extends CGFscene {
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
 
     // Grass Field
-    this.grassField = new MyGrassField(this, 90000, 75);
+    this.grassField = new MyGrassField(this, 160000, 50);
     this.grassShader = new CGFshader(
       this.gl,
       'shaders/grass.vert',
