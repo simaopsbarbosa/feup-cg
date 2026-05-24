@@ -44,6 +44,14 @@ export class MyWagon {
       this.woodApp.setTexture(new CGFtexture(scene, 'images/barn/wood_plank.jpg'));
       this.woodApp.setTextureWrap('REPEAT', 'REPEAT');
 
+      this.coverApp = new CGFappearance(scene);
+      this.coverApp.setAmbient(0.5, 0.5, 0.5, 1.0);
+      this.coverApp.setDiffuse(0.9, 0.9, 0.9, 1.0);
+      this.coverApp.setSpecular(0.05, 0.05, 0.05, 1.0);
+      this.coverApp.setShininess(5);
+      this.coverApp.setTexture(new CGFtexture(scene, 'images/wagon/cloth_texture.jpg'));
+      this.coverApp.setTextureWrap('REPEAT', 'REPEAT');
+
       this.metalApp = new CGFappearance(scene);
       this.metalApp.setAmbient(0.2, 0.2, 0.2, 1.0);
       this.metalApp.setDiffuse(0.4, 0.4, 0.4, 1.0);
@@ -54,6 +62,7 @@ export class MyWagon {
    initShaders() {
       this.coverShader = new CGFshader(this.scene.gl, 'shaders/wagonCover.vert', 'shaders/wagonCover.frag');
       this.coverShader.setUniformsValues({
+         uSampler: 0,
          uBaseColor: [0.99, 0.84, 0.72],
          uWeaveScale: 18.0,
          uLightDir: [-1.0, 0.7, 0.3],
@@ -93,6 +102,7 @@ export class MyWagon {
       scene.pushMatrix();
       scene.translate(0, this.coverY, -this.bedD / 6);
       scene.gl.disable(scene.gl.CULL_FACE);
+      this.coverApp.apply();
       scene.setActiveShader(this.coverShader);
       this.cover.display();
       scene.setActiveShader(scene.defaultShader);

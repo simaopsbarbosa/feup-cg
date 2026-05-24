@@ -6,6 +6,7 @@ varying vec2 vTexCoord;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
+uniform sampler2D uSampler;
 uniform vec3 uLightDir;
 uniform vec3 uBaseColor;
 uniform float uWeaveScale;
@@ -29,18 +30,21 @@ void main() {
 
    float grain = hash(vec2(col, row)) * 0.05 - 0.025;
 
-   vec3 color = (uBaseColor + vec3(grain)) * (0.85 + 0.15 * weave);
+   vec3 cloth = texture2D(uSampler, vTexCoord).rgb;
+   vec3 color = mix(cloth, cloth * uBaseColor, 0.35);
+   color = color * (0.9 + 0.1 * weave) + vec3(grain);
 
    vec3 n = normalize(vNormal);
-   float diff = abs(dot(n, normalize(uLightDir)));
+   float diff = max(dot(n, normalize(uLightDir)), 0.0);
 
-   float ambient = 0.65;
+   float ambient = 0.70;
    
    float theta = vTexCoord.y * 4.0 * 6.2831853;
    float sagOcc = (1.0 - cos(theta)) * 0.5;
-   ambient -= sagOcc * 0.15; 
+   ambient -= sagOcc * 0.08; 
    
-   color *= (ambient + diff * 0.45);
+   color *= (ambient + diff * 0.35);
+   color = mix(color, vec3(1.0), 0.04);
 
    gl_FragColor = vec4(color, 1.0);
 }
