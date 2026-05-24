@@ -12,6 +12,7 @@ import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import { MyPlayer } from "../elements/player/MyPlayer.js"
+import { MyWagon } from '../elements/wagon/MyWagon.js';
 
 /**
  * MyScene
@@ -48,7 +49,7 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
     this.barn = new MyBarn(this);
-
+    this.wagon = new MyWagon(this);
     // Shaders
     this.heightmapBakeQuad = new MyPlane(this, 1);
     // Different terrain every run
@@ -257,6 +258,13 @@ export class MyScene extends CGFscene {
     this.rotate(Math.PI / 2, 0, -1, 0);
     this.scale(7, 7, 7);
     this.barn.display();
+    this.popMatrix();
+
+    // Wagon
+    this.pushMatrix();
+    this.translate(-4, 0.9, -3);
+    this.scale(3, 3, 3);
+    this.wagon.display();
     this.popMatrix();
 
     // ---- END Primitive drawing section

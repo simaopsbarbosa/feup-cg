@@ -1,5 +1,5 @@
-import { CGFappearance, CGFtexture } from '../../lib/CGF.js';
-import { MyBox } from '../primitives/MyBox.js';
+import { CGFappearance, CGFtexture } from '../../../lib/CGF.js';
+import { MyBox } from '../../primitives/MyBox.js';
 import { MyWheel } from './MyWheel.js';
 import { MyWagonCover } from './MyWagonCover.js';
 
@@ -49,7 +49,7 @@ export class MyWagon {
       this.metalApp.setSpecular(0.6, 0.6, 0.6, 1.0);
       this.metalApp.setShininess(40);
 
-      this.clothApp = new CGFappearance(sc);
+      this.clothApp = new CGFappearance(scene);
       this.clothApp.setAmbient(0.5, 0.48, 0.42, 1.0);
       this.clothApp.setDiffuse(0.9, 0.87, 0.78, 1.0);
       this.clothApp.setSpecular(0.02, 0.02, 0.02, 1.0);

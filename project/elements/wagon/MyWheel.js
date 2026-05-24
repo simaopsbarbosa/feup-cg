@@ -1,4 +1,4 @@
-import { CGFobject } from '../../lib/CGF.js';
+import { CGFobject } from '../../../lib/CGF.js';
 
 export class MyWheel extends CGFobject {
    constructor(scene, radius = 0.25, spokes = 8, thickness = 0.06) {
@@ -77,13 +77,13 @@ export class MyWheel extends CGFobject {
                push(hr * ca - px, hr * sa - py, z, 0, 0, nz, 0, 1);
                push(ri * ca - px, ri * sa - py, z, 0, 0, nz, 1, 1);
                push(ri * ca + px, ri * sa + py, z, 0, 0, nz, 1, 0);
-               this.indices.push(b, b + 1, b + 2, b, b + 2, b + 3);
+               this.indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
             } else {
                push(hr * ca + px, hr * sa + py, z, 0, 0, nz, 0, 0);
                push(hr * ca + px, ri * sa + py, z, 0, 0, nz, 1, 0);
                push(hr * ca - px, ri * sa - py, z, 0, 0, nz, 1, 1);
                push(hr * ca - px, hr * sa - py, z, 0, 0, nz, 0, 1);
-               this.indices.push(b, b + 1, b + 2, b, b + 2, b + 3);
+               this.indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
             }
          }
       }
@@ -105,6 +105,7 @@ export class MyWheel extends CGFobject {
       }
 
       this.primitiveType = this.scene.gl.TRIANGLES;
+      this.initGLBuffers();
 
    }
 }

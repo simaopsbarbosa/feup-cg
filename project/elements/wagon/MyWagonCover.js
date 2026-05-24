@@ -1,6 +1,6 @@
-import { CGFobject } from '../../lib/CGF.js';
+import { CGFobject } from '../../../lib/CGF.js';
 
-export class MyWagonCover extends CFGobject {
+export class MyWagonCover extends CGFobject {
    constructor(scene, width = 0.7, length = 1.4, segments = 20) {
       super(scene);
       this.R = width / 2;
