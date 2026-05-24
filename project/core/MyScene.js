@@ -72,7 +72,7 @@ export class MyScene extends CGFscene {
     this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
 
     //-------Objects connected to MyInterface
-    this.displayAxis = true;
+    this.displayAxis = false;
     this.displaySky = true;
     this.displayGrass = true;
     this.textureFiltering = false;
@@ -204,6 +204,71 @@ export class MyScene extends CGFscene {
     }
   }
 
+  displaySkyAndClouds() {
+    this.pushMatrix();
+    this.scale(
+      this.scaleFactor * 2,
+      this.scaleFactor * 2,
+      this.scaleFactor * 2
+    );
+    this.gl.disable(this.gl.CULL_FACE);
+    this.sphere.display();
+    this.gl.enable(this.gl.CULL_FACE);
+    this.popMatrix();
+
+    this.gl.disable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.BLEND);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.depthMask(false);
+    this.gl.disable(this.gl.DEPTH_TEST);
+
+    for (let i = 0; i < this.clouds.length; i++) {
+      if (this.clouds[i].isReady()) {
+        this.clouds[i].display();
+      }
+    }
+
+    this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl.depthMask(true);
+    this.gl.disable(this.gl.BLEND);
+    this.gl.enable(this.gl.CULL_FACE);
+  }
+
+  displayPlane() {
+    let camera = this.camera.position;
+    this.ScatterManager.display(camera);
+    this.plane.display();
+  }
+
+  displayGrassField() {
+    this.pushMatrix();
+    this.gl.disable(this.gl.CULL_FACE); // render both sides of the blade
+    this.setActiveShader(this.grassShader);
+    
+    this.plane.grassTexture.bind(0);
+
+    let currentTime = performance.now() / 1000.0;
+
+    this.grassShader.setUniformsValues({
+      u_random1: this.plane.u_random1,
+      u_random2: this.plane.u_random2,
+      u_time: currentTime
+    });
+    this.grassField.display();
+    this.setActiveShader(this.defaultShader);
+    this.gl.enable(this.gl.CULL_FACE); // Restore backface culling for the rest of the scene
+    this.popMatrix();
+  }
+
+  displayBarn() {
+    this.pushMatrix();
+    this.translate(3,1,3);
+    this.rotate(Math.PI / 2, 0, -1, 0);
+    this.scale(7, 7, 7);
+    this.barn.display();
+    this.popMatrix();
+  }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -218,79 +283,24 @@ export class MyScene extends CGFscene {
     this.updateLights();
 
     // Draw axis
-    if (this.displayAxis) this.axis.display();
+    if (this.displayAxis) {
+      this.axis.display();
+    }
 
     this.setDefaultAppearance();
 
     // ---- BEGIN Primitive drawing section
     if (this.displaySky) {
-      this.pushMatrix();
-      this.scale(
-        this.scaleFactor * 2,
-        this.scaleFactor * 2,
-        this.scaleFactor * 2
-      );
-      // Sphere
-      this.gl.disable(this.gl.CULL_FACE);
-      this.sphere.display();
-      this.gl.enable(this.gl.CULL_FACE);
-      this.popMatrix();
+      this.displaySkyAndClouds();
     }
 
-    // Clouds
-    if (this.displaySky) {
-      this.gl.disable(this.gl.CULL_FACE);
-      this.gl.enable(this.gl.BLEND);
-      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-      this.gl.depthMask(false);
-      this.gl.disable(this.gl.DEPTH_TEST);
+    this.displayPlane();
 
-      for (let i = 0; i < this.clouds.length; i++) {
-        if (this.clouds[i].isReady()) {
-          this.clouds[i].display();
-        }
-      }
-
-      this.gl.enable(this.gl.DEPTH_TEST);
-      this.gl.depthMask(true);
-      this.gl.disable(this.gl.BLEND);
-      this.gl.enable(this.gl.CULL_FACE);
-    }
-
-    // Plane
-    let camera = this.camera.position;
-    this.ScatterManager.display(camera);
-    this.plane.display();
-
-    // Grass Field
     if (this.displayGrass) {
-      this.pushMatrix();
-      this.gl.disable(this.gl.CULL_FACE); // render both sides of the blade
-      this.setActiveShader(this.grassShader);
-      
-      this.plane.grassTexture.bind(0);
-
-      let currentTime = performance.now() / 1000.0;
-
-      this.grassShader.setUniformsValues({
-        u_random1: this.plane.u_random1,
-        u_random2: this.plane.u_random2,
-        u_time: currentTime
-      });
-      this.grassField.display();
-      this.setActiveShader(this.defaultShader);
-      this.gl.enable(this.gl.CULL_FACE); // Restore backface culling for the rest of the scene
-      this.popMatrix();
+      this.displayGrassField();
     }
 
-
-    // Barn
-    this.pushMatrix();
-    this.translate(3,1,3);
-    this.rotate(Math.PI / 2, 0, -1, 0);
-    this.scale(7, 7, 7);
-    this.barn.display();
-    this.popMatrix();
+    this.displayBarn();
 
     // ---- END Primitive drawing section
   }
