@@ -74,6 +74,7 @@ export class MyScene extends CGFscene {
     //-------Objects connected to MyInterface
     this.displayAxis = true;
     this.displaySky = true;
+    this.displayGrass = true;
     this.textureFiltering = false;
     this.scaleFactor = 5;
     this.selectedTexture = -1;
@@ -262,23 +263,25 @@ export class MyScene extends CGFscene {
     this.plane.display();
 
     // Grass Field
-    this.pushMatrix();
-    this.gl.disable(this.gl.CULL_FACE); // render both sides of the blade
-    this.setActiveShader(this.grassShader);
-    
-    this.plane.grassTexture.bind(0);
+    if (this.displayGrass) {
+      this.pushMatrix();
+      this.gl.disable(this.gl.CULL_FACE); // render both sides of the blade
+      this.setActiveShader(this.grassShader);
+      
+      this.plane.grassTexture.bind(0);
 
-    let currentTime = performance.now() / 1000.0;
+      let currentTime = performance.now() / 1000.0;
 
-    this.grassShader.setUniformsValues({
-      u_random1: this.plane.u_random1,
-      u_random2: this.plane.u_random2,
-      u_time: currentTime
-    });
-    this.grassField.display();
-    this.setActiveShader(this.defaultShader);
-    this.gl.enable(this.gl.CULL_FACE); // Restore backface culling for the rest of the scene
-    this.popMatrix();
+      this.grassShader.setUniformsValues({
+        u_random1: this.plane.u_random1,
+        u_random2: this.plane.u_random2,
+        u_time: currentTime
+      });
+      this.grassField.display();
+      this.setActiveShader(this.defaultShader);
+      this.gl.enable(this.gl.CULL_FACE); // Restore backface culling for the rest of the scene
+      this.popMatrix();
+    }
 
 
     // Barn
