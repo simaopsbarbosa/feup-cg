@@ -12,6 +12,7 @@ import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import {MyPlayer} from "../elements/player/MyPlayer.js"
+import { MyGrassField } from '../elements/grass/MyGrassField.js';
 
 /**
  * MyScene
@@ -54,6 +55,15 @@ export class MyScene extends CGFscene {
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
+
+    // Grass Field
+    this.grassField = new MyGrassField(this, 90000, 75);
+    this.grassShader = new CGFshader(
+      this.gl,
+      'shaders/grass.vert',
+      'shaders/grass.frag'
+    );
+    this.timeSeconds = 0.0;
 
     //scatter Manager
     this.ScatterManager = new ScatterManager(this);
@@ -181,6 +191,7 @@ export class MyScene extends CGFscene {
     if (this.lastTime == 0) this.lastTime = t;
     let deltaTime = t - this.lastTime;
     this.lastTime = t;
+    this.timeSeconds = t / 1000.0;
 
     let timeScale = 0.005;
 
@@ -249,6 +260,25 @@ export class MyScene extends CGFscene {
     let camera = this.camera.position;
     this.ScatterManager.display(camera);
     this.plane.display();
+
+    // Grass Field
+    this.pushMatrix();
+    this.gl.disable(this.gl.CULL_FACE); // render both sides of the blade
+    this.setActiveShader(this.grassShader);
+    
+    this.plane.grassTexture.bind(0);
+
+    let currentTime = performance.now() / 1000.0;
+
+    this.grassShader.setUniformsValues({
+      u_random1: this.plane.u_random1,
+      u_random2: this.plane.u_random2,
+      u_time: currentTime
+    });
+    this.grassField.display();
+    this.setActiveShader(this.defaultShader);
+    this.gl.enable(this.gl.CULL_FACE); // Restore backface culling for the rest of the scene
+    this.popMatrix();
 
 
     // Barn
