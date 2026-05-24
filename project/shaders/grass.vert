@@ -33,7 +33,7 @@ float noise(in vec2 st) {
 void main() {
     vTextureCoord = aTextureCoord;
 
-    vec2 terrainUV = vec2((aVertexPosition.x + 80.0) / 160.0, (80.0 - aVertexPosition.z) / 160.0);
+    vec2 terrainUV = vec2((aVertexPosition.x + 80.0) / 160.0, (aVertexPosition.z + 80.0) / 160.0);
 
     // Sample the terrain displacement function at this position to snap the blade root to the exact terrain height
     float distFromCenter = distance(terrainUV, vec2(0.5, 0.5));
