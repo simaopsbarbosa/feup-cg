@@ -1,4 +1,4 @@
-import { CGFappearance, CGFtexture } from '../../../lib/CGF.js';
+import { CGFappearance, CGFtexture, CGFshader } from '../../../lib/CGF.js';
 import { MyBox } from '../../primitives/MyBox.js';
 import { MyWheel } from './MyWheel.js';
 import { MyWagonCover } from './MyWagonCover.js';
@@ -14,11 +14,11 @@ export class MyWagon {
       this.bedD = 1.40;
 
       this.bedY = this.wheelRadius + 0.02;
-      this.coverY = this.bedY + this.bedH;
+      this.coverY = this.bedY + this.bedH / 2;
       this.axleHalfW = this.bedW / 2 + this.wheelThick / 2 + 0.01;
 
       this.bed = new MyBox(scene, this.bedW, this.bedH, this.bedD);
-      this.cover = new MyWagonCover(scene, this.bedW, this.bedD);
+      this.cover = new MyWagonCover(scene, this.bedW, this.bedD / 1.5);
       this.wheel = new MyWheel(scene, this.wheelRadius, 8, this.wheelThick);
 
       this.axle = new MyBox(scene, this.axleHalfW * 2 + 0.02, 0.03, 0.03);
@@ -26,6 +26,7 @@ export class MyWagon {
       this.tongue = new MyBox(scene, 0.04, 0.04, 0.60);
 
       this.initAppearances();
+      this.initShaders();
    }
 
    initAppearances() {
@@ -48,12 +49,15 @@ export class MyWagon {
       this.metalApp.setDiffuse(0.4, 0.4, 0.4, 1.0);
       this.metalApp.setSpecular(0.6, 0.6, 0.6, 1.0);
       this.metalApp.setShininess(40);
+   }
 
-      this.clothApp = new CGFappearance(scene);
-      this.clothApp.setAmbient(0.5, 0.48, 0.42, 1.0);
-      this.clothApp.setDiffuse(0.9, 0.87, 0.78, 1.0);
-      this.clothApp.setSpecular(0.02, 0.02, 0.02, 1.0);
-      this.clothApp.setShininess(2);
+   initShaders() {
+      this.coverShader = new CGFshader(this.scene.gl, 'shaders/wagonCover.vert', 'shaders/wagonCover.frag');
+      this.coverShader.setUniformsValues({
+         uBaseColor: [0.99, 0.84, 0.72],
+         uWeaveScale: 18.0,
+         uLightDir: [-1.0, 0.7, 0.3],
+      });
    }
 
    _drawWheel(x, z) {
@@ -87,9 +91,12 @@ export class MyWagon {
 
       // Cloth cover
       scene.pushMatrix();
-      scene.translate(0, this.coverY, 0);
-      this.clothApp.apply();
+      scene.translate(0, this.coverY, -this.bedD / 6);
+      scene.gl.disable(scene.gl.CULL_FACE);
+      scene.setActiveShader(this.coverShader);
       this.cover.display();
+      scene.setActiveShader(scene.defaultShader);
+      scene.gl.enable(scene.gl.CULL_FACE);
       scene.popMatrix();
 
       // Front axle and wheels
@@ -106,7 +113,7 @@ export class MyWagon {
 
       // Tonge
       scene.pushMatrix();
-      scene.translate(0, this.wheelRadius, frontZ + this.bedD / 2 * 0.5 + 0.30);
+      scene.translate(0, this.wheelRadius, frontZ + this.bedD / 2 * 0.5);
       scene.rotate(0.15, 1, 0, 0);
       this.woodApp.apply();
       this.tongue.display();

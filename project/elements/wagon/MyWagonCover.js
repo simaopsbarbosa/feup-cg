@@ -11,56 +11,46 @@ export class MyWagonCover extends CGFobject {
 
    initBuffers() {
       let R = this.R, d = this.length / 2, N = this.segments;
+      let heightFactor = 1.4;
+      let Z_SEG = 30;
 
       this.vertices = [];
       this.normals = [];
       this.texCoords = [];
       this.indices = [];
 
-      for (let i = 0; i <= N; i++) {
-         let angle = Math.PI * i / N;
-         let x = R * Math.cos(angle);
-         let y = R * Math.sin(angle);
-         let nx = Math.cos(angle);
-         let ny = Math.sin(angle);
-         let u = i / N;
+      for (let j = 0; j <= Z_SEG; j++) {
+         let v = j / Z_SEG;
+         let z = d - v * this.length;
 
-         this.vertices.push(x, y, d);
-         this.normals.push(nx, ny, 0);
-         this.texCoords.push(u, 1);
-      }
+         for (let i = 0; i <= N; i++) {
+            let u = i / N;
+            let angle = Math.PI * i / N;
 
-      for (let i = 0; i < N; i++) {
-         let b = i * 2;
-         this.indices.push(b, b + 1, b + 2, b + 1, b + 3, b + 2);
-      }
+            let x = R * Math.cos(angle);
+            let y = (R * Math.sin(angle)) * heightFactor;
 
-      let capFront = this.vertices.length / 3;
-      this.vertices.push(0, 0, d);
-      this.normals.push(0, 0, 1);
-      this.texCoords.push(0.5, 0.5);
-      for (let i = 0; i <= N; i++) {
-         let angle = Math.PI * i / N;
-         this.vertices.push(R * Math.cos(angle), R * Math.sin(angle), d);
-         this.normals.push(0, 0, 1);
-         this.texCoords.push(0.5 + 0.5 * Math.cos(angle), 0.5 + 0.5 * Math.sin(angle));
-      }
-      for (let i = 0; i < N; i++) {
-         this.indices.push(capFront, capFront + i + 1, capFront + i + 2);
+            let nx = Math.cos(angle);
+            let ny = Math.sin(angle) / heightFactor;
+            let nLen = Math.sqrt(nx * nx + ny * ny);
+            nx /= nLen;
+            ny /= nLen;
+
+            this.vertices.push(x, y, z);
+            this.normals.push(nx, ny, 0);
+            this.texCoords.push(u, v);
+         }
       }
 
-      let capBack = this.vertices.length / 3;
-      this.vertices.push(0, 0, -d);
-      this.normals.push(0, 0, -1);
-      this.texCoords.push(0.5, 0.5);
-      for (let i = 0; i <= N; i++) {
-         let angle = Math.PI * i / N;
-         this.vertices.push(R * Math.cos(angle), R * Math.sin(angle), -d);
-         this.normals.push(0, 0, -1);
-         this.texCoords.push(0.5 + 0.5 * Math.cos(angle), 0.5 + 0.5 * Math.sin(angle));
-      }
-      for (let i = 0; i < N; i++) {
-         this.indices.push(capBack, capBack + i + 2, capBack + i + 1);
+      for (let j = 0; j < Z_SEG; j++) {
+         for (let i = 0; i < N; i++) {
+            let p1 = j * (N + 1) + i;
+            let p2 = p1 + 1;
+            let p3 = (j + 1) * (N + 1) + i;
+            let p4 = p3 + 1;
+
+            this.indices.push(p1, p3, p2, p2, p3, p4);
+         }
       }
 
       this.primitiveType = this.scene.gl.TRIANGLES;
