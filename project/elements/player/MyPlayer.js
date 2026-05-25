@@ -5,12 +5,32 @@ export class MyPlayer {
     this.scene = scene;
     this.horse=new horse(this.scene);
     this.wagon = new MyWagon(this.scene);
+    this.x=-5;
+    this.y=1.5;
+    this.z=0;
+    this.speed=0.2;
 
+  }
+  move(direction) {
+    switch(direction) {
+      case 'W': 
+        this.z += this.speed;
+        break;
+      case 'S': 
+        this.z -= this.speed;
+        break;
+      case 'A': 
+        this.x -= this.speed;
+        break;
+      case 'D': 
+        this.x += this.speed;
+        break;
+    }
   }
 
   display(){
     this.scene.pushMatrix();
-    this.scene.translate(-5,1,0);
+    this.scene.translate(this.x,this.y,this.z);
     // Wagon
     this.scene.pushMatrix();
     this.scene.scale(3, 3, 3);

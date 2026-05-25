@@ -133,6 +133,22 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
+  playerMoves(){
+    let key=this.gui.activeKeys;
+    if (key['KeyW']) {
+        this.player.move('W');
+    }
+    if (key['KeyS']) {
+        this.player.move('S');
+    }
+    if (key['KeyA']) {
+        this.player.move('A');
+    }
+    if (key['KeyD']) {
+        this.player.move('D');
+    }
+  }
+
   
 
   displaySkyAndClouds() {
@@ -212,6 +228,7 @@ export class MyScene extends CGFscene {
     this.applyViewMatrix();
 
     this.updateLights();
+    this.playerMoves();
 
     // Draw axis
     if (this.displayAxis) {
