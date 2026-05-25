@@ -1,60 +1,27 @@
+import { horse } from '../horse/horse.js';
+import { MyWagon } from '../wagon/MyWagon.js';
 export class MyPlayer {
-  constructor(scene, camera, height, terrainSize) {
+  constructor(scene) {
     this.scene = scene;
-    this.camera = camera;
-    this.height = height;
-    this.terrainSize = terrainSize;
-    this.eyeHeight = 1.5;
-    this.speed = 0.2;
+    this.horse=new horse(this.scene);
+    this.wagon = new MyWagon(this.scene);
+
   }
 
-  update(key) {
-    if (!key) return;
-    let forward = [
-      this.camera.target[0] - this.camera.position[0],
-      0,
-      this.camera.target[2] - this.camera.position[2],
-    ];
+  display(){
+    this.scene.pushMatrix();
+    this.scene.translate(-5,1,0);
+    // Wagon
+    this.scene.pushMatrix();
+    this.scene.scale(3, 3, 3);
+    this.wagon.display();
+    this.scene.popMatrix();
+    //horse 
+    this.scene.pushMatrix();
+    this.scene.translate(0,0,4);
+    this.horse.display();
+    this.scene.popMatrix();
 
-    let length = Math.sqrt(forward[0] ** 2 + forward[2] ** 2);
-    forward[0] /= length;
-    forward[2] /= length;
-
-    let right = [-forward[2], 0, forward[0]];
-
-    if (key['KeyW']) this.move(forward, this.speed);
-    if (key['KeyS']) this.move(forward, -this.speed);
-    if (key['KeyA']) this.move(right, -this.speed);
-    if (key['KeyD']) this.move(right, this.speed);
-    if (key['Space']) this.moveVertically(this.speed);
-    if (key['ShiftLeft']) this.moveVertically(-this.speed);
-
-    //this.applyGravity();
-  }
-
-  move(direction, speed) {
-    this.camera.position[0] += direction[0] * speed;
-    this.camera.position[2] += direction[2] * speed;
-    this.camera.target[0] += direction[0] * speed;
-    this.camera.target[2] += direction[2] * speed;
-  }
-
-  moveVertically(speed) {
-    this.camera.position[1] += speed;
-    this.camera.target[1] += speed;
-  }
-
-  applyGravity() {
-    let pos = this.camera.position;
-
-    let groundY = this.height.getGroundHeight(pos[0], pos[2], this.terrainSize);
-
-    let minHeight = groundY + this.eyeHeight;
-
-    if (this.camera.position[1] < minHeight) {
-      let diffY = minHeight - this.camera.position[1];
-      this.camera.position[1] += diffY;
-      this.camera.target[1] += diffY;
-    }
+    this.scene.popMatrix();
   }
 }

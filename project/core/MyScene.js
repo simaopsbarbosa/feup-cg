@@ -13,8 +13,7 @@ import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import {MyPlayer} from "../elements/player/MyPlayer.js"
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
-import { horse } from '../elements/horse/horse.js';
-import { MyWagon } from '../elements/wagon/MyWagon.js';
+
 
 /**
  * MyScene
@@ -51,7 +50,6 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
     this.barn = new MyBarn(this);
-    this.wagon = new MyWagon(this);
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
@@ -69,11 +67,9 @@ export class MyScene extends CGFscene {
     this.ScatterManager = new ScatterManager(this);
 
     //player
-    this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
+    this.player = new MyPlayer(this);
 
-    //horse
-    this.horse=new horse(this);
-
+ 
     //-------Objects connected to MyInterface
     this.displayAxis = false;
     this.displaySky = true;
@@ -137,21 +133,7 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
-  update(t) {
-    if (this.lastTime == 0) this.lastTime = t;
-    let deltaTime = t - this.lastTime;
-    this.lastTime = t;
-    this.timeSeconds = t / 1000.0;
-
-    let timeScale = 0.005;
-
-    for (let i = 0; i < this.clouds.length; i++) {
-      this.clouds[i].update(deltaTime * timeScale);
-    }
-    if (this.gui.activeKeys) {
-      this.player.update(this.gui.activeKeys);
-    }
-  }
+  
 
   displaySkyAndClouds() {
     this.pushMatrix();
@@ -237,7 +219,7 @@ export class MyScene extends CGFscene {
     }
 
     this.setDefaultAppearance();
-
+    
     // ---- BEGIN Primitive drawing section
     if (this.displaySky) {
       this.displaySkyAndClouds();
@@ -250,20 +232,7 @@ export class MyScene extends CGFscene {
     }
 
     this.displayBarn();
-
-    // Wagon
-    this.pushMatrix();
-    this.translate(-4, 0.9, -3);
-    this.scale(3, 3, 3);
-    this.wagon.display();
-    this.popMatrix();
-
-
-    //horse 
-    this.horse.display();
-
-
-
+    this.player.display();
 
     // ---- END Primitive drawing section
   }

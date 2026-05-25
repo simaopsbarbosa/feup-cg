@@ -33,7 +33,6 @@ export class horse extends CGFobject {
 
   display() {
     this.scene.pushMatrix();
-    this.scene.translate(14,1.5,0);
     this.scene.scale(0.1,0.1,0.1);
     this.material.apply();
     this.horseAnimation[this.currentFrame].display();
