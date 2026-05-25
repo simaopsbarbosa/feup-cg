@@ -17,12 +17,14 @@ export class MyPlayer {
   move(direction) {
     switch(direction) {
       case 'W': 
-        this.z += this.speed;
+        this.x += this.speed * Math.sin(this.wheelAngle);
+        this.z += this.speed * Math.cos(this.wheelAngle);
         this.rollAngle += this.rotationDelta;
         this.horse.currentFrame = (this.horse.currentFrame + 1) % this.totalFrames;
         break;
       case 'S': 
-        this.z -= this.speed;
+        this.x -= this.speed * Math.sin(this.wheelAngle);
+        this.z -= this.speed * Math.cos(this.wheelAngle);
         this.rollAngle -= this.rotationDelta;
         this.horse.currentFrame = (this.horse.currentFrame -1+  this.totalFrames) % this.totalFrames;
         break;
@@ -34,7 +36,7 @@ export class MyPlayer {
         break;
     
     }
-    console.log(this.wheelAngle);
+  
   }
 
   display(){
