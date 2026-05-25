@@ -11,25 +11,30 @@ export class MyPlayer {
     this.speed=0.2;
     this.wheelAngle=0;
     this.rollAngle=0
-    this.rotationDelta = this.speed / 0.25;
+    this.rotationDelta = this.speed / 0.25;       
+    this.totalFrames = 11;      
   }
   move(direction) {
     switch(direction) {
       case 'W': 
         this.z += this.speed;
         this.rollAngle += this.rotationDelta;
+        this.horse.currentFrame = (this.horse.currentFrame + 1) % this.totalFrames;
         break;
       case 'S': 
         this.z -= this.speed;
         this.rollAngle -= this.rotationDelta;
+        this.horse.currentFrame = (this.horse.currentFrame -1+  this.totalFrames) % this.totalFrames;
         break;
       case 'A': 
-        this.wheelAngle=-Math.PI/10;
+        this.wheelAngle = Math.max(-Math.PI / 10, this.wheelAngle - Math.PI / 10);
         break;
       case 'D': 
-        this.wheelAngle=+Math.PI/10;
+        this.wheelAngle = Math.min(Math.PI / 10, this.wheelAngle + Math.PI / 10);
         break;
+    
     }
+    console.log(this.wheelAngle);
   }
 
   display(){
