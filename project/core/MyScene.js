@@ -14,6 +14,7 @@ import { MyBarn } from '../elements/barn/MyBarn.js';
 import {MyPlayer} from "../elements/player/MyPlayer.js"
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
 import { horse } from '../elements/horse/horse.js';
+import { MyWagon } from '../elements/wagon/MyWagon.js';
 
 /**
  * MyScene
@@ -50,8 +51,7 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
     this.barn = new MyBarn(this);
-
-  
+    this.wagon = new MyWagon(this);
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
@@ -211,7 +211,7 @@ export class MyScene extends CGFscene {
 
   displayBarn() {
     this.pushMatrix();
-    this.translate(3,1,3);
+    this.translate(3, 1, 3);
     this.rotate(Math.PI / 2, 0, -1, 0);
     this.scale(7, 7, 7);
     this.barn.display();
@@ -251,9 +251,19 @@ export class MyScene extends CGFscene {
 
     this.displayBarn();
 
+    // Wagon
+    this.pushMatrix();
+    this.translate(-4, 0.9, -3);
+    this.scale(3, 3, 3);
+    this.wagon.display();
+    this.popMatrix();
+
 
     //horse 
     this.horse.display();
+
+
+
 
     // ---- END Primitive drawing section
   }

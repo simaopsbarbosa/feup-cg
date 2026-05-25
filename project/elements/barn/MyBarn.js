@@ -1,5 +1,5 @@
 import { CGFappearance, CGFtexture } from '../../../lib/CGF.js';
-import { MyBox } from './MyBox.js';
+import { MyBox } from '../../primitives/MyBox.js';
 import { MyRoof } from './MyRoof.js';
 
 export class MyBarn {
