@@ -15,6 +15,7 @@ import {MyPlayer} from "../elements/player/MyPlayer.js"
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
 
 
+
 /**
  * MyScene
  * @constructor
@@ -68,7 +69,9 @@ export class MyScene extends CGFscene {
 
     //player
     this.player = new MyPlayer(this);
+    this.player = new MyPlayer(this);
 
+ 
  
     //-------Objects connected to MyInterface
     this.displayAxis = false;
@@ -132,7 +135,6 @@ export class MyScene extends CGFscene {
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
   }
-
   playerMoves(){
     let key=this.gui.activeKeys;
     if (key['KeyW']) {
@@ -149,7 +151,22 @@ export class MyScene extends CGFscene {
     }
   }
 
-  
+
+  update(t) {
+    if (this.lastTime == 0) this.lastTime = t;
+    let deltaTime = t - this.lastTime;
+    this.lastTime = t;
+    this.timeSeconds = t / 1000.0;
+
+    let timeScale = 0.005;
+
+    for (let i = 0; i < this.clouds.length; i++) {
+      this.clouds[i].update(deltaTime * timeScale);
+    }
+    if (this.gui.activeKeys) {
+      this.playerMoves()
+    }
+  }
 
   displaySkyAndClouds() {
     this.pushMatrix();
@@ -249,6 +266,7 @@ export class MyScene extends CGFscene {
     }
 
     this.displayBarn();
+    this.player.display();
     this.player.display();
 
     // ---- END Primitive drawing section
