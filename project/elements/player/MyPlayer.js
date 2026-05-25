@@ -9,21 +9,25 @@ export class MyPlayer {
     this.y=1.5;
     this.z=0;
     this.speed=0.2;
-
+    this.wheelAngle=0;
+    this.rollAngle=0
+    this.rotationDelta = this.speed / 0.25;
   }
   move(direction) {
     switch(direction) {
       case 'W': 
         this.z += this.speed;
+        this.rollAngle += this.rotationDelta;
         break;
       case 'S': 
         this.z -= this.speed;
+        this.rollAngle -= this.rotationDelta;
         break;
       case 'A': 
-        this.x -= this.speed;
+        this.wheelAngle=-Math.PI/10;
         break;
       case 'D': 
-        this.x += this.speed;
+        this.wheelAngle=+Math.PI/10;
         break;
     }
   }
@@ -34,7 +38,7 @@ export class MyPlayer {
     // Wagon
     this.scene.pushMatrix();
     this.scene.scale(3, 3, 3);
-    this.wagon.display();
+    this.wagon.display(this.wheelAngle,this.rollAngle);
     this.scene.popMatrix();
     //horse 
     this.scene.pushMatrix();

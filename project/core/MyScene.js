@@ -136,16 +136,16 @@ export class MyScene extends CGFscene {
   playerMoves(){
     let key=this.gui.activeKeys;
     if (key['KeyW']) {
-        this.player.move('W');
+      this.player.move('W');
     }
     if (key['KeyS']) {
-        this.player.move('S');
+      this.player.move('S');
     }
     if (key['KeyA']) {
-        this.player.move('A');
+      this.player.move('A');
     }
     if (key['KeyD']) {
-        this.player.move('D');
+      this.player.move('D');
     }
   }
 
