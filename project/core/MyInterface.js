@@ -17,6 +17,8 @@ export class MyInterface extends CGFinterface {
     // https://github.com/dataarts/dat.gui/blob/master/API.md
     this.gui = new dat.GUI();
 
+    this.gui.add(this.scene, 'timeSeconds').name('Score (s)').listen();
+
     //Checkbox element in GUI
     this.gui.add(this.scene, 'displayAxis').name('Display Axis');
     this.gui.add(this.scene, 'displaySky').name('Display Sky');
