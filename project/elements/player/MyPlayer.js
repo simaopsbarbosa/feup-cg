@@ -19,7 +19,7 @@ export class MyPlayer {
     this.totalFrames = 11;   
     
     //Vector
-    this.DirectionVector=[0,0,0];
+    this.directionVector=[0,0,0];
 
 
 
@@ -42,6 +42,12 @@ export class MyPlayer {
         break;
       case 'D': 
         this.wheelAngle = Math.max(-Math.PI / 10, this.wheelAngle - Math.PI / 10);
+        break;
+      case 'DS': 
+        this.speed=Math.max(this.speed-0.05,0);
+        if(this.speed!=0){
+          this.horse.currentFrame = (this.horse.currentFrame -1+  this.totalFrames) % this.totalFrames;
+        }
         break;
       default:
         this.wheelAngle=0;

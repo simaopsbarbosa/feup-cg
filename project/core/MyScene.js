@@ -143,7 +143,7 @@ export class MyScene extends CGFscene {
       this.player.move('S');
     }
     else{
-      this.player.move('S');
+      this.player.move('DS');
     }
 
     if (key['KeyA']) {
