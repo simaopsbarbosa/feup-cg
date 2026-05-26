@@ -11,9 +11,10 @@ import { MyPlane } from '../primitives/MyPlane.js';
 import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
-import {MyPlayer} from "../elements/player/MyPlayer.js"
+import { MyPlayer } from "../elements/player/MyPlayer.js"
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
 import { MyWagon } from '../elements/wagon/MyWagon.js';
+import { MyBarnArea } from '../elements/barn/MyBarnArea.js';
 
 /**
  * MyScene
@@ -51,6 +52,8 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 80);
     this.barn = new MyBarn(this);
     this.wagon = new MyWagon(this);
+    this.barnArea = new MyBarnArea(this, 3.5);
+
     // Shaders
     this.heightmapBakeQuad = new MyPlane(this, 1);
     // Different terrain every run
@@ -245,7 +248,7 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.gl.disable(this.gl.CULL_FACE); // render both sides of the blade
     this.setActiveShader(this.grassShader);
-    
+
     this.plane.grassTexture.bind(0);
 
     let currentTime = performance.now() / 1000.0;
@@ -263,9 +266,9 @@ export class MyScene extends CGFscene {
 
   displayBarn() {
     this.pushMatrix();
-    this.translate(3, 1, 3);
+    this.translate(3, 1.0, 3);
     this.rotate(Math.PI / 2, 0, -1, 0);
-    this.scale(7, 7, 7);
+    this.scale(9, 9, 9);
     this.barn.display();
     this.popMatrix();
   }
@@ -305,9 +308,16 @@ export class MyScene extends CGFscene {
 
     // Wagon
     this.pushMatrix();
-    this.translate(-4, 0.9, -3);
+    this.translate(-6, 0.9, -5.5);
     this.scale(3, 3, 3);
     this.wagon.display();
+    this.popMatrix();
+
+    // Barn Area
+    this.pushMatrix();
+    this.translate(-7.2, 1.7, 2.9);
+    this.rotate(Math.PI / 2, 1, 0, 0);
+    this.barnArea.display();
     this.popMatrix();
 
     // ---- END Primitive drawing section
