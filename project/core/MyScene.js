@@ -193,7 +193,7 @@ export class MyScene extends CGFscene {
     if (this.lastTime == 0) this.lastTime = t;
     let deltaTime = t - this.lastTime;
     this.lastTime = t;
-    this.timeSeconds = t / 1000.0;
+    this.timeSeconds += deltaTime / 1000.0;
 
     let timeScale = 0.005;
 
