@@ -6,28 +6,36 @@ export class MyPlayer {
     this.scene = scene;
     this.horse=new horse(this.scene);
     this.wagon = new MyWagon(this.scene);
-    this.x=-5;
-    this.y=1.5;
-    this.z=0;
-    this.speed=0.2;
+    //Player Position
+    this.position=[-5,1.5,0];
+    //Player physics
+    this.speed=0;
     this.wheelAngle=0;
-    this.rollAngle=0
-    this.rotationDelta = this.speed / 0.25;       
-    this.totalFrames = 11;      
+    this.rollAngle=0;
+    this.rotationDelta = this.speed / 0.25; 
+    this.orientationAngle = 0; 
+
+    // Horse Animation Frames
+    this.totalFrames = 11;   
+    
+    //Vector
+    this.DirectionVector=[0,0,0];
+
+
+
   }
   move(direction) {
     switch(direction) {
       case 'W': 
-        this.x += this.speed * Math.sin(this.wheelAngle);
-        this.z += this.speed * Math.cos(this.wheelAngle);
-        this.rollAngle += this.rotationDelta;
+        this.speed=Math.min(this.speed+0.1,2);
         this.horse.currentFrame = (this.horse.currentFrame + 1) % this.totalFrames;
+     
         break;
       case 'S': 
-        this.x -= this.speed * Math.sin(this.wheelAngle);
-        this.z -= this.speed * Math.cos(this.wheelAngle);
-        this.rollAngle -= this.rotationDelta;
-        this.horse.currentFrame = (this.horse.currentFrame -1+  this.totalFrames) % this.totalFrames;
+        this.speed=Math.max(this.speed-0.1,0);
+        if(this.speed!=0){
+          this.horse.currentFrame = (this.horse.currentFrame -1+  this.totalFrames) % this.totalFrames;
+        }
         break;
       case 'A': 
         this.wheelAngle = Math.min(Math.PI / 10, this.wheelAngle + Math.PI / 10);
@@ -35,26 +43,48 @@ export class MyPlayer {
       case 'D': 
         this.wheelAngle = Math.max(-Math.PI / 10, this.wheelAngle - Math.PI / 10);
         break;
-    
+      default:
+        this.wheelAngle=0;
+        break;
+      console.log(this.speed);
     }
-  
+    
+    console.log(this.speed);
+    console.log(direction);
+  }
+  update(deltaTime){
+      if(this.speed!=0){
+        this.orientationAngle += this.wheelAngle * this.speed * deltaTime;
+      }
+      this.directionVector=[this.speed * Math.sin(this.wheelAngle),0,this.speed * Math.cos(this.wheelAngle)];
+      this.position[0] += this.directionVector[0] *  deltaTime;
+      this.position[1] += this.directionVector[1] *  deltaTime;
+      this.position[2] += this.directionVector[2] *  deltaTime;
+      this.rotationDelta = this.speed / 0.25;  
+      this.rollAngle += this.rotationDelta * deltaTime;
+
   }
 
   display(){
+    
     this.scene.pushMatrix();
-    this.scene.translate(this.x,this.y,this.z);
+    this.scene.rotate(this.orientationAngle, 0, 1, 0);
+    this.scene.translate(this.position[0],this.position[1],this.position[2]);
+   
+
     // Wagon
     this.scene.pushMatrix();
     this.scene.scale(3, 3, 3);
     this.wagon.display(this.wheelAngle,this.rollAngle);
     this.scene.popMatrix();
+
     //horse 
     this.scene.pushMatrix();
     this.scene.translate(0,0,4);
     this.scene.rotate(this.wheelAngle,0,1,0);
     this.horse.display();
     this.scene.popMatrix();
-
     this.scene.popMatrix();
+
   }
 }

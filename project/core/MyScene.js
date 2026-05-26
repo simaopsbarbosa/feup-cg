@@ -139,14 +139,21 @@ export class MyScene extends CGFscene {
     if (key['KeyW']) {
       this.player.move('W');
     }
-    if (key['KeyS']) {
+    else if (key['KeyS']) {
       this.player.move('S');
     }
+    else{
+      this.player.move('S');
+    }
+
     if (key['KeyA']) {
       this.player.move('A');
     }
-    if (key['KeyD']) {
+    else if (key['KeyD']) {
       this.player.move('D');
+    }
+    else{
+      this.player.move('RW');
     }
   }
 
@@ -165,6 +172,8 @@ export class MyScene extends CGFscene {
     if (this.gui.activeKeys) {
       this.playerMoves()
     }
+    let dt = deltaTime / 1000.0;
+    this.player.update(dt);
   }
 
   displaySkyAndClouds() {
