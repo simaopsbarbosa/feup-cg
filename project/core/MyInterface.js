@@ -23,7 +23,7 @@ export class MyInterface extends CGFinterface {
     this.gui.add(this.scene, 'currentHealth').name('Health').listen();
 
     // Score
-    this.gui.add(this.scene, 'timeSeconds').name('Score (s)').listen();
+    this.gui.add(this.scene, 'scoreSeconds').name('Score (s)').listen();
     
     // Configuration folder
     const configFolder = this.gui.addFolder('Configuration');

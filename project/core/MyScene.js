@@ -70,7 +70,7 @@ export class MyScene extends CGFscene {
       'shaders/grass.vert',
       'shaders/grass.frag'
     );
-    this.timeSeconds = 0.0;
+    this.scoreSeconds = 0.0;
 
     //scatter Manager
     this.ScatterManager = new ScatterManager(this);
@@ -199,7 +199,10 @@ export class MyScene extends CGFscene {
     if (this.lastTime == 0) this.lastTime = t;
     let deltaTime = t - this.lastTime;
     this.lastTime = t;
-    this.timeSeconds += deltaTime / 1000.0;
+
+    if (!this.gameOver) {
+      this.scoreSeconds += deltaTime / 1000.0;
+    }
 
     this.healthTimer += deltaTime / 1000.0;
 
