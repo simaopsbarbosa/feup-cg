@@ -69,10 +69,8 @@ export class MyScene extends CGFscene {
 
     //player
     this.player = new MyPlayer(this);
-    this.player = new MyPlayer(this);
 
- 
- 
+
     //-------Objects connected to MyInterface
     this.displayAxis = false;
     this.displaySky = true;
@@ -135,6 +133,7 @@ export class MyScene extends CGFscene {
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
   }
+
   playerMoves(){
     let key=this.gui.activeKeys;
     if (key['KeyW']) {
@@ -266,7 +265,6 @@ export class MyScene extends CGFscene {
     }
 
     this.displayBarn();
-    this.player.display();
     this.player.display();
 
     // ---- END Primitive drawing section

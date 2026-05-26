@@ -1,9 +1,7 @@
 import { horse } from '../horse/horse.js';
 import { MyWagon } from '../wagon/MyWagon.js';
-import { horse } from '../horse/horse.js';
-import { MyWagon } from '../wagon/MyWagon.js';
+
 export class MyPlayer {
-  constructor(scene) {
   constructor(scene) {
     this.scene = scene;
     this.horse=new horse(this.scene);
