@@ -45,6 +45,9 @@ export class MyScene extends CGFscene {
     this.maxHealth = 100;
     this.healthTimer = 0;
     this.gameOver = false;
+    this.hayBalesDropped = 0;
+    this.collisionDamage = 20;
+    this.hayBaleHeal = 30;
 
     // populate cloud textures array
     this.cloudTextures = [];
