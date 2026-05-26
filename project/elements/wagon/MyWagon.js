@@ -120,9 +120,9 @@ export class MyWagon {
 
       // Rear axle and wheels
       let rearZ = -this.bedD / 2 + 0.20;
-      this._drawAxle(rearZ,wheelAngle);
-      this._drawWheel(-this.axleHalfW, rearZ,wheelAngle,rollAngle);
-      this._drawWheel(this.axleHalfW, rearZ,wheelAngle,rollAngle);
+      this._drawAxle(rearZ,0);
+      this._drawWheel(-this.axleHalfW, rearZ,0,rollAngle);
+      this._drawWheel(this.axleHalfW, rearZ,0,rollAngle);
 
       // Tonge
       scene.pushMatrix();

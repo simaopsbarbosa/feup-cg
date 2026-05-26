@@ -29,10 +29,10 @@ export class MyPlayer {
         this.horse.currentFrame = (this.horse.currentFrame -1+  this.totalFrames) % this.totalFrames;
         break;
       case 'A': 
-        this.wheelAngle = Math.max(-Math.PI / 10, this.wheelAngle - Math.PI / 10);
+        this.wheelAngle = Math.min(Math.PI / 10, this.wheelAngle + Math.PI / 10);
         break;
       case 'D': 
-        this.wheelAngle = Math.min(Math.PI / 10, this.wheelAngle + Math.PI / 10);
+        this.wheelAngle = Math.max(-Math.PI / 10, this.wheelAngle - Math.PI / 10);
         break;
     
     }
@@ -50,6 +50,7 @@ export class MyPlayer {
     //horse 
     this.scene.pushMatrix();
     this.scene.translate(0,0,4);
+    this.scene.rotate(this.wheelAngle,0,1,0);
     this.horse.display();
     this.scene.popMatrix();
 
