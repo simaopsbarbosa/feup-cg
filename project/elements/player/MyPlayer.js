@@ -56,7 +56,7 @@ export class MyPlayer {
       if(this.speed!=0){
         this.orientationAngle += this.wheelAngle * this.speed * deltaTime;
       }
-      this.directionVector=[this.speed * Math.sin(this.wheelAngle),0,this.speed * Math.cos(this.wheelAngle)];
+      this.directionVector=[this.speed * Math.sin(this.orientationAngle),0,this.speed * Math.cos(this.orientationAngle)];
       this.position[0] += this.directionVector[0] *  deltaTime;
       this.position[1] += this.directionVector[1] *  deltaTime;
       this.position[2] += this.directionVector[2] *  deltaTime;
@@ -68,9 +68,9 @@ export class MyPlayer {
   display(){
     
     this.scene.pushMatrix();
-    this.scene.rotate(this.orientationAngle, 0, 1, 0);
+    
     this.scene.translate(this.position[0],this.position[1],this.position[2]);
-   
+    this.scene.rotate(this.orientationAngle, 0, 1, 0);
 
     // Wagon
     this.scene.pushMatrix();
