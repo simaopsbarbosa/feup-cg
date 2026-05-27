@@ -28,14 +28,9 @@ export class MyPlayer {
     switch(direction) {
       case 'W': 
         this.speed=Math.min(this.speed+0.1,2);
-        this.horse.currentFrame = (this.horse.currentFrame + 1) % this.totalFrames;
-     
         break;
       case 'S': 
         this.speed=Math.max(this.speed-0.1,0);
-        if(this.speed!=0){
-          this.horse.currentFrame = (this.horse.currentFrame -1+  this.totalFrames) % this.totalFrames;
-        }
         break;
       case 'A': 
         this.wheelAngle = Math.min(Math.PI / 10, this.wheelAngle + Math.PI / 10);
@@ -45,9 +40,6 @@ export class MyPlayer {
         break;
       case 'DS': 
         this.speed=Math.max(this.speed-0.05,0);
-        if(this.speed!=0){
-          this.horse.currentFrame = (this.horse.currentFrame -1+  this.totalFrames) % this.totalFrames;
-        }
         break;
       default:
         this.wheelAngle=0;
@@ -61,14 +53,15 @@ export class MyPlayer {
   update(deltaTime){
       if(this.speed!=0){
         this.orientationAngle += this.wheelAngle * this.speed * deltaTime;
+        this.horse.currentFrame = (this.horse.currentFrame + 1) % this.totalFrames;
       }
       this.directionVector=[this.speed * Math.sin(this.orientationAngle),0,this.speed * Math.cos(this.orientationAngle)];
       this.position[0] += this.directionVector[0] *  deltaTime;
       this.position[1] += this.directionVector[1] *  deltaTime;
       this.position[2] += this.directionVector[2] *  deltaTime;
-      this.rotationDelta = this.speed / 0.25;  
+      this.rotationDelta = this.speed / 0.5;
       this.rollAngle += this.rotationDelta * deltaTime;
-
+      
   }
 
   display(){
