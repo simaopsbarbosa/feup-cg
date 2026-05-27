@@ -27,7 +27,7 @@ export class MyPlayer {
   move(direction) {
     switch(direction) {
       case 'W': 
-        this.speed=Math.min(this.speed+0.1,2);
+        this.speed=Math.min(this.speed+0.1,3);
         break;
       case 'S': 
         this.speed=Math.max(this.speed-0.1,0);
@@ -44,11 +44,9 @@ export class MyPlayer {
       default:
         this.wheelAngle=0;
         break;
-      console.log(this.speed);
+   
     }
     
-    console.log(this.speed);
-    console.log(direction);
   }
   update(deltaTime){
       if(this.speed!=0){
