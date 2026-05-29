@@ -45,11 +45,16 @@ export class MyBarnArea extends CGFobject {
 
    initAppearance() {
       this.app = new CGFappearance(this.scene);
-      this.app.setAmbient(...AREA_COLORS[0], 1.0);
-      this.app.setDiffuse(...AREA_COLORS[0], 1.0);
+      this.app.setSpecular(0.0, 0.0, 0.0, 1.0);
       this.app.setShininess(1.0);
+      this._applyColor(0);
+   }
 
-      this.app.setEmission(0.7, 0.7, 0.0, 1.0);
+   _applyColor(index) {
+      let [r, g, b] = AREA_COLORS[index];
+      this.app.setAmbient(r, g, b, 1.0);
+      this.app.setDiffuse(r, g, b, 1.0);
+      this.app.setEmission(r * 0.7, g * 0.7, b * 0.7, 1.0);
    }
 
    display() {
