@@ -33,13 +33,19 @@ export class MyInterface extends CGFinterface {
     this.gui.add(this.scene, 'hayBalesDropped').name('Hay Bales Dropped').listen();
     
     // Score
-    this.gui.add(this.scene, 'scoreSeconds').name('Score (sec)').listen();
+    this.gui.add(this.scene, 'timeSeconds').name('Score (sec)').listen();
     
     // Configuration folder
     const configFolder = this.gui.addFolder('Configuration');
     configFolder.add(this.scene, 'displayAxis').name('Display Axis');
     configFolder.add(this.scene, 'displaySky').name('Display Sky');
     configFolder.add(this.scene, 'displayGrass').name('Display Grass');
+
+    this.gui.add(this.scene, 'hayBalesAmount', 1, 30, 1).name('Hay Bale Amount').onChange((value)=>{
+      this.scene.updateHayBales(value);
+    }
+    );
+
     this.processKeyboard = function () {};
     this.activeKeys = {};
     this.scene.gui = this;
