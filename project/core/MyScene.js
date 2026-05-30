@@ -115,6 +115,17 @@ export class MyScene extends CGFscene {
 
     //MyBaleHay Distribution
     this.hayBales=new HayBaleDistribution(this,this.hayBalesAmount,this.ScatterManager.poissonSampler.points);
+    this.hayBales.bales.forEach((bale, index) => {
+      this.collisionManager.register(
+        `haybale_${index}`,
+        bale,
+        () => ({ x: bale.x, z: bale.z }),
+        1.5,
+        (obj) => { obj.collected = true; }, 
+        null,
+        'sphere'
+      );
+    });
   }
 
   initLights() {
@@ -274,7 +285,6 @@ export class MyScene extends CGFscene {
     this.applyViewMatrix();
 
     this.updateLights();
-    this.playerMoves();
 
     // Draw axis
     if (this.displayAxis) {

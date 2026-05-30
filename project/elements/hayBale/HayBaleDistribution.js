@@ -23,21 +23,13 @@ export class HayBaleDistribution {
     this.points=this.distribution.points;
     this.bales=[];
     for(let p of this.points){
-        let currentMatrix = mat4.create();
-        mat4.translate(currentMatrix,currentMatrix, [p[0],1.5,p[1]]);
-        mat4.scale(currentMatrix, currentMatrix, [2 ,1, 2]);
-        this.bales.push([new MyHayBale(this.scene,this.box,this.app),currentMatrix]);
+        this.bales.push(new MyHayBale(this.scene,this.box,this.app,p[0],p[1]));
     }
  }
 
   display() {
-     for (let baleInfo of this.bales) {
-        let bale = baleInfo[0];
-        let matrix = baleInfo[1];
-        this.scene.pushMatrix();
-        this.scene.multMatrix(matrix); 
-        bale.display();             
-        this.scene.popMatrix();
+     for (let bale of this.bales) {
+        if(!bale.collected) bale.display();             
     }
     
   }
