@@ -40,6 +40,15 @@ export class MyScene extends CGFscene {
 
     this.setUpdatePeriod(16);
 
+    // gameplay
+    this.currentHealth = 100;
+    this.maxHealth = 100;
+    this.healthTimer = 0;
+    this.gameOver = false;
+    this.hayBalesDropped = 0;
+    this.collisionDamage = 20;
+    this.hayBaleHeal = 30;
+
     // populate cloud textures array
     this.cloudTextures = [];
     for (let i = 1; i <= 20; i++) {
@@ -165,7 +174,21 @@ export class MyScene extends CGFscene {
     if (this.lastTime == 0) this.lastTime = t;
     let deltaTime = t - this.lastTime;
     this.lastTime = t;
-    this.timeSeconds += deltaTime / 1000.0;
+
+    if (!this.gameOver) {
+      this.timeSeconds += deltaTime / 1000.0;
+    }
+
+    this.healthTimer += deltaTime / 1000.0;
+
+    if (this.healthTimer >= 3.0) {
+      this.currentHealth -= 5;
+      this.healthTimer = 0;
+      if (this.currentHealth <= 0) {
+        this.gameOver = true;
+        this.currentHealth = 0;
+      }
+    }
 
     let timeScale = 0.005;
 
