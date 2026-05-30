@@ -42,6 +42,12 @@ export class MyScene extends CGFscene {
 
     this.setUpdatePeriod(16);
 
+    // gameplay
+    this.maxHealth = 100;
+    this.hayBalesDropped = 0;
+    this.collisionDamage = 20;
+    this.hayBaleHeal = 30;
+
     // populate cloud textures array
     this.cloudTextures = [];
     for (let i = 1; i <= 20; i++) {
@@ -84,7 +90,8 @@ export class MyScene extends CGFscene {
       () => ({ x: -7.2, z: 2.9 }),
       3.5,
       (obj) =>{ if(this.player.hayBalesCollected>0){
-        this.player.HP+=Math.min(100,25*this.player.hayBalesCollected);
+        this.player.HP = Math.min(this.maxHealth, this.player.HP + this.hayBaleHeal*this.player.hayBalesCollected);
+        this.hayBalesDropped += this.player.hayBalesCollected;
         this.player.resetBales();
       }
         obj._applyColor(1); 
@@ -139,9 +146,8 @@ export class MyScene extends CGFscene {
         tree,
         () => ({ x: tree.x, z: tree.z }),
         tree.baseRadius*2,
-        (obj) => { this.player.speed =Math.max(this.player.speed-0.1,0);     
-          let points= Math.floor(Math.random() * 11) + 5;
-          this.player.HP = Math.max(this.player.HP - points, 0);}, 
+        (obj) => { this.player.speed =Math.max(this.player.speed-0.1,0);
+          this.player.HP = Math.max(this.player.HP - this.collisionDamage, 0);}, 
         null,
         'sphere'
       );
@@ -152,9 +158,8 @@ export class MyScene extends CGFscene {
         rock,
         () => ({ x: rock.x, z: rock.z }),
         rock.radius,
-        (obj) => { this.player.speed =Math.max(this.player.speed-0.1,0);  
-          let points= Math.floor(Math.random() * 11) + 5;
-          this.player.HP = Math.max(this.player.HP - points, 0);}, 
+        (obj) => { this.player.speed =Math.max(this.player.speed-0.1,0);
+          this.player.HP = Math.max(this.player.HP - this.collisionDamage, 0);}, 
         null,
         'sphere'
       );
@@ -225,6 +230,7 @@ export class MyScene extends CGFscene {
     if (this.lastTime == 0) this.lastTime = t;
     let deltaTime = t - this.lastTime;
     this.lastTime = t;
+
     this.timeSeconds += deltaTime / 1000.0;
 
     for (let i = 0; i < this.clouds.length; i++) {
