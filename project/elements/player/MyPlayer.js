@@ -89,7 +89,8 @@ export class MyPlayer {
       this.position[2] += this.directionVector[2] *  deltaTime;
       this.rotationDelta = this.speed / 0.5;
       this.rollAngle += this.rotationDelta * deltaTime;
-      this.HP=Math.max(0, this.HP - deltaTime );
+      this.HP=Math.max(0, this.HP - deltaTime *this.speed );
+
   }
 
   display(){

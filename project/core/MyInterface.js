@@ -24,6 +24,7 @@ export class MyInterface extends CGFinterface {
     }
     );
     this.gui.add(this.scene.player, 'hayBalesCollected').name('Hay Bales:').listen();
+    this.gui.add(this.scene.player, 'HP').name('Health:').listen();
 
     //Checkbox element in GUI
     this.gui.add(this.scene, 'displayAxis').name('Display Axis');

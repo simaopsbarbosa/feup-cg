@@ -29,7 +29,7 @@ export class HayBaleDistribution {
  resetCollected(amount){
   this.bales.forEach((bale) => {
       bale.collected = false; 
-      updatePositions(amount);
+      this.updatePositions(amount);
   });
  }
 

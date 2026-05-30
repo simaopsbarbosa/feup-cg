@@ -83,7 +83,9 @@ export class MyScene extends CGFscene {
       this.barnArea,
       () => ({ x: -7.2, z: 2.9 }),
       3.5,
-      (obj) =>{ if(this.player.hayBalesCollected>0){this.player.resetBales();}
+      (obj) =>{ if(this.player.hayBalesCollected>0){this.player.resetBales();
+        this.player.HP+=Math.min(100,25*this.player.hayBalesCollected);
+      }
         obj._applyColor(1); 
       },
       (obj) => obj._applyColor(0),
@@ -132,22 +134,26 @@ export class MyScene extends CGFscene {
     });
     this.ScatterManager.trees.forEach((tree, index) => {
       this.collisionManager.register(
-        `haybale_${index}`,
+        `tree_${index}`,
         tree,
         () => ({ x: tree.x, z: tree.z }),
-        1.5,
-        (obj) => { this.player.speed = 0;}, 
+        tree.baseRadius*2,
+        (obj) => { this.player.speed = 0;     
+          let points= Math.floor(Math.random() * 11) + 5;
+          this.player.HP = Math.max(this.player.HP - points, 0);}, 
         null,
         'sphere'
       );
     });
     this.ScatterManager.rocks.forEach((rock, index) => {
       this.collisionManager.register(
-        `haybale_${index}`,
+        `rock_${index}`,
         rock,
         () => ({ x: rock.x, z: rock.z }),
-        1.5,
-        (obj) => { this.player.speed -= 0.01;}, 
+        rock.radius,
+        (obj) => { this.player.speed = 0;     
+          let points= Math.floor(Math.random() * 11) + 5;
+          this.player.HP = Math.max(this.player.HP - points, 0);}, 
         null,
         'sphere'
       );
@@ -234,7 +240,7 @@ export class MyScene extends CGFscene {
       2.7
     );
     if(this.player.HP==0){
-      resetScene();
+      this.resetScene();
     }
 
   }
