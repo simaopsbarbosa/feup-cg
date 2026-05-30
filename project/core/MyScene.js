@@ -13,7 +13,6 @@ import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import { MyPlayer } from '../elements/player/MyPlayer.js';
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
-import { MyWagon } from '../elements/wagon/MyWagon.js';
 import { MyHayBale } from '../elements/hayBale/MyHayBale.js';
 
 /**
@@ -51,9 +50,6 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
     this.barn = new MyBarn(this);
-    this.wagon = new MyWagon(this);
-    // Shaders
-    this.heightmapBakeQuad = new MyPlane(this, 1);
     // Different terrain every run
     this.u_random1 = [10.0 + Math.random() * 10.0, 70.0 + Math.random() * 20.0];
     this.u_random2 = 40000.0 + Math.random() * 20000.0;
@@ -71,7 +67,8 @@ export class MyScene extends CGFscene {
     this.ScatterManager = new ScatterManager(this);
 
     //player
-    this.player = new MyPlayer(this, this.camera, this.terrainHeight, 160);
+    this.player = new MyPlayer(this);
+
 
     //-------Objects connected to MyInterface
     this.displayAxis = false;
@@ -97,61 +94,7 @@ export class MyScene extends CGFscene {
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
   }
-  generateHeightmapTexture(resolution = 512) {
-    const gl = this.gl;
 
-    const fb = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-
-    const heightmapTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, heightmapTexture);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      resolution,
-      resolution,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      null
-    );
-
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      heightmapTexture,
-      0
-    );
-
-    const genShader = new CGFshader(
-      gl,
-      'shaders/heightmap.vert',
-      'shaders/heightmap.frag'
-    );
-
-    this.setActiveShader(genShader);
-    genShader.setUniformsValues({
-      u_random1: this.u_random1,
-      u_random2: this.u_random2,
-    });
-    gl.viewport(0, 0, resolution, resolution);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    this.heightmapBakeQuad.display();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    this.setActiveShader(this.defaultShader);
-
-    const cgfTex = new CGFtexture(this);
-    cgfTex.texID = heightmapTexture;
-    return cgfTex;
-  }
 
   initLights() {
     // Don't change this because of the default material for the sky
@@ -178,7 +121,7 @@ export class MyScene extends CGFscene {
       0.7,
       0.1,
       500,
-      vec3.fromValues(15, 15, 15),
+      vec3.fromValues(-20, 10, 20),
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -190,11 +133,35 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
+  playerMoves(){
+    let key=this.gui.activeKeys;
+    if (key['KeyW']) {
+      this.player.move('W');
+    }
+    else if (key['KeyS']) {
+      this.player.move('S');
+    }
+    else{
+      this.player.move('DS');
+    }
+
+    if (key['KeyA']) {
+      this.player.move('A');
+    }
+    else if (key['KeyD']) {
+      this.player.move('D');
+    }
+    else{
+      this.player.move('RW');
+    }
+  }
+
+
   update(t) {
     if (this.lastTime == 0) this.lastTime = t;
     let deltaTime = t - this.lastTime;
     this.lastTime = t;
-    this.timeSeconds = t / 1000.0;
+    this.timeSeconds += deltaTime / 1000.0;
 
     let timeScale = 0.005;
 
@@ -202,8 +169,10 @@ export class MyScene extends CGFscene {
       this.clouds[i].update(deltaTime * timeScale);
     }
     if (this.gui.activeKeys) {
-      this.player.update(this.gui.activeKeys);
+      this.playerMoves()
     }
+    let dt = deltaTime / 1000.0;
+    this.player.update(dt);
   }
 
   displaySkyAndClouds() {
@@ -283,6 +252,7 @@ export class MyScene extends CGFscene {
     this.applyViewMatrix();
 
     this.updateLights();
+    this.playerMoves();
 
     // Draw axis
     if (this.displayAxis) {
@@ -290,7 +260,7 @@ export class MyScene extends CGFscene {
     }
 
     this.setDefaultAppearance();
-
+    
     // ---- BEGIN Primitive drawing section
     if (this.displaySky) {
       this.displaySkyAndClouds();
@@ -303,13 +273,7 @@ export class MyScene extends CGFscene {
     }
 
     this.displayBarn();
-
-    // Wagon
-    this.pushMatrix();
-    this.translate(-4, 0.9, -3);
-    this.scale(3, 3, 3);
-    this.wagon.display();
-    this.popMatrix();
+    this.player.display();
 
     // ---- END Primitive drawing section
   }
