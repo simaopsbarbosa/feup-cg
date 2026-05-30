@@ -138,7 +138,7 @@ export class MyScene extends CGFscene {
         tree,
         () => ({ x: tree.x, z: tree.z }),
         tree.baseRadius*2,
-        (obj) => { this.player.speed = 0;     
+        (obj) => { this.player.speed =Math.max(this.player.speed-0.1,0);     
           let points= Math.floor(Math.random() * 11) + 5;
           this.player.HP = Math.max(this.player.HP - points, 0);}, 
         null,
@@ -151,7 +151,7 @@ export class MyScene extends CGFscene {
         rock,
         () => ({ x: rock.x, z: rock.z }),
         rock.radius,
-        (obj) => { this.player.speed = 0;     
+        (obj) => { this.player.speed =Math.max(this.player.speed-0.1,0);  
           let points= Math.floor(Math.random() * 11) + 5;
           this.player.HP = Math.max(this.player.HP - points, 0);}, 
         null,
