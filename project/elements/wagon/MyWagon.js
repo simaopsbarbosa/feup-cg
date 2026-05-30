@@ -79,31 +79,31 @@ export class MyWagon {
     });
   }
 
-   _drawWheel(x, z,rotation,rollAngle) {
-      let scene = this.scene;
-      scene.pushMatrix();
-      scene.translate(x, this.wheelRadius, z);
-      scene.rotate(Math.PI / 2, 0, 1, 0);
-      scene.rotate(rotation,0,1,0);
-      scene.rotate(rollAngle,0,0,1);
-      this.metalApp.apply();
-      this.wheel.display();
-      scene.popMatrix();
-   }
+  _drawWheel(x, z, rotation, rollAngle) {
+    let scene = this.scene;
+    scene.pushMatrix();
+    scene.translate(x, this.wheelRadius, z);
+    scene.rotate(Math.PI / 2, 0, 1, 0);
+    scene.rotate(rotation, 0, 1, 0);
+    scene.rotate(rollAngle, 0, 0, 1);
+    this.metalApp.apply();
+    this.wheel.display();
+    scene.popMatrix();
+  }
 
-  _drawAxle(z,rotation) {
+  _drawAxle(z, rotation) {
     let scene = this.scene;
     scene.pushMatrix();
     scene.translate(-this.axleHalfW / 2, this.wheelRadius, z);
-    scene.rotate(rotation,0,1,0);
+    scene.rotate(rotation, 0, 1, 0);
     this.woodApp.apply();
     this.axle.display();
     scene.popMatrix();
   }
 
-   display(wheelAngle = 0, rollAngle = 0) {
-      let scene = this.scene;
-      let hayBalesHeld = scene.player ? scene.player.hayBalesHeld : 0;
+  display(wheelAngle = 0, rollAngle = 0) {
+    let scene = this.scene;
+    let hayBalesHeld = scene.player ? scene.player.hayBalesHeld : 0;
 
     // Wagon bed
     scene.pushMatrix();
@@ -136,17 +136,17 @@ export class MyWagon {
     scene.gl.enable(scene.gl.CULL_FACE);
     scene.popMatrix();
 
-      // Front axle and wheels
-      let frontZ = this.bedD / 2 - 0.20;
-      this._drawAxle(frontZ,wheelAngle);
-      this._drawWheel(-this.axleHalfW, frontZ,wheelAngle,rollAngle);
-      this._drawWheel(this.axleHalfW, frontZ,wheelAngle,rollAngle);
+    // Front axle and wheels
+    let frontZ = this.bedD / 2 - 0.2;
+    this._drawAxle(frontZ, wheelAngle);
+    this._drawWheel(-this.axleHalfW, frontZ, wheelAngle, rollAngle);
+    this._drawWheel(this.axleHalfW, frontZ, wheelAngle, rollAngle);
 
-      // Rear axle and wheels
-      let rearZ = -this.bedD / 2 + 0.20;
-      this._drawAxle(rearZ,0);
-      this._drawWheel(-this.axleHalfW, rearZ,0,rollAngle);
-      this._drawWheel(this.axleHalfW, rearZ,0,rollAngle);
+    // Rear axle and wheels
+    let rearZ = -this.bedD / 2 + 0.2;
+    this._drawAxle(rearZ, 0);
+    this._drawWheel(-this.axleHalfW, rearZ, 0, rollAngle);
+    this._drawWheel(this.axleHalfW, rearZ, 0, rollAngle);
 
     // Tonge
     scene.pushMatrix();

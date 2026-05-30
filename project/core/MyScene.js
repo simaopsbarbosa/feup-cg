@@ -77,7 +77,11 @@ export class MyScene extends CGFscene {
     this.timeSeconds = 0.0;
 
     this.arrowQuad = new MyQuad(this);
-    this.arrowShader = new CGFshader(this.gl, 'shaders/arrow.vert', 'shaders/arrow.frag');
+    this.arrowShader = new CGFshader(
+      this.gl,
+      'shaders/arrow.vert',
+      'shaders/arrow.frag'
+    );
 
     //scatter Manager
     this.ScatterManager = new ScatterManager(this);
@@ -93,12 +97,16 @@ export class MyScene extends CGFscene {
       this.barnArea,
       () => ({ x: -7.2, z: 2.9 }),
       3.5,
-      (obj) =>{ if(this.player.hayBalesHeld>0){
-        this.player.HP = Math.min(this.maxHealth, this.player.HP + this.hayBaleHeal*this.player.hayBalesHeld);
-        this.hayBalesDropped += this.player.hayBalesHeld;
-        this.player.resetBales();
-      }
-        obj._applyColor(1); 
+      (obj) => {
+        if (this.player.hayBalesHeld > 0) {
+          this.player.HP = Math.min(
+            this.maxHealth,
+            this.player.HP + this.hayBaleHeal * this.player.hayBalesHeld
+          );
+          this.hayBalesDropped += this.player.hayBalesHeld;
+          this.player.resetBales();
+        }
+        obj._applyColor(1);
       },
       (obj) => obj._applyColor(0),
       'ring'
@@ -113,7 +121,7 @@ export class MyScene extends CGFscene {
     this.selectedTexture = -1;
     this.wrapS = 0;
     this.wrapT = 0;
-    this.hayBalesAmount=20;
+    this.hayBalesAmount = 20;
 
     this.clouds = [];
     let numberOfClouds = 50;
@@ -128,18 +136,23 @@ export class MyScene extends CGFscene {
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
 
-
     //MyBaleHay Distribution
-    this.hayBales=new HayBaleDistribution(this,this.hayBalesAmount,this.ScatterManager.poissonSampler.points);
+    this.hayBales = new HayBaleDistribution(
+      this,
+      this.hayBalesAmount,
+      this.ScatterManager.poissonSampler.points
+    );
     this.hayBales.bales.forEach((bale, index) => {
       this.collisionManager.register(
         `haybale_${index}`,
         bale,
         () => ({ x: bale.x, z: bale.z }),
         1.5,
-        (obj) => { if (this.player.addBale()) {
-          obj.collected = true;
-        } }, 
+        (obj) => {
+          if (this.player.addBale()) {
+            obj.collected = true;
+          }
+        },
         null,
         'sphere'
       );
@@ -149,9 +162,11 @@ export class MyScene extends CGFscene {
         `tree_${index}`,
         tree,
         () => ({ x: tree.x, z: tree.z }),
-        tree.baseRadius*2,
-        (obj) => { this.player.speed =Math.max(this.player.speed-0.1,0);
-          this.player.HP = Math.max(this.player.HP - this.collisionDamage, 0);}, 
+        tree.baseRadius * 2,
+        (obj) => {
+          this.player.speed = Math.max(this.player.speed - 0.1, 0);
+          this.player.HP = Math.max(this.player.HP - this.collisionDamage, 0);
+        },
         null,
         'sphere'
       );
@@ -162,8 +177,10 @@ export class MyScene extends CGFscene {
         rock,
         () => ({ x: rock.x, z: rock.z }),
         rock.radius,
-        (obj) => { this.player.speed =Math.max(this.player.speed-0.1,0);
-          this.player.HP = Math.max(this.player.HP - this.collisionDamage, 0);}, 
+        (obj) => {
+          this.player.speed = Math.max(this.player.speed - 0.1, 0);
+          this.player.HP = Math.max(this.player.HP - this.collisionDamage, 0);
+        },
         null,
         'sphere'
       );
@@ -250,10 +267,9 @@ export class MyScene extends CGFscene {
       this.player.position[2],
       2.7
     );
-    if(this.player.HP==0){
+    if (this.player.HP == 0) {
       this.resetScene();
     }
-
   }
   updateHayBales(newAmount) {
     this.hayBales.updatePositions(newAmount);
@@ -329,7 +345,10 @@ export class MyScene extends CGFscene {
     this.translate(x, y, z);
     this.gl.disable(this.gl.CULL_FACE);
     this.setActiveShader(this.arrowShader);
-    this.arrowShader.setUniformsValues({ uTime: this.timeSeconds, uScale: scale });
+    this.arrowShader.setUniformsValues({
+      uTime: this.timeSeconds,
+      uScale: scale,
+    });
     this.arrowQuad.display();
     this.setActiveShader(this.defaultShader);
     this.gl.enable(this.gl.CULL_FACE);
@@ -381,5 +400,5 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     // ---- END Primitive drawing section
-  }  
+  }
 }
