@@ -83,7 +83,9 @@ export class MyScene extends CGFscene {
       this.barnArea,
       () => ({ x: -7.2, z: 2.9 }),
       3.5,
-      (obj) => obj._applyColor(1),
+      (obj) =>{ if(this.player.hayBalesCollected>0){this.player.resetBales();}
+        obj._applyColor(1); 
+      },
       (obj) => obj._applyColor(0),
       'ring'
     );
@@ -121,7 +123,9 @@ export class MyScene extends CGFscene {
         bale,
         () => ({ x: bale.x, z: bale.z }),
         1.5,
-        (obj) => { obj.collected = true; }, 
+        (obj) => { if (this.player.addBale()) {
+          obj.collected = true;
+        } }, 
         null,
         'sphere'
       );

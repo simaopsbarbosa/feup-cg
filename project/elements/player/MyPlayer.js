@@ -21,7 +21,9 @@ export class MyPlayer {
     //Vector
     this.directionVector=[0,0,0];
 
-
+    //haybales collected
+    this.hayBalesCollected=0;
+    this.maxHayBales=2;
 
   }
   move(direction) {
@@ -47,6 +49,17 @@ export class MyPlayer {
    
     }
     
+  }
+  addBale() {
+    if (this.hayBalesCollected < this.maxHayBales) {
+      this.hayBalesCollected++;
+      return true;
+    }
+    return false;
+  }
+
+  resetBales() {
+    this.hayBalesCollected = 0;
   }
   update(deltaTime){
       if(this.speed!=0){

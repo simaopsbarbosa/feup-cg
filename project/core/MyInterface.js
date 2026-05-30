@@ -23,6 +23,7 @@ export class MyInterface extends CGFinterface {
       this.scene.updateHayBales(value);
     }
     );
+    this.gui.add(this.scene.player, 'hayBalesCollected').name('Hay Bales:').listen();
 
     //Checkbox element in GUI
     this.gui.add(this.scene, 'displayAxis').name('Display Axis');
