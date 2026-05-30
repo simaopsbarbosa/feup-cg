@@ -34,7 +34,6 @@ export class ScatterManager {
     this.trunkMaterial.setShininess(2.0);
     this.trunkPrimitive = new MyCylinder(scene, 12, 1);
 
-
     this.leafPrimitive = new MySphere(scene, 1, 8);
     this.leafTex = new CGFtexture(scene, 'images/tree/cluster.jpg');
     this.leafMaterial = new CGFappearance(scene);
@@ -44,20 +43,20 @@ export class ScatterManager {
     this.leafMaterial.setShininess(2.0);
     this.leafMaterial.setTexture(this.leafTex);
 
-    // this creates the positions for the rocks
-    const poissonSampler = new PoissonDiskSampling(40, 6);
+    // this creates the positions for the elements
+    this.poissonSampler = new PoissonDiskSampling(40, 6);
     this.viewDistSq = 200 * 200;
     this.rocks = [];
     this.trees = [];
-    this.flowers=[];
+    this.flowers = [];
     let element;
-    for (let i = 0; i < poissonSampler.points.length; i++) {
-      let x = poissonSampler.points[i][0];
-      let z = poissonSampler.points[i][1];
+    for (let i = 0; i < this.poissonSampler.points.length; i++) {
+      let x = this.poissonSampler.points[i][0];
+      let z = this.poissonSampler.points[i][1];
       let spawnChoice = Math.random();
-      if (spawnChoice < 0.2) {
-        const treeMaxDepth = 3.0+ Math.random()*2.0;
-        const baseHeight = 2.0 + Math.random() * 1.0; 
+      if (spawnChoice < 0.15) {
+        const treeMaxDepth = 3.0 + Math.random() * 2.0;
+        const baseHeight = 2.0 + Math.random() * 1.0;
         const baseRadius = 0.2 + Math.random() * 0.1;
         element = new MyTree(
           scene,
@@ -70,12 +69,12 @@ export class ScatterManager {
           this.leafMaterial,
           this.terrainHeightMap,
           this.trunkPrimitive,
-          this.leafPrimitive = this.leafPrimitive,
+          (this.leafPrimitive = this.leafPrimitive),
           this.trunkMaterial
         );
 
         this.trees.push(element);
-      } else if(spawnChoice<0.40) {
+      } else if (spawnChoice < 0.3) {
         let radius = Math.random() * 0.25 + 0.25;
         element = new MyRock(
           scene,
@@ -89,11 +88,10 @@ export class ScatterManager {
           this.rockShader
         );
         this.rocks.push(element);
-      }
-      else{
+      } else {
         this.flowers.push({
-          flowerObject: new MyFlower(scene, i * 53.7), 
-          x: x, 
+          flowerObject: new MyFlower(scene, i * 53.7),
+          x: x,
           z: z,
           rotation: Math.random() * Math.PI * 2,
           scale: 0.2 + Math.random() * 0.4,
@@ -107,7 +105,7 @@ export class ScatterManager {
     const camZ = camera[2];
     const viewDistSq = this.viewDistSq;
     this.scene.setActiveShader(this.rockShader);
-    for (let i = 0; i < this.rocks.length ; i ++) {
+    for (let i = 0; i < this.rocks.length; i++) {
       const rock = this.rocks[i];
       const dx = rock.x - camX;
       const dz = rock.z - camZ;
@@ -124,7 +122,7 @@ export class ScatterManager {
         tree.display();
       }
     }
-     for (let i = 0; i < this.flowers.length; i++) {
+    for (let i = 0; i < this.flowers.length; i++) {
       const flower = this.flowers[i];
       const dx = flower.x - camX;
       const dz = flower.z - camZ;

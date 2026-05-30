@@ -13,9 +13,9 @@ import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import { MyPlayer } from '../elements/player/MyPlayer.js';
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
-import { MyWagon } from '../elements/wagon/MyWagon.js';
 import { MyBarnArea } from '../elements/barn/MyBarnArea.js';
 import { CollisionManager } from '../elements/collisions/CollisionManager.js';
+import { HayBaleDistribution } from '../elements/hayBale/HayBaleDistribution.js';
 
 /**
  * MyScene
@@ -97,6 +97,7 @@ export class MyScene extends CGFscene {
     this.selectedTexture = -1;
     this.wrapS = 0;
     this.wrapT = 0;
+    this.hayBalesAmount=20;
 
     this.clouds = [];
     let numberOfClouds = 50;
@@ -108,9 +109,12 @@ export class MyScene extends CGFscene {
     this.lastTime = 0;
 
     this.sunDirection = [-1.0, 0.7, 0.3];
-
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
+
+
+    //MyBaleHay Distribution
+    this.hayBales=new HayBaleDistribution(this,this.hayBalesAmount,this.ScatterManager.poissonSampler.points);
   }
 
   initLights() {
@@ -188,6 +192,9 @@ export class MyScene extends CGFscene {
       this.player.position[2],
       2.7
     );
+  }
+  updateHayBales(newAmount) {
+    this.hayBales.updatePositions(newAmount);
   }
 
   displaySkyAndClouds() {
@@ -290,6 +297,8 @@ export class MyScene extends CGFscene {
     this.displayBarn();
 
     this.player.display();
+
+    this.hayBales.display();
 
     // Barn Area
     this.pushMatrix();
