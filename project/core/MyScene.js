@@ -13,7 +13,7 @@ import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
 import { MyPlayer } from '../elements/player/MyPlayer.js';
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
-import { MyHayBale } from '../elements/hayBale/MyHayBale.js';
+import { HayBaleDistribution } from '../elements/hayBale/HayBaleDistribution.js';
 
 /**
  * MyScene
@@ -66,6 +66,9 @@ export class MyScene extends CGFscene {
     //scatter Manager
     this.ScatterManager = new ScatterManager(this);
 
+    //MyBaleHay Distribution
+    this.hayBales=new HayBaleDistribution(this,20,this.ScatterManager.poissonSampler.points);
+
     //player
     this.player = new MyPlayer(this);
 
@@ -90,7 +93,6 @@ export class MyScene extends CGFscene {
     this.lastTime = 0;
 
     this.sunDirection = [-1.0, 0.7, 0.3];
-
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
   }
@@ -274,6 +276,8 @@ export class MyScene extends CGFscene {
 
     this.displayBarn();
     this.player.display();
+
+    this.hayBales.display();
 
     // ---- END Primitive drawing section
   }

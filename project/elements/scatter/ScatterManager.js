@@ -43,18 +43,18 @@ export class ScatterManager {
     this.leafMaterial.setShininess(2.0);
     this.leafMaterial.setTexture(this.leafTex);
 
-    // this creates the positions for the rocks
-    const poissonSampler = new PoissonDiskSampling(40, 6);
+    // this creates the positions for the elements
+    this.poissonSampler = new PoissonDiskSampling(40, 6);
     this.viewDistSq = 200 * 200;
     this.rocks = [];
     this.trees = [];
     this.flowers = [];
     let element;
-    for (let i = 0; i < poissonSampler.points.length; i++) {
-      let x = poissonSampler.points[i][0];
-      let z = poissonSampler.points[i][1];
+    for (let i = 0; i < this.poissonSampler.points.length; i++) {
+      let x = this.poissonSampler.points[i][0];
+      let z = this.poissonSampler.points[i][1];
       let spawnChoice = Math.random();
-      if (spawnChoice < 0.2) {
+      if (spawnChoice < 0.15) {
         const treeMaxDepth = 3.0 + Math.random() * 2.0;
         const baseHeight = 2.0 + Math.random() * 1.0;
         const baseRadius = 0.2 + Math.random() * 0.1;
@@ -74,7 +74,7 @@ export class ScatterManager {
         );
 
         this.trees.push(element);
-      } else if (spawnChoice < 0.4) {
+      } else if (spawnChoice < 0.3) {
         let radius = Math.random() * 0.25 + 0.25;
         element = new MyRock(
           scene,
