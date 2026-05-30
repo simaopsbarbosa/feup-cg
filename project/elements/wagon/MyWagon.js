@@ -25,6 +25,8 @@ export class MyWagon {
 
     this.tongue = new MyBox(scene, 0.04, 0.04, 0.6);
 
+    this.baleBox = new MyBox(scene, 0.5, 0.4, 0.35);
+
     this.initAppearances();
     this.initShaders();
   }
@@ -99,8 +101,9 @@ export class MyWagon {
     scene.popMatrix();
   }
 
-   display(wheelAngle=0,rollAngle=0) {
+   display(wheelAngle = 0, rollAngle = 0) {
       let scene = this.scene;
+      let hayBalesHeld = scene.player ? scene.player.hayBalesHeld : 0;
 
     // Wagon bed
     scene.pushMatrix();
@@ -108,6 +111,19 @@ export class MyWagon {
     this.woodApp.apply();
     this.bed.display();
     scene.popMatrix();
+
+    // Display hay bales in the wagon bed if any are held
+    if (hayBalesHeld > 0) {
+      if (scene.hayBales) scene.hayBales.app.apply();
+      let y = this.bedY + this.bedH / 2;
+      for (let i = 0; i < Math.min(hayBalesHeld, 2); i++) {
+        scene.pushMatrix();
+        scene.translate(0, y, i === 0 ? -0.3 : 0.3);
+        scene.rotate(i === 0 ? 0.05 : -0.04, 0, 1, 0);
+        this.baleBox.display();
+        scene.popMatrix();
+      }
+    }
 
     // Cloth cover
     scene.pushMatrix();
