@@ -56,9 +56,12 @@ export class PoissonDiskSampling {
     const barnMinZ = -12;
     const barnMaxZ =  12;
 
-   
-    if (p[0] >= barnMinX && p[0] <= barnMaxX &&
-        p[1] >= barnMinZ && p[1] <= barnMaxZ) {
+    if (
+      p[0] >= barnMinX &&
+      p[0] <= barnMaxX &&
+      p[1] >= barnMinZ &&
+      p[1] <= barnMaxZ
+    ) {
       return false;
     }
 

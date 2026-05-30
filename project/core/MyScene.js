@@ -11,10 +11,9 @@ import { MyPlane } from '../primitives/MyPlane.js';
 import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
-import {MyPlayer} from "../elements/player/MyPlayer.js"
+import { MyPlayer } from '../elements/player/MyPlayer.js';
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
-
-
+import { HayBaleDistribution } from '../elements/hayBale/HayBaleDistribution.js';
 
 /**
  * MyScene
@@ -80,6 +79,7 @@ export class MyScene extends CGFscene {
     this.selectedTexture = -1;
     this.wrapS = 0;
     this.wrapT = 0;
+    this.hayBalesAmount=20;
 
     this.clouds = [];
     let numberOfClouds = 50;
@@ -91,9 +91,12 @@ export class MyScene extends CGFscene {
     this.lastTime = 0;
 
     this.sunDirection = [-1.0, 0.7, 0.3];
-
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
+
+
+    //MyBaleHay Distribution
+    this.hayBales=new HayBaleDistribution(this,this.hayBalesAmount,this.ScatterManager.poissonSampler.points);
   }
 
 
@@ -175,7 +178,9 @@ export class MyScene extends CGFscene {
     let dt = deltaTime / 1000.0;
     this.player.update(dt);
   }
-
+  updateHayBales(newAmount) {
+    this.hayBales.updatePositions(newAmount);
+  }
   displaySkyAndClouds() {
     this.pushMatrix();
     this.scale(
@@ -216,7 +221,7 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.gl.disable(this.gl.CULL_FACE); // render both sides of the blade
     this.setActiveShader(this.grassShader);
-    
+
     this.plane.grassTexture.bind(0);
 
     let currentTime = performance.now() / 1000.0;
@@ -224,7 +229,7 @@ export class MyScene extends CGFscene {
     this.grassShader.setUniformsValues({
       u_random1: this.plane.u_random1,
       u_random2: this.plane.u_random2,
-      u_time: currentTime
+      u_time: currentTime,
     });
     this.grassField.display();
     this.setActiveShader(this.defaultShader);
@@ -275,6 +280,8 @@ export class MyScene extends CGFscene {
 
     this.displayBarn();
     this.player.display();
+
+    this.hayBales.display();
 
     // ---- END Primitive drawing section
   }

@@ -18,9 +18,9 @@ export class MyGrassField extends CGFobject {
 
     // prevent grass from spawning inside the barn
     const barnMinX = -2.5;
-    const barnMaxX =  8.5;
+    const barnMaxX = 8.5;
     const barnMinZ = -1.1;
-    const barnMaxZ =  7.1;
+    const barnMaxZ = 7.1;
 
     for (let i = 0; i < this.nrBlades; i++) {
       let angle = Math.random() * Math.PI * 2;
@@ -45,31 +45,15 @@ export class MyGrassField extends CGFobject {
       let rz2 = (w / 2) * sin;
 
       // Anchor all vertices to the pivot position so they can be displaced as a whole on the GPU
-      this.vertices.push(
-        x, 0.0, z,
-        x, 0.0, z,
-        x, 0.0, z
-      );
+      this.vertices.push(x, 0.0, z, x, 0.0, z, x, 0.0, z);
 
       // Pack the actual shape offset values in the normal attribute since we don't need traditional lighting
-      this.normals.push(
-        rx1, 0.0, rz1,
-        rx2, 0.0, rz2,
-        0.0, h,   0.0
-      );
+      this.normals.push(rx1, 0.0, rz1, rx2, 0.0, rz2, 0.0, h, 0.0);
 
       // Map V texture coordinate to height ratio (0 at base, 1 at tip) for wind weight scaling
-      this.texCoords.push(
-        0.0, 0.0,
-        1.0, 0.0,
-        0.5, 1.0
-      );
+      this.texCoords.push(0.0, 0.0, 1.0, 0.0, 0.5, 1.0);
 
-      this.indices.push(
-        vertexIndex,
-        vertexIndex + 1,
-        vertexIndex + 2
-      );
+      this.indices.push(vertexIndex, vertexIndex + 1, vertexIndex + 2);
 
       vertexIndex += 3;
     }
