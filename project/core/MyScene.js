@@ -16,6 +16,7 @@ import { MyGrassField } from '../elements/grass/MyGrassField.js';
 import { MyBarnArea } from '../elements/barn/MyBarnArea.js';
 import { CollisionManager } from '../elements/collisions/CollisionManager.js';
 import { HayBaleDistribution } from '../elements/hayBale/HayBaleDistribution.js';
+import { MyQuad } from '../primitives/MyQuad.js';
 
 /**
  * MyScene
@@ -46,7 +47,7 @@ export class MyScene extends CGFscene {
     this.maxHealth = 100;
     this.hayBalesDropped = 0;
     this.collisionDamage = 20;
-    this.hayBaleHeal = 30;
+    this.hayBaleHeal = 40;
 
     // populate cloud textures array
     this.cloudTextures = [];
@@ -74,6 +75,9 @@ export class MyScene extends CGFscene {
       'shaders/grass.frag'
     );
     this.timeSeconds = 0.0;
+
+    this.arrowQuad = new MyQuad(this);
+    this.arrowShader = new CGFshader(this.gl, 'shaders/arrow.vert', 'shaders/arrow.frag');
 
     //scatter Manager
     this.ScatterManager = new ScatterManager(this);
@@ -320,6 +324,18 @@ export class MyScene extends CGFscene {
     this.popMatrix();
   }
 
+  displayArrow(x, y, z, scale = 1.0) {
+    this.pushMatrix();
+    this.translate(x, y, z);
+    this.gl.disable(this.gl.CULL_FACE);
+    this.setActiveShader(this.arrowShader);
+    this.arrowShader.setUniformsValues({ uTime: this.timeSeconds, uScale: scale });
+    this.arrowQuad.display();
+    this.setActiveShader(this.defaultShader);
+    this.gl.enable(this.gl.CULL_FACE);
+    this.popMatrix();
+  }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -365,5 +381,5 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     // ---- END Primitive drawing section
-  }
+  }  
 }

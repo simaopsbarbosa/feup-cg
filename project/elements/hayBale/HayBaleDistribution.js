@@ -34,9 +34,28 @@ export class HayBaleDistribution {
  }
 
   display() {
-     for (let bale of this.bales) {
-        if(!bale.collected) bale.display();             
+    let player = this.scene.player;
+    let px = player ? player.position[0] : 0;
+    let pz = player ? player.position[2] : 0;
+    let isWagonFilled = player ? player.hayBalesHeld >= player.maxHayBales : false;
+
+    for (let bale of this.bales) {
+      if (!bale.collected) {
+        let dx = bale.x - px;
+        let dz = bale.z - pz;
+        let distSq = dx * dx + dz * dz;
+
+        if (distSq <= 260.0) {
+          bale.display();
+          if (!isWagonFilled) {
+            this.scene.displayArrow(bale.x, 3.2, bale.z, 0.85);
+          }
+        }
+      }
     }
-    
+
+    if (isWagonFilled) {
+      this.scene.displayArrow(-7.2, 4.0, 2.9, 1.5);
+    }
   }
 }
