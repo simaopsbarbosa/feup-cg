@@ -66,9 +66,6 @@ export class MyScene extends CGFscene {
     //scatter Manager
     this.ScatterManager = new ScatterManager(this);
 
-    //MyBaleHay Distribution
-    this.hayBales=new HayBaleDistribution(this,20,this.ScatterManager.poissonSampler.points);
-
     //player
     this.player = new MyPlayer(this);
 
@@ -82,6 +79,7 @@ export class MyScene extends CGFscene {
     this.selectedTexture = -1;
     this.wrapS = 0;
     this.wrapT = 0;
+    this.hayBalesAmount=20;
 
     this.clouds = [];
     let numberOfClouds = 50;
@@ -95,6 +93,10 @@ export class MyScene extends CGFscene {
     this.sunDirection = [-1.0, 0.7, 0.3];
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
+
+
+    //MyBaleHay Distribution
+    this.hayBales=new HayBaleDistribution(this,this.hayBalesAmount,this.ScatterManager.poissonSampler.points);
   }
 
 
@@ -176,7 +178,9 @@ export class MyScene extends CGFscene {
     let dt = deltaTime / 1000.0;
     this.player.update(dt);
   }
-
+  updateHayBales(newAmount) {
+    this.hayBales.updatePositions(newAmount);
+  }
   displaySkyAndClouds() {
     this.pushMatrix();
     this.scale(

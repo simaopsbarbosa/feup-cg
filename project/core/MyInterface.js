@@ -19,6 +19,11 @@ export class MyInterface extends CGFinterface {
 
     this.gui.add(this.scene, 'timeSeconds').name('Score (s)').listen();
 
+    this.gui.add(this.scene, 'hayBalesAmount', 1, 30, 1).name('Hay Bale Amount').onChange((value)=>{
+      this.scene.updateHayBales(value);
+    }
+    );
+
     //Checkbox element in GUI
     this.gui.add(this.scene, 'displayAxis').name('Display Axis');
     this.gui.add(this.scene, 'displaySky').name('Display Sky');
