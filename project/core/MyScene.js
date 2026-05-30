@@ -89,9 +89,9 @@ export class MyScene extends CGFscene {
       this.barnArea,
       () => ({ x: -7.2, z: 2.9 }),
       3.5,
-      (obj) =>{ if(this.player.hayBalesCollected>0){
-        this.player.HP = Math.min(this.maxHealth, this.player.HP + this.hayBaleHeal*this.player.hayBalesCollected);
-        this.hayBalesDropped += this.player.hayBalesCollected;
+      (obj) =>{ if(this.player.hayBalesHeld>0){
+        this.player.HP = Math.min(this.maxHealth, this.player.HP + this.hayBaleHeal*this.player.hayBalesHeld);
+        this.hayBalesDropped += this.player.hayBalesHeld;
         this.player.resetBales();
       }
         obj._applyColor(1); 

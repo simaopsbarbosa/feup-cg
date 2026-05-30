@@ -24,7 +24,7 @@ export class MyPlayer {
     this.directionVector=[0,0,0];
 
     //haybales collected
-    this.hayBalesCollected=0;
+    this.hayBalesHeld=0;
     this.maxHayBales=2;
 
     //player health points
@@ -57,15 +57,15 @@ export class MyPlayer {
     
   }
   addBale() {
-    if (this.hayBalesCollected < this.maxHayBales) {
-      this.hayBalesCollected++;
+    if (this.hayBalesHeld < this.maxHayBales) {
+      this.hayBalesHeld++;
       return true;
     }
     return false;
   }
 
   resetBales() {
-    this.hayBalesCollected = 0;
+    this.hayBalesHeld = 0;
   }
   resetPlayer() {
     this.position = [-5, 1.5, 0];

@@ -39,7 +39,7 @@ export class MyInterface extends CGFinterface {
       this.scene.updateHayBales(value);
     }
     );
-    this.gui.add(this.scene.player, 'hayBalesCollected').name('Hay Bales Held').listen();
+    this.gui.add(this.scene.player, 'hayBalesHeld').name('Hay Bales Held').listen();
     
     // Configuration folder
     const configFolder = this.gui.addFolder('Configuration');
