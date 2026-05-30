@@ -11,10 +11,11 @@ import { MyPlane } from '../primitives/MyPlane.js';
 import { MyCloud } from '../elements/cloud/MyCloud.js';
 import { ScatterManager } from '../elements/scatter/ScatterManager.js';
 import { MyBarn } from '../elements/barn/MyBarn.js';
-import { MyPlayer } from "../elements/player/MyPlayer.js"
+import { MyPlayer } from '../elements/player/MyPlayer.js';
 import { MyGrassField } from '../elements/grass/MyGrassField.js';
 import { MyWagon } from '../elements/wagon/MyWagon.js';
 import { MyBarnArea } from '../elements/barn/MyBarnArea.js';
+import { CollisionManager } from '../elements/collisions/CollisionManager.js';
 
 /**
  * MyScene
@@ -51,7 +52,6 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 80);
     this.barn = new MyBarn(this);
-    this.wagon = new MyWagon(this);
     this.barnArea = new MyBarnArea(this, 3.5);
 
     // Shaders
@@ -75,6 +75,18 @@ export class MyScene extends CGFscene {
     //player
     this.player = new MyPlayer(this);
 
+    // Collision manager
+    this.collisionManager = new CollisionManager();
+
+    this.collisionManager.register(
+      'barnArea',
+      this.barnArea,
+      () => ({ x: -7.2, z: 2.9 }),
+      3.5,
+      (obj) => obj._applyColor(1),
+      (obj) => obj._applyColor(0),
+      'ring'
+    );
 
     //-------Objects connected to MyInterface
     this.displayAxis = false;
@@ -100,7 +112,6 @@ export class MyScene extends CGFscene {
     this.sphere = new MyHalfSphere(this, 6, 100);
     this.sphere.appearance.setEmission(1.0, 1.0, 1.0, 1.0);
   }
-
 
   initLights() {
     // Don't change this because of the default material for the sky
@@ -139,29 +150,24 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
-  playerMoves(){
-    let key=this.gui.activeKeys;
+  playerMoves() {
+    let key = this.gui.activeKeys;
     if (key['KeyW']) {
       this.player.move('W');
-    }
-    else if (key['KeyS']) {
+    } else if (key['KeyS']) {
       this.player.move('S');
-    }
-    else{
+    } else {
       this.player.move('DS');
     }
 
     if (key['KeyA']) {
       this.player.move('A');
-    }
-    else if (key['KeyD']) {
+    } else if (key['KeyD']) {
       this.player.move('D');
-    }
-    else{
+    } else {
       this.player.move('RW');
     }
   }
-
 
   update(t) {
     if (this.lastTime == 0) this.lastTime = t;
@@ -169,16 +175,19 @@ export class MyScene extends CGFscene {
     this.lastTime = t;
     this.timeSeconds += deltaTime / 1000.0;
 
-    let timeScale = 0.005;
-
     for (let i = 0; i < this.clouds.length; i++) {
-      this.clouds[i].update(deltaTime * timeScale);
+      this.clouds[i].update(deltaTime * 0.005);
     }
-    if (this.gui.activeKeys) {
-      this.playerMoves()
-    }
-    let dt = deltaTime / 1000.0;
-    this.player.update(dt);
+
+    if (this.gui.activeKeys) this.playerMoves();
+
+    this.player.update(deltaTime / 1000.0);
+
+    this.collisionManager.update(
+      this.player.position[0],
+      this.player.position[2],
+      2.7
+    );
   }
 
   displaySkyAndClouds() {
@@ -229,7 +238,7 @@ export class MyScene extends CGFscene {
     this.grassShader.setUniformsValues({
       u_random1: this.plane.u_random1,
       u_random2: this.plane.u_random2,
-      u_time: currentTime
+      u_time: currentTime,
     });
     this.grassField.display();
     this.setActiveShader(this.defaultShader);
@@ -266,7 +275,7 @@ export class MyScene extends CGFscene {
     }
 
     this.setDefaultAppearance();
-    
+
     // ---- BEGIN Primitive drawing section
     if (this.displaySky) {
       this.displaySkyAndClouds();
