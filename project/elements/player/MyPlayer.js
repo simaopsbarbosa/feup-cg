@@ -6,8 +6,10 @@ export class MyPlayer {
     this.scene = scene;
     this.horse=new horse(this.scene);
     this.wagon = new MyWagon(this.scene);
+    
     //Player Position
     this.position=[-5,1.5,0];
+
     //Player physics
     this.speed=0;
     this.wheelAngle=0;
@@ -24,6 +26,10 @@ export class MyPlayer {
     //haybales collected
     this.hayBalesCollected=0;
     this.maxHayBales=2;
+
+    //player health points
+    this.HP=100;
+
 
   }
   move(direction) {
@@ -61,6 +67,17 @@ export class MyPlayer {
   resetBales() {
     this.hayBalesCollected = 0;
   }
+  resetPlayer() {
+    this.position = [-5, 1.5, 0];
+    this.speed = 0;
+    this.wheelAngle = 0;
+    this.rollAngle = 0;
+    this.orientationAngle = 0;
+    this.directionVector = [0, 0, 0];
+    this.HP = 100;
+    this.resetBales();
+  }
+
   update(deltaTime){
       if(this.speed!=0){
         this.orientationAngle += this.wheelAngle * this.speed * deltaTime;
@@ -72,7 +89,7 @@ export class MyPlayer {
       this.position[2] += this.directionVector[2] *  deltaTime;
       this.rotationDelta = this.speed / 0.5;
       this.rollAngle += this.rotationDelta * deltaTime;
-      
+      this.HP=Math.max(0, this.HP - deltaTime );
   }
 
   display(){

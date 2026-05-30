@@ -130,6 +130,28 @@ export class MyScene extends CGFscene {
         'sphere'
       );
     });
+    this.ScatterManager.trees.forEach((tree, index) => {
+      this.collisionManager.register(
+        `haybale_${index}`,
+        tree,
+        () => ({ x: tree.x, z: tree.z }),
+        1.5,
+        (obj) => { this.player.speed = 0;}, 
+        null,
+        'sphere'
+      );
+    });
+    this.ScatterManager.rocks.forEach((rock, index) => {
+      this.collisionManager.register(
+        `haybale_${index}`,
+        rock,
+        () => ({ x: rock.x, z: rock.z }),
+        1.5,
+        (obj) => { this.player.speed -= 0.01;}, 
+        null,
+        'sphere'
+      );
+    });
   }
 
   initLights() {
@@ -167,6 +189,10 @@ export class MyScene extends CGFscene {
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
+  }
+  resetScene() {
+    this.player.resetPlayer();
+    this.hayBales.resetCollected(this.hayBalesAmount);
   }
 
   playerMoves() {
@@ -207,6 +233,10 @@ export class MyScene extends CGFscene {
       this.player.position[2],
       2.7
     );
+    if(this.player.HP==0){
+      resetScene();
+    }
+
   }
   updateHayBales(newAmount) {
     this.hayBales.updatePositions(newAmount);

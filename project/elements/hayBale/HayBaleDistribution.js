@@ -26,6 +26,12 @@ export class HayBaleDistribution {
         this.bales.push(new MyHayBale(this.scene,this.box,this.app,p[0],p[1]));
     }
  }
+ resetCollected(amount){
+  this.bales.forEach((bale) => {
+      bale.collected = false; 
+      updatePositions(amount);
+  });
+ }
 
   display() {
      for (let bale of this.bales) {
