@@ -123,7 +123,7 @@ export class MyScene extends CGFscene {
     this.selectedTexture = -1;
     this.wrapS = 0;
     this.wrapT = 0;
-    this.hayBalesAmount = 20;
+    this.hayBalesAmount = 10;
 
     this.clouds = [];
     let numberOfClouds = 50;
