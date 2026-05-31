@@ -14,7 +14,6 @@ export class MyRock extends CGFobject {
     z,
     rockTexture,
     rockHeightMap,
-    terrainHeightMap,
     shader
   ) {
     super(scene);
@@ -26,7 +25,6 @@ export class MyRock extends CGFobject {
     this.x = x;
     this.z = z;
     this.initBuffers();
-    this.terrainHeightMap = terrainHeightMap;
   }
 
   display() {

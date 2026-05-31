@@ -10,7 +10,6 @@ export class MyTree extends CGFobject {
     z,
     trunkTexture,
     leafMaterial,
-    terrainHeightMap,
     trunkprimitive,
     leafprimitive,
     trunkMaterial

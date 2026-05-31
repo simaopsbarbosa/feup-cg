@@ -67,7 +67,6 @@ export class ScatterManager {
           z,
           this.treeBarkTexture[i % this.treeBarkTexture.length],
           this.leafMaterial,
-          this.terrainHeightMap,
           this.trunkPrimitive,
           (this.leafPrimitive = this.leafPrimitive),
           this.trunkMaterial
@@ -84,7 +83,6 @@ export class ScatterManager {
           z,
           this.rockTextures[i % this.rockTextures.length],
           this.rockHeightMap,
-          this.terrainHeightMap,
           this.rockShader
         );
         this.rocks.push(element);
