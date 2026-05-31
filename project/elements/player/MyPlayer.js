@@ -122,6 +122,30 @@ export class MyPlayer {
     this.position[0] += this.directionVector[0] * deltaTime;
     this.position[1] += this.directionVector[1] * deltaTime;
     this.position[2] += this.directionVector[2] * deltaTime;
+
+    const radius = 50;
+    const distanceSq = this.position[0] ** 2 + this.position[2] ** 2;
+
+    if (distanceSq > radius ** 2) {
+      const distance = Math.sqrt(distanceSq);
+
+   
+      this.position[0] = (this.position[0] / distance) * radius;
+      this.position[2] = (this.position[2] / distance) * radius;
+
+      const nx = -this.position[0] / radius;
+      const nz = -this.position[2] / radius;
+
+      const dotProduct = this.directionVector[0] * nx + this.directionVector[2] * nz;
+      
+      const reflectedX = this.directionVector[0] - 2 * dotProduct * nx;
+      const reflectedZ = this.directionVector[2] - 2 * dotProduct * nz;
+
+      this.orientationAngle = Math.atan2(reflectedX, reflectedZ);
+      
+      this.speed =0; 
+    }
+
     this.rotationDelta = this.speed / 0.5;
     this.rollAngle += this.rotationDelta * deltaTime;
     this.HP = Math.max(0, this.HP - deltaTime);
