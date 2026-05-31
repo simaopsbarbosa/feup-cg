@@ -4,10 +4,10 @@ import { simpleDistribution } from '../../utils/SimpleDistribution.js';
 import { MyHayBale } from './MyHayBale.js';
 
 export class HayBaleDistribution {
-  constructor(scene,amount,occupied) {
+  constructor(scene, amount, occupied) {
     this.scene = scene;
     this.box = new MyBox(scene, 0.5, 0.4, 0.35);
-    this.occupied=occupied;
+    this.occupied = occupied;
     this.app = new CGFappearance(this.scene);
     this.app.setAmbient(0.5, 0.45, 0.3, 1.0);
     this.app.setDiffuse(0.9, 0.82, 0.55, 1.0);
@@ -18,27 +18,48 @@ export class HayBaleDistribution {
     this.updatePositions(amount);
   }
 
- updatePositions(amount){
-    this.distribution=new simpleDistribution(40,2,amount,this.occupied);
-    this.points=this.distribution.points;
-    this.bales=[];
-    for(let p of this.points){
-        let currentMatrix = mat4.create();
-        mat4.translate(currentMatrix,currentMatrix, [p[0],1.5,p[1]]);
-        mat4.scale(currentMatrix, currentMatrix, [2 ,1, 2]);
-        this.bales.push([new MyHayBale(this.scene,this.box,this.app),currentMatrix]);
+  updatePositions(amount) {
+    this.distribution = new simpleDistribution(40, 2, amount, this.occupied);
+    this.points = this.distribution.points;
+    this.bales = [];
+    for (let p of this.points) {
+      this.bales.push(
+        new MyHayBale(this.scene, this.box, this.app, p[0], p[1])
+      );
     }
- }
+  }
+  resetCollected(amount) {
+    this.bales.forEach((bale) => {
+      bale.collected = false;
+      this.updatePositions(amount);
+    });
+  }
 
   display() {
-     for (let baleInfo of this.bales) {
-        let bale = baleInfo[0];
-        let matrix = baleInfo[1];
-        this.scene.pushMatrix();
-        this.scene.multMatrix(matrix); 
-        bale.display();             
-        this.scene.popMatrix();
+    let player = this.scene.player;
+    let px = player ? player.position[0] : 0;
+    let pz = player ? player.position[2] : 0;
+    let isWagonFilled = player
+      ? player.hayBalesHeld >= player.maxHayBales
+      : false;
+
+    for (let bale of this.bales) {
+      if (!bale.collected) {
+        let dx = bale.x - px;
+        let dz = bale.z - pz;
+        let distSq = dx * dx + dz * dz;
+
+        if (distSq <= 260.0) {
+          bale.display();
+          if (!isWagonFilled) {
+            this.scene.displayArrow(bale.x, 3.2, bale.z, 0.85);
+          }
+        }
+      }
     }
-    
+
+    if (isWagonFilled) {
+      this.scene.displayArrow(-7.2, 4.0, 2.9, 1.5);
+    }
   }
 }
