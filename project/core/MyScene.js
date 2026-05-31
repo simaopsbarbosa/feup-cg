@@ -104,6 +104,15 @@ export class MyScene extends CGFscene {
       (obj) => obj._applyColor(0),
       'ring'
     );
+    this.collisionManager.register(
+      'barn',
+      this.barn,
+      () => ({ x:3 ,z: 3 }),
+      8,
+      null,
+      null,
+      'sphere'
+    );
 
     //-------Objects connected to MyInterface
     this.displayAxis = false;
@@ -273,6 +282,16 @@ export class MyScene extends CGFscene {
       this.player.position[2],
       2.7
     );
+
+    let [safeX, safeZ] = this.collisionManager.resolveCollisions(
+      this.player.position[0],
+      this.player.position[2],
+      2.7
+    );
+
+    this.player.position[0] = safeX;
+    this.player.position[2] = safeZ;
+
     if (this.player.HP == 0) {
       this.resetScene();
     }

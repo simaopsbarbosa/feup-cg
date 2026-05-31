@@ -67,4 +67,49 @@ export class CollisionManager {
       }
     }
   }
+
+  resolveCollisions(wagonx,wagonz,wagonRadius) {
+    let correctedX = wagonx;
+    let correctedZ = wagonz;
+    for (let c of this.collidables) {
+      let pos = c.getPosition();
+      let hit;
+      if (c.type === 'sphere'&& c.id.startsWith('tree_')||c.id==='barn') {
+        hit = this._checkSphere(
+          wagonx,
+          wagonz,
+          wagonRadius,
+          pos.x,
+          pos.z,
+          c.radius
+        );
+      }
+
+      if (hit) {
+        let dx = correctedX - pos.x;
+        let dz = correctedZ - pos.z;
+        let dist = Math.sqrt(dx * dx + dz * dz);
+        let minDist = wagonRadius + c.radius;
+
+      if (dist < minDist) {
+     
+      if (dist === 0) {
+        dx = 1;
+        dz = 0;
+        dist = 1;
+      }
+
+      let nx = dx / dist;
+      let nz = dz / dist;
+
+     
+      let overlap = minDist - dist;
+
+      correctedX += nx * overlap;
+      correctedZ += nz * overlap;
+        }
+      }
+    }
+    return [correctedX, correctedZ];
+    }
 }
