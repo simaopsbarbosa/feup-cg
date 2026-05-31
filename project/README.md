@@ -62,7 +62,7 @@ http://localhost:8000
    - Panoramic sky dome (half-sphere)
    - Directional sun light
    - Animated clouds drifting across the scene
-   - **Advanced:** TODO: Check here
+   - **Advanced:** procedural animated cloud layer near sky sphere. 
 
 - **Terrain, Ground, Scatter Elements**
    - Rolling prairie hills with terrain elevation
