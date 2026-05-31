@@ -57,17 +57,22 @@ export class HayBaleDistribution {
       ? player.hayBalesHeld >= player.maxHayBales
       : false;
 
+    const baleViewDist = 20.0;
+    const arrowViewDist = 260.0;
+    const baleViewSq = baleViewDist * baleViewDist;
+    const arrowViewSq = arrowViewDist * arrowViewDist;
+
     for (let bale of this.bales) {
       if (!bale.collected) {
         let dx = bale.x - px;
         let dz = bale.z - pz;
         let distSq = dx * dx + dz * dz;
 
-        if (distSq <= 260.0 * 260.0) {
+        if (distSq <= baleViewSq) {
           bale.display();
-          if (!isWagonFilled) {
-            this.scene.displayArrow(bale.x, 3.2, bale.z, 0.85);
-          }
+        }
+        if (!isWagonFilled && distSq <= arrowViewSq) {
+          this.scene.displayArrow(bale.x, 3.2, bale.z, 0.85);
         }
       }
     }
