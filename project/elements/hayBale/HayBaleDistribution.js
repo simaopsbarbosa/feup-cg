@@ -63,7 +63,7 @@ export class HayBaleDistribution {
         let dz = bale.z - pz;
         let distSq = dx * dx + dz * dz;
 
-        if (distSq <= 260.0) {
+        if (distSq <= 260.0 * 260.0) {
           bale.display();
           if (!isWagonFilled) {
             this.scene.displayArrow(bale.x, 3.2, bale.z, 0.85);
