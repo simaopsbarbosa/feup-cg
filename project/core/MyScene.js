@@ -135,7 +135,6 @@ export class MyScene extends CGFscene {
       this.hayBalesAmount,
       this.ScatterManager.poissonSampler.points
     );
-
     this.hayBales.bales.forEach((bale, index) => {
       this.collisionManager.register(
         `haybale_${index}`,
