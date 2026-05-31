@@ -98,14 +98,7 @@ export class MyScene extends CGFscene {
       () => ({ x: -7.2, z: 2.9 }),
       3.5,
       (obj) => {
-        if (this.player.hayBalesHeld > 0) {
-          this.player.HP = Math.min(
-            this.maxHealth,
-            this.player.HP + this.hayBaleHeal * this.player.hayBalesHeld
-          );
-          this.hayBalesDropped += this.player.hayBalesHeld;
-          this.player.resetBales();
-        }
+        this.player.inBarnArea = true;
         obj._applyColor(1);
       },
       (obj) => obj._applyColor(0),
@@ -142,6 +135,7 @@ export class MyScene extends CGFscene {
       this.hayBalesAmount,
       this.ScatterManager.poissonSampler.points
     );
+  
     this.hayBales.bales.forEach((bale, index) => {
       this.collisionManager.register(
         `haybale_${index}`,
@@ -149,11 +143,14 @@ export class MyScene extends CGFscene {
         () => ({ x: bale.x, z: bale.z }),
         1.5,
         (obj) => {
-          if (this.player.addBale()) {
-            obj.collected = true;
+          if (!obj.collected && !this.player.nearbyBales.includes(obj)) {
+          this.player.nearbyBales.push(obj); 
           }
         },
-        null,
+        (obj) => { 
+  
+      this.player.nearbyBales = this.player.nearbyBales.filter(baleItem => baleItem !== obj); 
+    },
         'sphere'
       );
     });
@@ -244,6 +241,14 @@ export class MyScene extends CGFscene {
       this.player.move('D');
     } else {
       this.player.move('RW');
+    }
+    if (key['KeyP']) {
+      this.player.move('P');
+      key['KeyP'] = false; 
+    }
+    if (key['KeyL']) {
+      this.player.move('L');
+      key['KeyL'] = false;
     }
   }
 

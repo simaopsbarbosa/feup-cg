@@ -26,6 +26,10 @@ export class MyPlayer {
     //haybales collected
     this.hayBalesHeld = 0;
     this.maxHayBales = 2;
+    this.nearbyBales = [];
+    this.inBarnArea = false;
+    this.maxHealth = 100;
+    this.hayBaleHeal = 40;
 
     //player health points
     this.HP = 100;
@@ -53,14 +57,36 @@ export class MyPlayer {
       case 'DS':
         this.speed = Math.max(this.speed - 0.05, 0);
         break;
+      case 'P':
+        this.addBale();
+        break;
+      case 'L':
+        this.dropBales();
+        break;
       default:
         this.wheelAngle = 0;
         break;
     }
   }
   addBale() {
-    if (this.hayBalesHeld < this.maxHayBales) {
+    if (this.hayBalesHeld < this.maxHayBales && this.nearbyBales.length > 0) {
+      let targetBale = this.nearbyBales[0];
       this.hayBalesHeld++;
+      targetBale.collected = true;
+      this.nearbyBales.shift();
+      return true;
+    }
+    return false;
+  }
+  dropBales() {
+    if(this.hayBalesHeld > 0 && this.inBarnArea) {
+       this.HP = Math.min(
+            this.maxHealth,
+            this.HP + this.hayBaleHeal * this.hayBalesHeld
+          );
+          this.scene.hayBalesDropped += this.hayBalesHeld;
+
+      this.hayBalesHeld = 0;
       return true;
     }
     return false;
