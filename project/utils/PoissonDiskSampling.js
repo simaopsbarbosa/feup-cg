@@ -13,9 +13,16 @@ export class PoissonDiskSampling {
     const points = [];
     const active = [];
 
+    const angle = Math.random() * Math.PI * 2;
+
+    const minSpawnRadius = 18; 
+    const maxSpawnRadius = this.radius;
+
+    const r = minSpawnRadius + Math.random() * (maxSpawnRadius - minSpawnRadius);
+
     const firstPoint = [
-      Math.random() * this.radius * 2 - this.radius,
-      Math.random() * this.radius * 2 - this.radius,
+      r * Math.cos(angle),
+      r * Math.sin(angle)
     ];
     this.addToGrid(firstPoint);
     points.push(firstPoint);
