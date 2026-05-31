@@ -94,6 +94,8 @@ export class MyPlayer {
 
   resetBales() {
     this.hayBalesHeld = 0;
+    this.nearbyBales = [];
+    this.inBarnArea = false;
   }
   resetPlayer() {
     this.position = [-5, 1.5, 0];

@@ -27,12 +27,31 @@ export class HayBaleDistribution {
         new MyHayBale(this.scene, this.box, this.app, p[0], p[1])
       );
     }
+    this.bales.forEach((bale, index) => {
+      this.scene.collisionManager.register(
+        `haybale_${index}`,
+        bale,
+        () => ({ x: bale.x, z: bale.z }),
+        1.5,
+        (obj) => {
+          if (!obj.collected && !this.scene.player.nearbyBales.includes(obj)) {
+            this.player.nearbyBales.push(obj);
+          }
+        },
+        (obj) => {
+          this.scene.player.nearbyBales = this.scene.player.nearbyBales.filter(
+            (baleItem) => baleItem !== obj
+          );
+        },
+        'sphere'
+      );
+    });
   }
   resetCollected(amount) {
     this.bales.forEach((bale) => {
       bale.collected = false;
-      this.updatePositions(amount);
     });
+    bale.updatePositions(amount);
   }
 
   display() {
