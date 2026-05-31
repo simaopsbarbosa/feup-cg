@@ -231,7 +231,7 @@ export class MyScene extends CGFscene {
   }
   resetScene() {
     this.player.resetPlayer();
-    this.hayBales.resetCollected(this.hayBalesAmount);
+    this.hayBales.updatePositions(this.hayBalesAmount);
   }
 
   playerMoves() {

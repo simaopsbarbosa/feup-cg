@@ -35,7 +35,7 @@ export class HayBaleDistribution {
         1.5,
         (obj) => {
           if (!obj.collected && !this.scene.player.nearbyBales.includes(obj)) {
-            this.player.nearbyBales.push(obj);
+            this.scene.player.nearbyBales.push(obj);
           }
         },
         (obj) => {
@@ -46,12 +46,7 @@ export class HayBaleDistribution {
         'sphere'
       );
     });
-  }
-  resetCollected(amount) {
-    this.bales.forEach((bale) => {
-      bale.collected = false;
-    });
-    bale.updatePositions(amount);
+    
   }
 
   display() {
