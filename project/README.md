@@ -12,7 +12,8 @@
 
 A real-time 3D prairie scene rendered in WebGL using WebCGF framework. The player controls a covered wagon (prairie schooner) pulled by an animated horse across a prairie landscape. The objective is a survival challenge: collect hay bales scattered accross the map and deliver them to the barn to restore health points before they run out.
 
-The scene features a natural prairie environment with: 
+The scene features a natural prairie environment with:
+
 - a full sky dome with clouds;
 - hills;
 - scattered rocks and flowers;
@@ -43,57 +44,66 @@ http://localhost:8000
 
 ## Keyboard Controls
 
-| Key | Action |
-| --- | ------ |
-| `W` | Accelerate forward |
-| `S` | Reduce speed |
-| `A` | Steer wheels left |
-| `D` | Steer wheels right |
-| `P` | Pick up nearby hay bale |
-| `L` | Drop hay bale at barn |
-| Mouse drag | Orbit camera |
-| Mouse scroll | Zoom in/out |
+| Key          | Action                  |
+| ------------ | ----------------------- |
+| `W`          | Accelerate forward      |
+| `S`          | Reduce speed            |
+| `A`          | Steer wheels left       |
+| `D`          | Steer wheels right      |
+| `P`          | Pick up nearby hay bale |
+| `L`          | Drop hay bale at barn   |
+| Mouse drag   | Orbit camera            |
+| Mouse scroll | Zoom in/out             |
 
 ## Implemented Features
 
 ### Base
 
 - **Sky, Sun, Clouds**
-   - Panoramic sky dome (half-sphere)
-   - Directional sun light
-   - Animated clouds drifting across the scene
-   - **Advanced:** procedural animated cloud layer near sky sphere. 
+  - Panoramic sky dome (half-sphere)
+  - Directional sun light
+  - Animated clouds drifting across the scene
+  - **Advanced:** procedural animated cloud layer near sky sphere.
 
 - **Terrain, Ground, Scatter Elements**
-   - Rolling prairie hills with terrain elevation
-   - **Advanced:** procedural terrain - different every run
-   - Textured ground with scatter elements distributed across the terrain (rocks, trees)
-   - **Advanced:** Scatter elements are procedurally generated with varying sizes, placements and orientations
+  - Rolling prairie hills with terrain elevation
+  - **Advanced:** procedural terrain - different every run
+  - Textured ground with scatter elements distributed across the terrain (rocks, trees)
+  - **Advanced:** Scatter elements are procedurally generated with varying sizes, placements and orientations
 
 - **Flowers and Grass**
-   - Parametric flowers with randomised stem height, petal count, leaf count, size and colour
-   - **Avanced:** Procedural generation of all flower components
-   - Dense grass patches that change colour based on the terrain (dead grass patches)
-   - **Advanced:** Wind shader over grass
+  - Parametric flowers with randomised stem height, petal count, leaf count, size and colour
+  - **Avanced:** Procedural generation of all flower components
+  - Dense grass patches that change colour based on the terrain (dead grass patches)
+  - **Advanced:** Wind shader over grass
 
 - **Wagon, Interaction, and Animation**
-   - Barn with textures applied to walls roof and front part
-   - Circular delivery zone in front of barn that changes colour
-   - Hierarchical wagon model: cloth cover, wooden bed, front tongue, 4 wheels
-   - Horse implemented in OBJ format
-   - **Advanced:** Wagon with shader on cover and horse running animation
-   - Forward movement with smooth acceleration and front wheel steering mechanics
-   - Hay bale pickup and drop
-   - **Advanced:** Kinematic horse movement (physics-based acceleration)
+  - Barn with textures applied to walls roof and front part
+  - Circular delivery zone in front of barn that changes colour
+  - Hierarchical wagon model: cloth cover, wooden bed, front tongue, 4 wheels
+  - Horse implemented in OBJ format
+  - **Advanced:** Wagon with shader on cover and horse running animation
+  - Forward movement with smooth acceleration and front wheel steering mechanics
+  - Hay bale pickup and drop
+  - **Advanced:** Kinematic horse movement (physics-based acceleration)
 
 - **Collectible System and UI**
-   - Hay bales scattered across the prairie
-   - Wagon pickups and drops hay bales at the barn
-   - Collisions with scattered elements using sphere bounds
-   - DAT.gui interface: health points, collision damage, health restored, score
+  - Hay bales scattered across the prairie
+  - Wagon pickups and drops hay bales at the barn
+  - Collisions with scattered elements using sphere bounds
+  - DAT.gui interface: health points, collision damage, health restored, score
 
 ## Known Issues / Limitations
 
-TODO: check here
+- Objects may appear submerged, since they sit at a certain y-plane
 
 ## Screenshots
+
+<img src="screenshots/final/project-t10g03-N1.png" alt="Wide Shot" width="500">
+<br>
+<img src="screenshots/final/project-t10g03-N2.png" alt="Flower rocks and floor detail" width="500">
+<br>
+<img src="screenshots/final/project-t10g03-N3.png" alt="Wagon close-up" width="500">
+<br>
+<img src="screenshots/final/project-t10g03-N4.gif" alt="Animation" width="500">
+
