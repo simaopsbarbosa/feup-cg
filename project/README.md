@@ -68,8 +68,7 @@ http://localhost:8000
    - Rolling prairie hills with terrain elevation
    - **Advanced:** procedural terrain - different every run
    - Textured ground with scatter elements distributed across the terrain (rocks, trees)
-   - Rocks and trees are randomly placed with varying sizes and orientations
-   - **Advanced:** TODO: Check here
+   - **Advanced:** Scatter elements are procedurally generated with varying sizes, placements and orientations
 
 - **Flowers and Grass**
    - Parametric flowers with randomised stem height, petal count, leaf count, size and colour
