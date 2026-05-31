@@ -43,12 +43,6 @@ export class MyInterface extends CGFinterface {
     this.gui.add(this.scene, 'timeSeconds').name('Score (sec)').listen();
 
     this.gui
-      .add(this.scene, 'hayBalesAmount', 1, 30, 1)
-      .name('Hay Bales Available')
-      .onChange((value) => {
-        this.scene.updateHayBales(value);
-      });
-    this.gui
       .add(this.scene.player, 'hayBalesHeld')
       .name('Hay Bales Held')
       .listen();
