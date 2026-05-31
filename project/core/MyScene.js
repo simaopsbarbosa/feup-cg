@@ -135,7 +135,7 @@ export class MyScene extends CGFscene {
       this.hayBalesAmount,
       this.ScatterManager.poissonSampler.points
     );
-  
+
     this.hayBales.bales.forEach((bale, index) => {
       this.collisionManager.register(
         `haybale_${index}`,
@@ -144,13 +144,14 @@ export class MyScene extends CGFscene {
         1.5,
         (obj) => {
           if (!obj.collected && !this.player.nearbyBales.includes(obj)) {
-          this.player.nearbyBales.push(obj); 
+            this.player.nearbyBales.push(obj);
           }
         },
-        (obj) => { 
-  
-      this.player.nearbyBales = this.player.nearbyBales.filter(baleItem => baleItem !== obj); 
-    },
+        (obj) => {
+          this.player.nearbyBales = this.player.nearbyBales.filter(
+            (baleItem) => baleItem !== obj
+          );
+        },
         'sphere'
       );
     });
@@ -244,7 +245,7 @@ export class MyScene extends CGFscene {
     }
     if (key['KeyP']) {
       this.player.move('P');
-      key['KeyP'] = false; 
+      key['KeyP'] = false;
     }
     if (key['KeyL']) {
       this.player.move('L');

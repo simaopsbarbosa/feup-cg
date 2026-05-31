@@ -79,12 +79,12 @@ export class MyPlayer {
     return false;
   }
   dropBales() {
-    if(this.hayBalesHeld > 0 && this.inBarnArea) {
-       this.HP = Math.min(
-            this.maxHealth,
-            this.HP + this.hayBaleHeal * this.hayBalesHeld
-          );
-          this.scene.hayBalesDropped += this.hayBalesHeld;
+    if (this.hayBalesHeld > 0 && this.inBarnArea) {
+      this.HP = Math.min(
+        this.maxHealth,
+        this.HP + this.hayBaleHeal * this.hayBalesHeld
+      );
+      this.scene.hayBalesDropped += this.hayBalesHeld;
 
       this.hayBalesHeld = 0;
       return true;
