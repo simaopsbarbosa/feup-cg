@@ -94,7 +94,7 @@ export class MyWagon {
   _drawAxle(z, rotation) {
     let scene = this.scene;
     scene.pushMatrix();
-    scene.translate(-this.axleHalfW / 2, this.wheelRadius, z);
+    scene.translate(0, this.wheelRadius, z);
     scene.rotate(rotation, 0, 1, 0);
     this.woodApp.apply();
     this.axle.display();
